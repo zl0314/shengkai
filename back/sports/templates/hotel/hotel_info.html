@@ -1,0 +1,152 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader2.htm"}
+{insert_scripts files="validator.js,jquery.min.js,../js/region.js"}
+<div class="main-div">
+    <form method="post" action="route.php?con=hotel&act=edit" name="theForm" enctype="multipart/form-data">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td class="label">酒店名称：</td>
+                <td><input type="text" name="hotel_name" maxlength="60" value="{$hotel.hotel_name}" />{$lang.require_field}</td>
+            </tr>
+            <tr>
+                <td class="label">酒店介绍：</td>
+                <td><script id="editor" name="hotel_text" type="text/plain" style="width:800px;height:250px;">{$hotel.hotel_text}</script></td>
+            </tr>
+            <tr>
+                <!--<td class="label">酒店介绍：</td>-->
+                <td><div id="container">
+                        <a class="btn btn-default btn-lg " id="img_upload" href="#" >
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <sapn>选择文件</sapn>
+                        </a>
+                        <font id="upload_status"></font>
+                        <input type="hidden" name="hotel_img" id="img_id" value="{$hotel.hotel_img}">
+
+                    </div></td>
+            </tr>
+            <tr>
+                <td class="label">酒店所在城市：</td>
+                <td><font id="region_name">{$hotel.region_id|address}</font><input type="hidden" name="region_id" id="region_id" value="{$hotel.region_id}" /></td>
+            </tr>
+
+        </table>
+        <hr>
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <caption><strong>从下面的列表中选择地区，点加号按钮添加到酒店所在的地区</strong></caption>
+            <tr>
+                <td width="30%">&nbsp;</td>
+                <td>国家</td>
+                <td>省</td>
+                <td>市</td>
+                <td width="10%">&nbsp;</td>
+                <td width="10%">&nbsp;</td>
+                <td width="10%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td><select name="country" id="selCountries" onChange="region.changed(this, 1, 'selProvinces')" size="10">
+                        <!-- {foreach from=$countries item=country name="fe_country"} -->
+                        <option value="{$country.region_id}" {if $smarty.foreach.fe_country.first}selected{/if}>{$country.region_name|escape:html}</option>
+                        <!-- {/foreach} -->
+                    </select></td>
+                <td><select name="province" id="selProvinces" onChange="region.changed(this, 2, 'selCities')" size="10">
+                        <option value="">{$lang.select_please}</option>
+                    </select></td>
+                <td><select name="city" id="selCities" size="10">
+                        <option value="">{$lang.select_please}</option>
+                    </select></td>
+                <td>&nbsp;</td>
+                <td><input type="button" value="+" class="button" onclick="addRegion()" /></td>
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+
+        <table align="center">
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" class="button" value="{$lang.button_submit}" />
+                    <input type="reset" class="button" value="{$lang.button_reset}" />
+                    <input type="hidden" name="act" value="{$act}" />
+                    <input type="hidden" name="id" value="{$hotel.id}" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script type="text/javascript" charset="utf-8" src="js/qiniu/plupload.full.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/qiniu.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/main.js"></script>
+<script language="JavaScript">
+<!--
+    var ue = UE.getEditor('editor');
+    region.isAdmin = true;
+    document.forms['theForm'].elements['agency_name'].focus();
+    onload = function()
+    {
+        var selCountry = document.forms['theForm'].elements['country'];
+        if (selCountry.selectedIndex >= 0)
+        {
+            region.loadProvinces(selCountry.options[selCountry.selectedIndex].value);
+        }
+        // 开始检查订单
+        startCheckOrder();
+    }
+    /**
+     * 检查表单输入的数据
+     */
+    function validate()
+    {
+        validator = new Validator("theForm");
+        validator.required("agency_name", no_agencyname);
+        return validator.passed();
+    }
+
+    /**
+     * 添加一个区域
+     */
+    function addRegion()
+    {
+        var selCountry = document.forms['theForm'].elements['country'];
+        var selProvince = document.forms['theForm'].elements['province'];
+        var selCity = document.forms['theForm'].elements['city'];
+        var regionCell = document.getElementById("region_name");
+        var region_id = document.getElementById("region_id");
+        
+        if(selCity.value==''){
+            alert("请选择所在城市");
+            return false;
+        }
+        if (selCity.selectedIndex > 0)
+        {
+            regionId = selCity.options[selCity.selectedIndex].value;
+            regionName = selCity.options[selCity.selectedIndex].text;
+        }
+        else
+        {
+            if (selProvince.selectedIndex > 0)
+            {
+                regionId = selProvince.options[selProvince.selectedIndex].value;
+                regionName = selProvince.options[selProvince.selectedIndex].text;
+            }
+            else
+            {
+                if (selCountry.selectedIndex >= 0)
+                {
+                    regionId = selCountry.options[selCountry.selectedIndex].value;
+                    regionName = selCountry.options[selCountry.selectedIndex].text;
+                }
+                else
+                {
+                    return;
+                }
+            }
+        }
+        regionCell.innerHTML = regionName;
+        region_id.value = regionId;
+    }
+//-->
+</script>
+{/literal}
+{include file="pagefooter.htm"}

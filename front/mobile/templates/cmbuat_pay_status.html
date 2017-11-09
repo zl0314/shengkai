@@ -1,0 +1,92 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+    <title>提交订单</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=720 user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css" href="css/base.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="css/header.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="css/footer.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="css/index.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="css/submit.css" media="all"/>
+    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+</head>
+<body>
+<!--start-->
+<!--end-->
+<!--start 头部-->
+{include file="header.html"}
+<!--end 头部-->
+<div class="container">
+    {if $is_pay}
+    <div class="content">
+        <h1>正在打开掌上生客户端支付..</h1>
+
+        <div class="sub">
+            <h2>您的订单号: <span> {$order_detail.order_sn}</span></h2>
+            <h3>
+                单次支付最高额度为50000,如果总金额超过50000,会分多次进行支付.
+                <br>
+                本次应付款金额为: <span>￥{$amount}</span>
+            </h3>
+        </div>
+    </div>
+    {else}
+    <div class="content">
+        <h1>使用掌上生活客户端支付</h1>
+
+        <div class="sub">
+            <h2>感谢您在本店购物！您的订单已提交成功，请记住您的订单号: <span> {$order_detail.order_sn}</span></h2>
+            <h3>
+                单次支付最高额度为50000,如果总金额超过50000,会分多次进行支付.
+                <br>
+                总金额: <span>￥{$order_detail.order_amount}</span>
+                <br>
+                已支付: <span>￥{$order_detail.money_paid}</span>
+                <br>
+                本次应付款金额为: <span>￥{$amount}</span>
+            </h3>
+        </div>
+        <div class="bottom" style="width: 100%; text-align: center;">
+            <a href="#" id="cmbuat_pay_finish">
+                <button type="button" id="cmbuat" style="background: green; width: 220px;">订单已支付完成</button>
+            </a>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            {if $amount > 0}
+            <a href="javascript:void(0);" id="cmbuat_protocol_btn">
+                <button type="button" id="cmbuat" style="width: 220px;">立即支付</button>
+                <input type="hidden" id="CMBLIFEout_trade_no_9" name="out_trade_no" value="{$order_detail.order_sn}"/>
+            </a>
+            {/if}
+        </div>
+    </div>
+    {/if}
+</div>
+
+</body>
+<script type="text/javascript" src="js/pulldown.js"></script>
+<script>
+    $(function () {
+        $("#cmbuat_protocol_btn").unbind("click").click(function () {
+            var WIDout_trade_no = $("#CMBLIFEout_trade_no_9").val();
+            $.ajax({
+                url: 'submit.php?act=refresh_cmbuat_protocol&order_sn=' + WIDout_trade_no,
+                type: 'POST',
+                dataType: 'json',
+                success: function (data) {
+                    window.location.href = data.protocol;
+                }
+            });
+        });
+        $("#cmbuat_pay_finish").unbind("click").click(function () {
+            window.location.reload();
+        });
+    })
+</script>
+</html>

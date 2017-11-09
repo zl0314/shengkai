@@ -1,0 +1,460 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+    <title>购物车-订机票</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=720 user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css" href="assets/lib/flatui/css/vendor/bootstrap/css/bootstrap.min.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="css/base.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+    <link rel="stylesheet" type="text/css" href="css/index.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="css/header.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="css/footer.css" media="all"/>
+    <link rel="stylesheet" href="assets/lib/flatui/css/flat-ui.min.css">
+    <link rel="stylesheet" type="text/css" href="css/airplane.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="assets/lib/bootstrap-datetimepicker-4.17.47/css/bootstrap-datetimepicker.css"/>
+
+    <script type="text/javascript" src="assets/lib/flatui/js/vendor/jquery.min.js"></script>
+    <script src="assets/lib/moment-with-locales.min.js"></script>
+    <script src="assets/lib/bootstrap-datetimepicker-4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="assets/lib/flatui/js/flat-ui.min.js"></script>
+    <style type="text/css">
+        .shuliang{
+            margin-left: 48px;
+            margin-top: 10px;
+        }
+        .shuliang p{
+            font-size: 12px;
+            color:#0e7d76;
+            font-weight: bold;
+        }
+        .shuliang .slform{
+            float: left;
+            background: #0e7d76;
+            padding: 3px 0px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+        .shuliang .slform a{
+            width: 35px;
+            font-size: 14px;
+            line-height: 25px;
+            color: #fff;
+            font-weight: bold;
+            text-align: center;
+        }
+        .shuliang .slform input{
+            width: 35px;
+            height: 25px;
+            line-height: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            border: none;
+            color:#0e7d76;
+        }
+    </style>
+</head>
+<body>
+<!--start 头部-->
+{include file="header.html"}
+<!--container starts here-->
+<div class="section1 row" style="margin-top: 85px;">
+    <div class="clearfloat">
+        <div class="fl left">
+            <div class="symbol fl">
+                <img src="images/hj.png"/>
+            </div>
+            <div class="fr">订机票</div>
+        </div>
+        <div class="fr right">
+<!--            <a href="javascript:void(0)" onclick="wipe_data()" class="buttonOne fl">清空</a>-->
+
+<!--            <div class="fl">合计：<b>￥<span id="total_ambitus">0.00</span></b></div>-->
+            <a href="javascript:void(0)" onclick="airplane_submit();" class="fr buttonSecond">提交</a>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="wrapper">
+        <div class="section2">
+            <div class="row">
+                <div class="col-xs-12 cuowu" id="cuowu" style="display:none">
+                    <p class="fl" style="color:#bb171d;margin-left:5px;">您还有未填写的信息请填写</p>
+                </div>
+            </div>
+            <div class="row">
+                <form id="air_form" method="post" action="airplane.php?act=air_line_save">
+                    <div class="col-xs-6">
+                        <h4 class="col-md-2">去程</h4>
+
+                        <p>出发城市</p>
+                        <select class="form-control select select-primary" data-toggle="select" name="from_from_city"
+                                id="from_from_city"
+                                onchange="get_to_region_plane('from_from_city','from_to_city','from_air')">
+                            <option value="">请选择</option>
+                            <!--{foreach from=$air_line_list['from_city_1'] item=froms}-->
+                            <option value="{$froms.region_id}">{$froms.region_name}</option>
+                            <!--{/foreach}-->
+                        </select>
+
+                        <p>抵达城市</p>
+                        <select class="form-control select select-primary" data-toggle="select" name="from_to_city"
+                                id="from_to_city" onchange="get_plane('from_from_city','from_to_city','from_air')">
+                            <option value="0" selected>请选择</option>
+                        </select>
+
+                        <p>航程选择</p>
+
+                        <div class="dropdown">
+                            <select data-toggle="select" name="from_air" id="from_air"
+                                    class="form-control   select select-info  mrs mbm"
+                                    onchange="set_plane('from_air','from_zuoxi')">
+                                <option value="0">请选择</option>
+                            </select>
+                        </div>
+                        <p>出发日期</p>
+
+                        <div class="dropdown">
+                            <input
+                                style="border:1px solid #1a8486;padding:8px 4px; border-radius:4px;-webkit-border-radius:4px;"
+                                class="date" name="from_form_time" type="text" placeholder="请选择出发航程"/>
+                        </div>
+
+                        <div class="zuoxi" style="margin-left: 0;">
+                            <div class="shuliang" id="fd{$key}" style="margin-left: 0;">
+                                <p>数量</p>
+                                <div class="slform">
+                                    <div class="fl hao"><a href="javascript:void(0)"
+                                                           onclick="set_plane_number('{$key}','-')">-</a>
+                                    </div>
+                                    <div class="fl"><input type="text" id="fn{$key}"
+                                                           name="from_number[]" value="0"></div>
+                                    <div class="fl hao"><a href="javascript:void(0)"
+                                                           onclick="set_plane_number('{$key}','+')">+</a>
+                                    </div>
+                                    <input type="hidden" name="from_space[]" value="{$space.s_id}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <h4 class="col-md-2">返程</h4>
+
+                        <p>返程出发城市</p>
+
+                        <div class="dropdown">
+                            <select data-toggle="select" name="to_from_city" id="to_from_city"
+                                    class="form-control select-info select mrs mbm" readonly>
+                                <option value="0">请选择</option>
+                                <!--{foreach from=$air_line_list['from_city_2'] item=froms}-->
+                                <option value="{$froms.region_id}">{$froms.region_name}</option>
+                                <!--{/foreach}-->
+                            </select>
+                        </div>
+                        <p>返程抵达城市</p>
+
+                        <div class="dropdown">
+                            <select data-toggle="select" name="to_to_city" id="to_to_city"
+                                    class="form-control select select-info mrs mbm" readonly>
+                                <option value="0">请选择</option>
+                                <!--{foreach from=$to_city item=froms}-->
+                                <option value="{$froms.region_id}">{$froms.region_name}</option>
+                                <!--{/foreach}-->
+                            </select>
+                        </div>
+                        <p>航程选择</p>
+
+                        <div class="dropdown">
+                            <select data-toggle="select" name="to_air" id="to_air"
+                                    class="form-control   select select-info  mrs mbm" readonly>
+                                <option value="0">请选择</option>
+                            </select>
+                        </div>
+                        <p>返程出发日期</p>
+
+                        <div class="dropdown">
+                            <section class="section">
+                                <fieldset>
+                                    <input
+                                        style="border:1px solid #1a8486;padding:8px 4px; border-radius:4px;-webkit-border-radius:4px;"
+                                        class="date" name="to_form_time" type="text" placeholder="请选择出发航程"/>
+                                </fieldset>
+                            </section>
+                        </div>
+                        <div class="zuoxi" style="margin-left: 0;">
+                            <div class="zuoxi">
+                                <label class="checkbox" style="padding-left:0px;">
+                                    {$space.space_name} 数量：&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<input
+                                        type="text" style="width:20px;border:0px;font-weight: bold;"
+                                        id="tn{$key}" value="0" readOnly=true>
+                                </label>
+
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--container ends here-->
+
+<script type="text/javascript">
+    var set_plane_number = function (obj, flag) {
+        if (flag == "+") {
+            $("#fn" + obj).val(parseInt($("#fn" + obj).val()) + 1);
+            $("#tn" + obj).val(parseInt($("#tn" + obj).val()) + 1);
+        } else {
+            if (parseInt($("#fn" + obj).val()) >= 1) {
+                $("#fn" + obj).val(parseInt($("#fn" + obj).val()) - 1);
+                $("#tn" + obj).val(parseInt($("#tn" + obj).val()) - 1);
+            }
+        }
+    };
+
+    /*
+     * 通过出发城市获取目的城市
+     */
+    var get_to_region_plane = function (from_city, to_city) {
+        var from_city_id = Number($("#" + from_city).val());
+        if (isNaN(from_city_id) || from_city_id == 0) {
+            return false;
+        }
+
+        $.ajax({
+            url: 'airplane.php?act=ajax_get_air_line_list_from_city',
+            type: 'POST',
+            dataType: 'json',
+            data: {from_city: from_city_id, type: 1},
+            success: function (data) {
+                $("#" + to_city).html("<option value='0'>请选择</option>").select2('val', 0);
+                if (from_city == "from_from_city" || from_city == "from_to_city") {
+                    $("#from_air").select2('val', 0);
+                } else if (from_city == "to_from_city" || from_city == "to_to_city") {
+                    $("#to_air").select2('val', 0);
+                }
+                $.each(data, function (index, item){
+                    $("#" + to_city).append("<option value=" + item.region_id + ">" + item.region_name + "</option>");
+                });
+            }
+        });
+    };
+    var get_to_region_plane_2 = function (from_city, to_city) {
+        var from_city_id = Number($("#" + from_city).val());
+        if (isNaN(from_city_id) || from_city_id == 0) {
+            return false;
+        }
+
+        $.ajax({
+            url: 'airplane.php?act=ajax_get_air_line_list_from_city',
+            type: 'POST',
+            dataType: 'json',
+            data: {from_city: from_city_id, type: 2},
+            success: function (data) {
+                $("#" + to_city).html("<option value='0'>请选择</option>").select2('val', 0);
+                if (from_city == "from_from_city" || from_city == "from_to_city") {
+                    $("#from_air").select2('val', 0);
+                } else if (from_city == "to_from_city" || from_city == "to_to_city") {
+                    $("#to_air").select2('val', 0);
+                }
+                $.each(data, function (index, item){
+                    $("#" + to_city).append("<option value=" + item.region_id + ">" + item.region_name + "</option>");
+                });
+            }
+        });
+    };
+
+    /*
+     * 获取航班机票
+     */
+    var get_plane = function (from, to, change) {
+        var from_obj = document.getElementById(from);
+        var to_obj = document.getElementById(to);
+        var from_index = from_obj.selectedIndex;
+        var to_index = to_obj.selectedIndex;
+        var from_city = from_obj.options[from_index].value;
+        var to_city = to_obj.options[to_index].value;
+        $("#" + change).empty();
+        if ((from_city == 0) || (to_city == 0)) {
+            return false;
+        }
+        $.ajax({
+            url: 'airplane.php?act=ajax_get_air_line_list',
+            type: 'POST',
+            dataType: 'json',
+            data: {from_city: from_city, to_city: to_city},
+            success: function (data) {
+                $("#" + change).append("<option value='0'>请选择</option>");
+                $("#" + change).select2('val', 0);
+                for (var air in data) {
+                    $("#" + change).append("<option value=" + data[air].id + " data-description='" + encodeURIComponent(data[air].description)+ "'>" + data[air].title + " 时间：" + data[air].fly_time + "</option>");
+                }
+
+                //设置返程
+                var val = $("#from_from_city").val();
+                var text = $("#from_from_city").find(":selected").text();
+                $("#to_to_city").html("<option value='0'>请选择</option><option value='" + val + "'>" + text + "</option>")
+                    .select2('val', val);
+
+                //设置返程
+                var val2 = $("#from_to_city").val();
+                var text2 = $("#from_to_city").find(":selected").text();
+                $("#to_from_city").html("<option value='0'>请选择</option><option value='" + val2 + "'>" + text2 + "</option>")
+                    .select2('val', val2);
+
+                $("#to_air").html("<option value='0'>请选择</option>");
+                $("#to_air").select2('val', 0);
+                for (var air in data) {
+                    $("#to_air").append("<option value=" + data[air].id + ">" + data[air].title + " 时间：" + data[air].return_fly_time + "</option>");
+                }
+            }
+        });
+    };
+
+    var datepicker_from;
+    var datepicker_return;
+    var set_plane = function (select_id, div_id) {
+        var air_line_id = $("#" + select_id).val();
+        if (air_line_id == 0) {
+            $("#" + div_id).empty();
+            return false;
+        }
+
+        $("#to_air").select2('val', air_line_id);
+        var description = $("#from_air").find("option:selected").attr("data-description");
+        $("#air_line_description").html(description ? decodeURIComponent(description) : '');
+
+        var options = {
+            locale:  'zh-cn',
+            format: 'YYYY-MM-DD',
+            viewMode: 'days',
+            useCurrent: false,
+            defaultDate: false,
+            keepOpen: true,
+            showClose: true,
+            allowInputToggle: true,
+            collapse: true,
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'auto'
+            }
+        };
+        var from_allow_date_list = ['1970-01-01'];
+        var return_allow_date_list = ['1970-01-01'];
+
+        $.ajax({url: 'airplane.php?act=ajax_air_line_num', type: 'POST', dataType: 'json', data: {air: air_line_id}, success: function (data) {
+            if (typeof data == 'object') {
+                for (var i = 0; i < data.length; i ++) {
+                    if (data[i].num < 1) {
+                        continue;
+                    }
+                    if (data[i].type == 1) {
+                        from_allow_date_list.push(data[i].date);
+                    } else if (data[i].type == 2) {
+                        return_allow_date_list.push(data[i].date);
+                    }
+                }
+
+                options.defaultDate = false;
+                if (from_allow_date_list.length > 1) {
+                    options.defaultDate = new Date(from_allow_date_list[1]);
+                }
+                datepicker_from = $("input[name=from_form_time]").datetimepicker(options);
+                datepicker_from.data("DateTimePicker").enabledDates(from_allow_date_list);
+
+                options.defaultDate = false;
+                if (return_allow_date_list.length > 1) {
+                    options.defaultDate = new Date(return_allow_date_list[1]);
+                }
+                datepicker_return = $("input[name=to_form_time]").datetimepicker(options);
+                datepicker_return.data("DateTimePicker").enabledDates(return_allow_date_list);
+            }
+        }});
+    };
+
+
+    var check_zuoxi = function (obj, num) {
+        if (obj.checked) {
+            $("#fd" + num).attr("class", "shuliang");
+            $("#td" + num).attr("class", "shuliang");
+            obj.parentNode.nextSibling.nextSibling.setAttribute("class", "shuliang");
+        } else {
+            $("#fd" + num).attr("class", "shuliang hidden");
+            $("#td" + num).attr("class", "shuliang hidden");
+            $("#tn" + num).val(0);
+            $("#fn" + num).val(0);
+            obj.parentNode.nextSibling.nextSibling.setAttribute("class", "shuliang hidden");
+        }
+    };
+
+    var airplane_submit = function () {
+        var i = 0;
+        $('[name="from_number[]"]').each(function () {
+            if ($(this).val() != 0) {
+                i++;
+            }
+        });
+        var res = "";
+        if ($('#from_from_city').val() == 0) {
+            res = "false";
+        } else if ($('#from_to_city').val() == 0) {
+            res = "false";
+        } else if ($('[name="form_form_time"]').val() == '') {
+            res = "false";
+        } else if ($('[name="form_to_time"]').val() == '') {
+            res = "false";
+        } else if ($('#from_air').val() == 0) {
+            res = "false";
+        } else if (i == 0) {
+            res = "false";
+        } else if ($('#to_from_city').val() == 0) {
+            res = "false";
+        } else if ($('#to_to_city').val() == 0) {
+            res = "false";
+        } else if ($('[name="to_form_time"]').val() == '') {
+            res = "false";
+        } else if ($('[name="to_to_time"]').val() == '') {
+            res = "false";
+        } else if ($('#to_air').val() == 0) {
+            res = "false";
+        } else {
+            document.getElementById("air_form").submit();
+            return true;
+        }
+
+        if (res == "false") {
+            $('#cuowu').css("display", "block");
+        }
+    };
+</script>
+
+<script type="text/javascript">
+    $(function (){
+        if ($('[data-toggle="select"]').length) {
+            $('[data-toggle="select"]').select2();
+        }
+        $("#to_from_city, #to_to_city, #to_air").select2("readonly", true);
+    });
+</script>
+</body>
+<script type="text/javascript" src="js/pulldown.js"></script>
+</html>

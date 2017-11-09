@@ -1,0 +1,320 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+<title>填写持票人信息</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=720 user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css"  href="css/base.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+<link rel="stylesheet" type="text/css"  href="css/header.css" media="all" />
+	<link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/footer.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/write.css" media="all" />
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+</head>
+<body>
+<div class="greyBg">
+	<!--start 头部-->
+	{include file="header.html"}
+	<!--end 头部-->
+	<h3 class="accounts debugTop">持票人信息</h3>
+	<form id="submit_form" method="post" action="submit.php?act=tijiao">
+	{if $order_ticket}
+	{if $order_ticket.key}
+	{foreach from=$order_ticket.key item=ticket_key}
+	<div class="bearer" >
+		<div class="periodBg">
+			<div class="period">
+				<div class="fl perIcon"><img src="{$ticket_key.game_logo}"></div>
+				<p class="perFont fl">{$ticket_key.game_name}</p>
+				<!--<p class="perFont fl">{$ticket_key.game_name}<span>每场比赛同级球票2张起售</span></p>-->
+			</div>
+		</div>
+		<!-- 一张票的信息，包含选择持票人 -->
+		<input type="hidden" name="ticket[]" value="{$ticket_key.rec_id}">
+		<div class="bearerTit ticket_{$ticket_key.rec_id}">
+			<div class="num fl" style="background: #{$ticket_key.color_value};">
+				<p>{$ticket_key.numbers} </p>
+			</div>
+			<div class="name fl">
+				<h4 class="spill" style="color:#{$ticket_key.color_value};width: 300px;font-size:28px;overflow: hidden;">{$ticket_key.goods_name}</h4>
+			</div>
+			<!-- 选择持票人select -->
+			<div class="sele fr">
+				<select data-toggle="select" class="bearer_person" name="bearer_id[]"  onchange="bearer_changed(this.value,
+				'{$ticket_key.rec_id}','{$order_sn}')">
+					<option value="0">请选择持票人</option>
+					{foreach from=$bearer_info_list item=val }
+					<option value="{$val.id}" {if $ticket_key.bearer_id==$val.id}selected{/if} >{$val.cn_customer_name}</option>
+					{/foreach}
+					<option value="-1">添加持票人</option>
+				</select>
+			</div>
+			<!-- 选择持票人select end -->
+		</div>
+		<!-- 一张票的信息，包含选择持票人 end-->
+	</div>
+	{/foreach}
+	{/if}
+	{if $order_ticket.info}
+	{foreach from=$order_ticket.info item=ticket}
+	<div class="bearer">
+		<div class="periodBg">
+			<div class="period">
+				<div class="fl perIcon"><img src="{$ticket.game_logo}"></div>
+				<p class="perFont fl">{$ticket.game_name}</p>
+			</div>
+		</div>
+		<div class="bearerTit">
+			<div class="num fl" style="background: #{$ticket.color_value};">
+				<p>{$ticket.numbers}</p>
+			</div>
+			<div class="name fl">
+				<h4 style="color:#{$ticket.color_value};width: 350px;">{$ticket.goods_name}</h4>
+			</div>
+			<!--<div class="fr compile" onclick="editBearerinfo({$ticket.id})">编辑</div>-->
+		</div>
+		<div class="bearerInfo">
+			<div class="name">持票人：{$ticket.cn_customer_name}</div>
+			<div class="passport">护照号：{$ticket.passport_number}</div>
+			<div class="time">&nbsp;&nbsp;&nbsp;时间：{$ticket.add_time}</div>
+			<div class="explain">
+				<div class="fl">&nbsp;&nbsp;&nbsp;说明：</div>
+				<img src="images/zhuanti/lbiaozji.jpg" class="fl"/>
+				<p class="fl">普通球票</p>
+				<span class="fl openingCeremony">开幕式</span>
+			</div>
+		</div>
+	</div>
+	{/foreach}
+	{/if}
+	{/if}
+	{if $order_combo}
+	{if $order_combo.key}
+	{foreach from=$order_combo.key item=combo_key}
+	<div class="bearer">
+		<div class="periodBg">
+			<div class="period">
+				<div class="fl perIcon"><img src="{$combo_key.combo_logo}"></div>
+				<p class="perFont fl">{$combo_key.combo_name}</p>
+			</div>
+		</div>
+		<div class="bearerTit  combo_{$combo_key.rec_id}">
+			<div class="num fl" style="background: #00873D;">
+				<p>{$combo_key.numbers} </p>
+			</div>
+			<div class="name fl">
+				<h4 style="color:#00873D;width: 350px;">{$combo_key.goods_name}</h4>
+			</div>
+			<div class="sele fr">
+				<select data-toggle="select" name="bearer_id_{$combo.rec_id}"  onchange="combo_bearer_changed(this.value,{$combo_key.rec_id},{$order_sn})">
+					<option value="0">请选择持票人</option>
+					<!--{foreach from=$bearer_info_list item=val}-->
+					<option value="{$val.id}" {if $combo_key.bearer_id==$val.id}selected{/if}>{$val.cn_customer_name}</option>
+					<!--{/foreach}-->
+					<option value="-1">添加持票人</option>
+				</select>
+			</div>
+		</div>
+	</div>
+	{/foreach}
+	{/if}
+	{if $order_combo.info}
+	{foreach from=$order_combo.info item=combo}
+	<div class="bearer">
+		<div class="periodBg">
+			<div class="period">
+				<div class="fl perIcon"><img src="{$combo.combo_logo}"></div>
+				<p class="perFont fl">{$combo.combo_name}</p>
+			</div>
+		</div>
+		<div class="bearerTit">
+			<div class="num fl" style="background: #C6151D;">
+				<p>{$combo_key.numbers}</p>
+			</div>
+			<div class="name fl">
+				<h4 style="color:#C6151D;">{$combo.goods_name}</h4>
+			</div>
+
+		</div>
+		<div class="bearerInfo">
+			<div class="name">持票人：{$combo.cn_customer_name}</div>
+			<div class="passport">护照号：{$combo.passport_number}</div>
+			<div class="time">&nbsp;&nbsp;&nbsp;时间：{$combo.add_time}</div>
+			<div class="explain">
+				<div class="fl">&nbsp;&nbsp;&nbsp;说明：</div>
+				<img src="images/zhuanti/lbiaozji.jpg" class="fl"/>
+				<p class="fl">套餐球票</p>
+				<span class="fl openingCeremony">开幕式</span>
+			</div>
+		</div>
+	</div>
+	{/foreach}
+	{/if}
+	{/if}
+		<input type="hidden" name="order_id" value="{$order_id}"/>
+		<!--<a href="bearer.php?act=add&step=center_add&order_sn={$order_sn}" id="btn_add_bearer" class="addition">添加持票人信息</a>-->
+		{if $order_ticket.key || $order_combo.key}
+		<button  class="sub" type="submit"  id="btn_submit_bearer" disabled="disabled">提交持票人信息</button>
+		{else}
+		<button  class="sub" type="submit"  id="btn_submit_bearer" >提交持票人信息</button>
+		{/if}
+		</form>
+</div>
+<script type="text/javascript" src="js/pulldown.js"></script>
+<script>
+	function bearer_changed(bearer_id,order_ticket_id,order_sn){
+
+		if(bearer_id=="-1"){
+			window.location.href="bearer.php?act=add_cpr&step=order_add&order_sn="+order_sn+"&rec_id="+order_ticket_id;
+			return false;
+		}
+		$.ajax({
+			url:'bearer.php?act=bearer_name',
+			data:'bearer_id=' + bearer_id + '&order_ticket_id=' + order_ticket_id,
+			type:"POST",
+			dataType:"JSON",
+			success:relatedResponse//响应选择完持票人信息的事件
+		});
+	}
+	function combo_bearer_changed(bearer_id,order_combo_id,order_sn){
+		console.log(bearer_id,order_combo_id);
+		if(bearer_id=="-1"){
+			window.location.href="bearer.php?act=add_cpr_combo&step=order_add&order_sn="+order_sn+"&rec_id="+order_combo_id;
+			return false;
+		}
+		$.ajax({
+			url:'bearer.php?act=bearer_info_name',
+			data:'bearer_id=' + bearer_id + '&order_combo_id=' + order_combo_id,
+			type:"POST",
+			dataType:"JSON",
+			success:relatedResponses
+		});
+	}
+	function yanzheng(){
+		var select=$(".bearerInfo").find('select');
+		var flag=true;
+		$.each(select,function(index,val){
+			if(val.options[val.selectedIndex].value==0){
+				flag=false;
+			}
+		});
+		if(!flag){
+			alert("请选择持票人");
+		}else{
+			document.getElementById('submit_form').submit();
+		}
+	}
+	//响应持票人选中的js时间
+	function relatedResponses(result){
+		console.log(result);
+		var order_combo_id = result.order_combo_id;
+		var aa = '<div class="bearerInfo">'+
+				'<div class="name">'+'持票人：'+result.cn_customer_name+'</div>'+
+				'<div class="passport">'+'护照号：'+result.passport_number+'</div>'+
+				'<div class="time">'+'&nbsp;&nbsp;&nbsp;'+'时间：'+result.add_time+'</div>'
+				+'<div class="explain">'+
+//					'<div class="fl">'+'&nbsp;&nbsp;&nbsp;'+'说明：'+'</div>'+
+//					'<img src="images/zhuanti/lbiaozji.jpg" class="fl"/>'+
+//					'<p class="fl">'+'普通球票'+'</p>'+
+//					'<span class="fl openingCeremony">'+'开幕式'+'</span>'+
+				'</div>'+
+				'</div>';
+		//console.log($(".ticket_"+order_ticket_id));
+
+		if($(".combo_"+order_combo_id).next()){
+			$(".combo_"+order_combo_id).next().remove();
+			$(".combo_"+order_combo_id).after(aa);
+		}else{
+			$(".combo_"+order_combo_id).after(aa);
+		}
+
+		//根据选择来判断是否隐藏添加持票人信息按钮
+		checkAllBearSelected();
+	}
+
+	//响应持票人选中的js时间
+	function relatedResponse(result){
+		//console.log(result);
+		var order_ticket_id = result.order_ticket_id;
+		var aa = '<div class="bearerInfo">'+
+					'<div class="name">'+'持票人：'+result.cn_customer_name+'</div>'+
+					'<div class="passport">'+'护照号：'+result.passport_number+'</div>'+
+					'<div class="time">'+'&nbsp;&nbsp;&nbsp;'+'时间：'+result.add_time+'</div>'
+					+'<div class="explain">'+
+//					'<div class="fl">'+'&nbsp;&nbsp;&nbsp;'+'说明：'+'</div>'+
+//					'<img src="images/zhuanti/lbiaozji.jpg" class="fl"/>'+
+//					'<p class="fl">'+'普通球票'+'</p>'+
+//					'<span class="fl openingCeremony">'+'开幕式'+'</span>'+
+					'</div>'+
+					'</div>';
+		//console.log($(".ticket_"+order_ticket_id));
+
+		if($(".ticket_"+order_ticket_id).next()){
+				$(".ticket_"+order_ticket_id).next().remove();
+				$(".ticket_"+order_ticket_id).after(aa);
+		}else{
+				$(".ticket_"+order_ticket_id).after(aa);
+		}
+
+		//根据选择来判断是否隐藏添加持票人信息按钮
+		checkAllBearSelected();
+	}
+
+	//触发更改下面的按钮从“添加持票人信息”=》“提交持票人信息”
+	//触发条件是所有的票的持票人都填写了
+	//如果重新选择了持票人
+	function checkAllBearSelected(){
+		var allBearers = $(".bearer_person");
+		var selected_bearer_ids =new Array();
+		for(var one=0;one<allBearers.length; one++){
+			var value = allBearers[one].value;
+			if(value==0){
+				console.log("有未选择持票人的票:index:"+one);
+//				show_add_bearer_button();
+				return false;
+			}else{
+				if(_is_exist_in_array(selected_bearer_ids,value)) {
+					alert("您选择的持票人有重复");
+					console.log("有重复持票人:index:"+one);
+//					show_add_bearer_button();
+					return false;
+				}
+				//console.log("put"+value);
+				selected_bearer_ids.push(value);
+			}
+		}
+		console.log("所有持票人都填写了");
+		//修改按钮的显示属性
+		show_submit_bearer_button();
+	}
+
+//	function show_add_bearer_button(){
+//		$("#btn_add_bearer").css("display","none");
+//		$("#btn_submit_bearer").css("display","block");
+//	}
+
+	function show_submit_bearer_button(){
+//		$("#btn_add_bearer").css("display","none");
+		$("#btn_submit_bearer").attr("disabled",false);
+	}
+
+	//判断一个元素是否在数组内（字符串数组）
+	function _is_exist_in_array(_arr, value){
+		//console.log(value);
+		//console.log("vs:");
+		//console.log(_arr);
+		for(var i=0;i<_arr.length;i++){
+			if(_arr[i] == value) return true;
+		}
+		return false;
+	}
+
+</script>
+</body>
+</html>

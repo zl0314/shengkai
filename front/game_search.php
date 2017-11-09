@@ -1,0 +1,823 @@
+<?php
+
+/**
+ * ECSHOP 搜索程序
+ * ============================================================================
+ * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * 网站地址: http://www.ecshop.com；
+ * ----------------------------------------------------------------------------
+ * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
+ * 使用；不允许对程序代码以任何形式任何目的的再发布。
+ * ============================================================================
+ * $Author: liubo
+ * $Id: search.php 17217 2011-01-19 06:29:08Z liubo $
+ */
+define('IN_ECS', true);
+require(dirname(__FILE__) . '/includes/init.php');
+include_once('includes/cls_json.php');
+//获取赛事信息
+
+
+$act = empty($_REQUEST['act']) ? "index" : trim($_REQUEST['act']);
+
+if ($act == "index") {
+    if ($_SESSION['user_id'] == '0') {
+        $smarty->assign('user_id', $_SESSION['user_id']);
+        //检查当前用户购物车中是否有数据
+        $game_id = empty($_REQUEST['game_id']) ? 0 : intval($_REQUEST['game_id']);
+        //移动端跳转到手机页面上
+        if ($mobile_detect->isMobile() || $mobile_detect->isTablet()) {
+            ecs_header("Location:mobile/lister.php?act=index&game_id={$game_id}");
+            exit;
+        }
+
+        $smarty->assign('game_id', $game_id);
+        $cart_info = get_cart_info(SESS_ID, $game_id);
+        $cart_num = count($cart_info);
+        $_SESSION['cart_num'] = $cart_num;
+        //判断购物车是否有商品
+        $get_cart_num = count(get_cart_num(SESS_ID));
+        $smarty->assign('cart_info', $get_cart_num);
+        if (count($cart_info) > 0) {
+            $cart_html .= '';
+            $n = 0;
+            foreach ($cart_info as $key => $value) {
+                $n += $value['goods_price'];
+                if (count($cart_info) == 1) {
+                    $cart_html .= '<div class="col-lg-1 col-md-1 cell" id="0"><dl><dt class="red" style="background:#';
+                    $cart_html .= $value['color_value'] . ';" >';
+                    $cart_html .= $value['numbers'] . '</dt><dd class="gold"></dd></dl></div>';
+                } elseif (count($cart_info) > 1) {
+                    if ($key < 5) {
+                        if (count($cart_info) == ($key + 1)) {
+                            $cart_html .= '<div class="col-lg-1 col-md-1 cell" id="' . $n . '"><dl><dt class="red" style="background:#';
+                            $cart_html .= $value['color_value'] . ';">';
+                            $cart_html .= $value['numbers'] . '</dt><dd class="gold"></dd></dl></div>';
+                        } else {
+                            $cart_html .= '<div class="col-lg-1 col-md-1 cell" id="' . $n . '"><dl><dt class="red" style="background:#';
+                            $cart_html .= $value['color_value'] . ';" >';
+                            $cart_html .= $value['numbers'] . '</dt><dd class="gold"></dd></dl></div>';
+                            $cart_html .= '<div class="col-lg-1 col-md-1 "><p><img src="themes/sk_themes/images/jiahao.png" /></p></div>';
+                        }
+                    } elseif ($key == 5) {
+                        $cart_html .= '<div class="col-lg-1 col-md-1 cell" id="' . $n . '"><dl><dt class="red" style="background:#';
+                        $cart_html .= $value['color_value'] . ';" >';
+                        $cart_html .= $value['numbers'] . '</dt><dd class="gold"></dd></dl></div>';
+                    } elseif ($key == 6) {
+                        $cart_html .= '<div class="col-lg-1 col-md-1"><span><img src="themes/sk_themes/images/dots.png" /> </span></div>';
+                    }
+                }
+                //            if($value['num_color'])
+            }
+        }
+        $smarty->assign('cart_list', $cart_info);
+        $smarty->assign('cart_list_count', count($cart_info));
+        /* 获取运动类别列表 start */
+        __load("SportcatService");
+        $sportcat_obj = new SportcatService();
+        $sportcat_list = $sportcat_obj->get_sportcat_list();
+        //根据运动类别查询赛事
+//            foreach($sportcat_list as $k=>$v){
+//                $sportcat_list[$k]['scat'] = get_game($v['id']);
+//            }
+//            $smarty->assign('sportcat_list', $sportcat_list);
+        /* 获取运动类别列表 end */
+        __load("CartService");
+        $cart_obj = new CartService();
+        $smarty->assign("cart_money", $cart_obj->get_cart_money());
+        $smarty->assign('total_price', sprintf("%10.2f", $n));
+        $number = get_cart_num(SESS_ID);
+        $num = 0;
+        foreach ($number as $value) {
+            $num += $value['goods_number'];
+        }
+        //    echo $num;die;
+        $smarty->assign('num', $num);
+        //获取城市信息
+        $region_id = empty($_REQUEST['region_id']) ? 0 : intval($_REQUEST['region_id']);
+        $scat_id = empty($_REQUEST['scat_id']) ? 0 : intval($_REQUEST['scat_id']);
+        __load("GameService");
+        __load("RegionService");
+        $region_obj = new RegionService();
+        $this_region = $region_obj->get_region($region_id);
+
+        $this_scat_name = get_scat_name($scat_id);
+
+        $sche_id = empty($_GET['sche_id']) ? 0 : intval($_GET['sche_id']);
+        $rank = empty($_GET['rank']) ? 0 : trim($_GET['rank']);
+        /* 获取票务等级 */
+        $game_rank_list = get_game_rank_list($game_id, $sche_id);
+        $smarty->assign('game_rank_list', $game_rank_list);
+
+        if (empty($scat_id)) {
+            $smarty->assign('scat_name', "运动类别");
+        } else {
+            $smarty->assign('scat_name', $this_scat_name['name']);
+        }
+        if (empty($region_id)) {
+            $smarty->assign('region_name', "所有城市");
+        } else {
+            $smarty->assign('region_name', $this_region['region_name']);
+        }
+        if (empty($rank)) {
+            $smarty->assign('rank_name', "所有等级");
+        } else {
+            $smarty->assign('rank_name', $rank);
+        }
+        $game = new GameService();
+        $left_info = $game->get_game_info($game_id, $region_id, $rank);
+        $arr = Array();
+        $arr = $left_info;
+        foreach ($arr AS $key => $value) {
+            $arr[$key]['keywords'] = explode(' ', trim($value['keywords']));
+            $arr[$key]['num_start'] = date('Y-m-d H:i', strtotime($arr[$key]['num_start']));
+        }
+        if ($sche_id) {
+            $left_info = $game->get_game_sche($game_id, $region_id, $_GET['sche_id'], $rank);
+            $arr = $left_info;
+            foreach ($arr AS $key => $value) {
+                $arr[$key]['keywords'] = explode(' ', trim($value['keywords']));
+            }
+        }
+
+        /* 获取地区列表  */
+        $region_list = $game->get_region_list($game_id, $_GET['sche_id']);
+        //获取运动类别
+        $scat_list = get_scat_list();
+        $smarty->assign('region_list', $region_list);
+        $smarty->assign('scat_list', $scat_list);
+        $smarty->assign("game_id", $game_id);
+        $smarty->assign("left_info", $arr);
+        $game_info = $game->get_game_name($game_id);
+        $smarty->assign("game_info", $game_info);
+        if (empty($game_info['template'])) {
+            $smarty->assign("game_more", 0);
+        } else {
+            $smarty->assign("game_more", 1);
+        }
+
+        /* 获取赛场列表 start */
+        __load("PitchService");
+        $pitch_obj = new PitchService();
+        $pitch = $pitch_obj->get_pitch_list($_GET['game_id']);
+
+        $pitch_html = '<div class="container-fluid city"style="">
+           <div class="lis_box"></div>';
+//                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>';
+        foreach ($pitch AS $info) {
+            $pitch_html .= '<div class="pitch_div lis_box">
+                <dl>
+                  <dt>
+                    <img src="' . $info['pitch_img'] . '" title="' . $info['pitch_name'] . '"/>
+                  </dt>
+                </dl>
+                <div class="tankuang1 dpn">
+                    ' . $info['pitch_name'] . '
+                </div>
+              </div>';
+        }
+        $pitch_html .= '</div>';
+        //    $smarty->assign('pitch_html', $pitch_html);
+        /* 获取赛场列表 end */
+
+        //给 $pitch 压入一数组
+        array_unshift($pitch, array('pitch_name' => '&nbsp;'));
+
+        /* 获取赛程列表 start */
+        __load("ScheduleService");
+        $sche_obj = new ScheduleService();
+        $sche_list = $sche_obj->sche_list_info($game_id);
+        if (empty($_GET['sche_id'])) {
+            $smarty->assign('sche_name', "所有赛段");
+        } else {
+            $sche_name = $sche_obj->get_ScheName($_GET['sche_id']);
+            $smarty->assign('sche_name', $sche_name);
+        }
+
+        $smarty->assign('sche_list', $sche_list);
+        $schedule_html = '';
+
+        __load("NumberService");
+        $num_obj = new NumberService();
+        foreach ($sche_list AS $schedule) {
+            //小组赛名称
+            $schedule_html .= $pitch_html . '<div class="container-fluid group01"><div class="row">
+                  <div class="col-md-12 one">' . $schedule['sche_name'] . '</div>
+                </div>';
+            /* 获取赛程下场次 */
+            $num = $num_obj->get_schel_num($schedule['id']);
+            //统一 场次行 与 赛场 下标
+            $day_list = array();
+            foreach ($num as $key => $data) {
+                array_push($day_list, local_date("Y-m-d", local_strtotime($data['num_start'])));
+                foreach ($pitch as $k => $pitch_info) {
+                    if ($data['pitch_id'] == $pitch_info['id']) {
+                        $data['pitchid'] = $k;
+                    }
+                }
+                $num[$key] = $data;
+            }
+            $day_list = array_unique($day_list);
+            foreach ($day_list as $day_key => $day) {
+                $schedule_html .= '<div class="row"><div class="container-fluid date">';
+//                    $schedule_html .= '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                $schedule_html .= '<div class="lis_box">
+                                          <dl>
+                                            <dt>' . zh_date(local_date("D", local_strtotime($day))) . '</dt>
+                                            <dd>' . local_date("m.d", strtotime($day)) . '</dd>
+                                          </dl>
+                                        </div>';
+                //生成赛事表
+                foreach ($pitch as $i => $pitch_info) {
+                    if ($i > 0) {
+
+
+                        $tmp_str = "";
+                        foreach ($num AS $num_info) {
+                            if (local_date("Y-m-d", local_strtotime($num_info['num_start'])) == $day) {
+                                if ($num_info['pitch_id'] == $pitch_info['id']) {
+                                    $arr = Array();
+                                    $arr = explode('vs', $num_info['num_name']);
+                                    $tmp_str = '<div class="lis_box" >
+                                                <div class="purple purple-match" style="background:#';
+                                    $tmp_str .= $num_info['color_value'] . '"><p class="nums purple" style="color:#';
+                                    $tmp_str .= $num_info['color_value'] . ';">' . $num_info['numbers'] . '</p>
+                                         <span style="padding-top:5px;"class="vs">' . $arr[0] . '</span> <span class="vs">vs</span><span style="padding-bottom:5px;"class="vs">' . $arr[1] . '</span> <i class="time">' . local_date("H:i", local_strtotime($num_info['num_start'])) . '</i>
+                                        </div>
+                                      </div>';
+                                }
+                            }
+                        }
+                        if (empty($tmp_str)) {
+                            $tmp_str = '<div class="lis_box"></div>';
+                        }
+                        $schedule_html .= $tmp_str;
+                    }
+                }
+
+                $schedule_html .= '</div></div>';
+            }
+
+            //循环赛程下的场次
+
+            //        foreach ($num AS $num_info) {
+            //            print_r(zh_date(local_date("D", local_strtotime($num_info['num_start']))));
+            //            echo " --";
+            //
+            //        }
+            //        echo " ##";
+            $schedule_html .= '</div>';
+        }
+        //exit;
+        $smarty->assign('schedule_html', $schedule_html);
+        __load("ColorService");
+        $col_obj = new ColorService();
+        $legend_info = $col_obj->color_List($game_id);
+        if (!empty($legend_info)) {
+            $legend_html = '  <ul class="">';
+            foreach ($legend_info AS $key => $val) {
+                $legend_html .= '  <li class="a" style="background:#';
+                $legend_html .= $val['color_value'] . '">';
+                $legend_html .= $val['color_name'] . '</li>';
+            }
+            $legend_html .= '</ul>';
+            $smarty->assign('legend_html', $legend_html);
+        }
+        $smarty->assign('game_id', $game_id);
+        $smarty->assign('yuanquan', 1);
+        //    $smarty->assign('schedule_html', $schedule_html);
+        /* 获取赛程列表 end */
+        $smarty->display("game_search.dwt");
+        exit;
+    } elseif ($_SESSION['user_id'] != '0') {
+        $type_info = get_user($_SESSION['user_id']);
+        $smarty->assign('type', $type_info);
+        $smarty->assign('user_id', $_SESSION['user_id']);
+        //检查当前用户购物车中是否有数据
+        $game_id = empty($_REQUEST['game_id']) ? 0 : intval($_REQUEST['game_id']);
+        $smarty->assign('game_id', $game_id);
+        $cart_info = get_cart_info(SESS_ID, $game_id);
+        //判断购物车是否有商品
+        $get_cart_num = count(get_cart_num(SESS_ID));
+        $smarty->assign('cart_info', $get_cart_num);
+        //       echo "<pre>";
+        //   print_r($cart_info);exit;
+        $cart_num = count($cart_info);
+        $_SESSION['cart_num'] = $cart_num;
+        $number = get_cart_num(SESS_ID);
+        $num = 0;
+        foreach ($number as $value) {
+            $num += $value['goods_number'];
+        }
+        //    echo $num;die;
+        $smarty->assign('num', $num);
+        if (count($cart_info) > 0) {
+            $cart_html .= '';
+            $n = 0;
+            foreach ($cart_info as $key => $value) {
+                $n += $value['goods_price'];
+                if (count($cart_info) == 1) {
+                    $cart_html .= '<div class="col-lg-1 col-md-1 cell" id="0"><dl><dt class="red" style="background:#';
+                    $cart_html .= $value['color_value'] . ';" >';
+                    $cart_html .= $value['numbers'] . '</dt><dd class="gold"></dd></dl></div>';
+                } elseif (count($cart_info) > 1) {
+                    if ($key < 5) {
+                        if (count($cart_info) == ($key + 1)) {
+                            $cart_html .= '<div class="col-lg-1 col-md-1 cell" id="' . $n . '"><dl><dt class="red" style="background:#';
+                            $cart_html .= $value['color_value'] . ';">';
+                            $cart_html .= $value['numbers'] . '</dt><dd class="gold"></dd></dl></div>';
+                        } else {
+                            $cart_html .= '<div class="col-lg-1 col-md-1 cell" id="' . $n . '"><dl><dt class="red" style="background:#';
+                            $cart_html .= $value['color_value'] . ';" >';
+                            $cart_html .= $value['numbers'] . '</dt><dd class="gold"></dd></dl></div>';
+                            $cart_html .= '<div class="col-lg-1 col-md-1 "><p><img src="themes/sk_themes/images/jiahao.png" /></p></div>';
+                        }
+                    } elseif ($key == 5) {
+                        $cart_html .= '<div class="col-lg-1 col-md-1 cell" id="' . $n . '"><dl><dt class="red" style="background:#';
+                        $cart_html .= $value['color_value'] . ';" >';
+                        $cart_html .= $value['numbers'] . '</dt><dd class="gold"></dd></dl></div>';
+                    } elseif ($key == 6) {
+                        $cart_html .= '<div class="col-lg-1 col-md-1"><span><img src="themes/sk_themes/images/dots.png" /> </span></div>';
+                    }
+                }
+                //            if($value['num_color'])
+            }
+        }
+        $smarty->assign('cart_list', $cart_info);
+        $smarty->assign('cart_list_count', count($cart_info));
+        /* 获取运动类别列表 start */
+        __load("SportcatService");
+        $sportcat_obj = new SportcatService();
+        $sportcat_list = $sportcat_obj->get_sportcat_list();
+        //根据运动类别查询赛事
+//            foreach($sportcat_list as $k=>$v){
+//                $sportcat_list[$k]['scat'] = get_game($v['id']);
+//            }
+//            $smarty->assign('sportcat_list', $sportcat_list);
+        /* 获取运动类别列表 end */
+        __load("CartService");
+        $cart_obj = new CartService();
+        //    echo "<pre>";
+        //    print_r( $cart_obj->get_cart_money());die;
+        $smarty->assign("cart_money", $cart_obj->get_cart_money());
+        $smarty->assign('total_price', sprintf("%10.2f", $n));
+
+
+        //获取城市信息
+        $region_id = empty($_REQUEST['region_id']) ? 0 : intval($_REQUEST['region_id']);
+        $scat_id = empty($_REQUEST['scat_id']) ? 0 : intval($_REQUEST['scat_id']);
+        __load("GameService");
+        __load("RegionService");
+        $region_obj = new RegionService();
+        $this_region = $region_obj->get_region($region_id);
+
+        $sche_id = empty($_GET['sche_id']) ? 0 : intval($_GET['sche_id']);
+        $rank = empty($_GET['rank']) ? 0 : trim($_GET['rank']);
+        /* 获取票务等级 */
+        $game_rank_list = get_game_rank_list($game_id, $sche_id);
+        $smarty->assign('game_rank_list', $game_rank_list);
+
+        $this_scat_name = get_scat_name($scat_id);
+        if (empty($scat_id)) {
+            $smarty->assign('scat_name', "运动类别");
+        } else {
+            $smarty->assign('scat_name', $this_scat_name['name']);
+        }
+        if (empty($region_id)) {
+            $smarty->assign('region_name', "所有城市");
+        } else {
+            $smarty->assign('region_name', $this_region['region_name']);
+        }
+        if (empty($rank)) {
+            $smarty->assign('rank_name', "所有等级");
+        } else {
+            $smarty->assign('rank_name', $rank);
+        }
+        $game = new GameService();
+        $left_info = $game->get_game_info($game_id, $region_id, $rank);
+        $arr = Array();
+        $arr = $left_info;
+        foreach ($arr AS $key => $value) {
+            $arr[$key]['keywords'] = explode(' ', trim($value['keywords']));
+            $arr[$key]['num_start'] = date('Y-m-d H:i', strtotime($arr[$key]['num_start']));
+        }
+        if ($_GET['sche_id']) {
+            $left_info = $game->get_game_sche($game_id, $region_id, $_GET['sche_id'],$rank);
+            $arr = $left_info;
+            foreach ($arr AS $key => $value) {
+                $arr[$key]['keywords'] = explode(' ', trim($value['keywords']));
+            }
+        }
+        /* 获取地区列表  */
+        $region_list = $game->get_region_list($game_id, $_GET['sche_id']);
+        //获取运动类别
+        $scat_list = get_scat_list();
+        $smarty->assign('region_list', $region_list);
+        $smarty->assign('scat_list', $scat_list);
+        $smarty->assign("game_id", $game_id);
+        $smarty->assign("left_info", $arr);
+//            echo "<pre>";
+//            print_r($arr);die;
+        $game_info = $game->get_game_name($game_id);
+        $smarty->assign("game_info", $game_info);
+        if (empty($game_info['template'])) {
+            $smarty->assign("game_more", 0);
+        } else {
+            $smarty->assign("game_more", 1);
+        }
+
+        /* 获取赛场列表 start */
+        __load("PitchService");
+        $pitch_obj = new PitchService();
+        $pitch = $pitch_obj->get_pitch_list($_GET['game_id']);
+
+        $pitch_html = '<div class="container-fluid city"style="">
+                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>';
+        foreach ($pitch AS $info) {
+            $pitch_html .= '<div class="pitch_div lis_box">
+                <dl>
+                  <dt>
+                    <img src="' . $info['pitch_img'] . '" title="' . $info['pitch_name'] . '"/>
+                  </dt>
+                </dl>
+                <div class="tankuang1 dpn">
+                    ' . $info['pitch_name'] . '
+                </div>
+              </div>';
+        }
+        $pitch_html .= '</div>';
+        //    $smarty->assign('pitch_html', $pitch_html);
+        /* 获取赛场列表 end */
+
+        //给 $pitch 压入一数组
+        array_unshift($pitch, array('pitch_name' => '&nbsp;'));
+
+        /* 获取赛程列表 start */
+        __load("ScheduleService");
+        $sche_obj = new ScheduleService();
+        $sche_list = $sche_obj->sche_list_info($game_id);
+        if (empty($_GET['sche_id'])) {
+            $smarty->assign('sche_name', "所有赛段");
+        } else {
+            $sche_name = $sche_obj->get_ScheName($_GET['sche_id']);
+            $smarty->assign('sche_name', $sche_name);
+        }
+
+        $smarty->assign('sche_list', $sche_list);
+        $schedule_html = '';
+        //
+
+        __load("NumberService");
+        $num_obj = new NumberService();
+        foreach ($sche_list AS $schedule) {
+            //小组赛名称
+            $schedule_html .= $pitch_html . '<div class="container-fluid group01"><div class="row">
+                  <div class="col-md-12 one">' . $schedule['sche_name'] . '</div>
+                </div>';
+            /* 获取赛程下场次 */
+            $num = $num_obj->get_schel_num($schedule['id']);
+            //统一 场次行 与 赛场 下标
+            $day_list = array();
+            foreach ($num as $key => $data) {
+                array_push($day_list, local_date("Y-m-d", local_strtotime($data['num_start'])));
+                foreach ($pitch as $k => $pitch_info) {
+                    if ($data['pitch_id'] == $pitch_info['id']) {
+                        $data['pitchid'] = $k;
+                    }
+                }
+                $num[$key] = $data;
+            }
+            $day_list = array_unique($day_list);
+            foreach ($day_list as $day_key => $day) {
+                $schedule_html .= '<div class="row"><div class="container-fluid date">';
+                $schedule_html .= '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                          <dl>
+                                            <dt>' . zh_date(local_date("D", local_strtotime($day))) . '</dt>
+                                            <dd>' . local_date("m.d", strtotime($day)) . '</dd>
+                                          </dl>
+                                        </div>';
+                //生成赛事表
+                foreach ($pitch as $i => $pitch_info) {
+                    if ($i > 0) {
+
+
+                        $tmp_str = "";
+                        foreach ($num AS $num_info) {
+                            if (local_date("Y-m-d", local_strtotime($num_info['num_start'])) == $day) {
+                                if ($num_info['pitch_id'] == $pitch_info['id']) {
+                                    $arr = Array();
+                                    $arr = explode('vs', $num_info['num_name']);
+                                    $tmp_str = '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                                <div class="purple purple-match" style="background:#';
+                                    $tmp_str .= $num_info['color_value'] . '"><p class="nums purple" style="color:#';
+                                    $tmp_str .= $num_info['color_value'] . ';">' . $num_info['numbers'] . '</p>
+                                         <span style="padding-top:5px;"class="vs">' . $arr[0] . '</span> <span class="vs">vs</span><span style="padding-bottom:5px;"class="vs">' . $arr[1] . '</span> <i class="time">' . local_date("H:i", local_strtotime($num_info['num_start'])) . '</i>
+                                        </div>
+                                      </div>';
+                                }
+                            }
+                        }
+                        if (empty($tmp_str)) {
+                            $tmp_str = '<div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>';
+                        }
+                        $schedule_html .= $tmp_str;
+                    }
+                }
+
+                $schedule_html .= '</div></div>';
+            }
+
+            //循环赛程下的场次
+
+            //        foreach ($num AS $num_info) {
+            //            print_r(zh_date(local_date("D", local_strtotime($num_info['num_start']))));
+            //            echo " --";
+            //
+            //        }
+            //        echo " ##";
+            $schedule_html .= '</div>';
+        }
+        //exit;
+        $smarty->assign('schedule_html', $schedule_html);
+        __load("ColorService");
+        $col_obj = new ColorService();
+        $legend_info = $col_obj->color_List($game_id);
+        if (!empty($legend_info)) {
+            $legend_html = '  <ul class="">';
+            foreach ($legend_info AS $key => $val) {
+                $legend_html .= '  <li class="a" style="background:#';
+                $legend_html .= $val['color_value'] . '">';
+                $legend_html .= $val['color_name'] . '</li>';
+            }
+            $legend_html .= '</ul>';
+            $smarty->assign('legend_html', $legend_html);
+        }
+        $smarty->assign('game_id', $game_id);
+        $smarty->assign('yuanquan', 1);
+        //    $smarty->assign('schedule_html', $schedule_html);
+        /* 获取赛程列表 end */
+        $smarty->display("game_search.dwt");
+        exit;
+    }
+} else if ($act == "search") {
+    if ($_POST['search'] != null) {
+
+        $game = search_game($_POST['search']);
+        $teams = search_teams($_POST['search']);
+        $city = search_city($_POST['search']);
+        $smarty->assign('like', $_POST['search']);
+        if ($game) {
+            $smarty->assign('game_info', $game);
+            $smarty->assign('game_count', game_count($_POST['search']));
+        } else if ($teams) {
+            $smarty->assign('game_info', $teams);
+            $smarty->assign('game_count', teams_count($_POST['search']));
+        } else if ($city) {
+            $smarty->assign('game_info', $city);
+            $smarty->assign('game_count', city_count($_POST['search']));
+        } else {
+            $smarty->assign('game_count', "0");
+        }
+    } else {
+        $smarty->assign('game_count', "0");
+    }
+    $smarty->display("search_info.dwt");
+} elseif ($act == "ajax_game") {
+    $scat_id = $_GET['id'];
+    //根据赛事自动查询城市
+    __load("GameService");
+    $game_obj = new GameService();
+    $game_list = $game_obj->get_by_scat($scat_id);
+    $json = new JSON();
+    $data = $json->encode($game_list);
+    print_r($data);
+    exit;
+} elseif ($act == "ajax_game_city") {
+    $game_id = $_GET['game_id'];
+    //根据赛事自动查询城市
+    __load("RegionService");
+    $RegionService = new RegionService();
+    $schedule_id = $RegionService->get_schedule($game_id);
+    $json = new JSON();
+    $data = $json->encode($schedule_id);
+    print_r($data);
+    exit;
+
+
+} elseif ($act == "remove_cart_goods") {
+    $goods_id = empty($_GET['goods_id']) ? 0 : $_GET['goods_id'];
+    $game_id = empty($_GET['game_id']) ? 0 : $_GET['game_id'];
+    remove_hotel_info($goods_id);
+    $GLOBALS['db']->query("delete from " . $GLOBALS['ecs']->table('cart') . " where session_id='" . SESS_ID . "' and goods_id='" . $goods_id . "'");
+
+    $url = 'game_search.php?game_id=' . $game_id;
+    ecs_header("Location: $url\n");
+
+    exit;
+} elseif ($act == 'update_goods_number') {
+    if ($_SESSION['user_id'] == 0) {
+        $goods_id = empty($_GET['goods_id']) ? 0 : $_GET['goods_id'];
+        $game_id = empty($_GET['game_id']) ? 0 : $_GET['game_id'];
+        $goods_number = empty($_GET['goods_number']) ? 0 : intval($_GET['goods_number']);
+        if ($goods_number == 0) {
+            remove_hotel_info($goods_id);
+            $GLOBALS['db']->query("delete from " . $GLOBALS['ecs']->table('cart') . " where session_id='" . SESS_ID . "' and goods_id='" . $goods_id . "'");
+        } elseif ($goods_number > 2) {
+
+        } else {
+            $GLOBALS['db']->query("update " . $GLOBALS['ecs']->table('cart') . " set goods_number='" . $goods_number . "' where session_id='" . SESS_ID . "' and goods_id='" . $goods_id . "'");
+        }
+
+        $url = 'game_search.php?game_id=' . $game_id;
+        ecs_header("Location: $url\n");
+        exit;
+    } else {
+        $type_info = get_user($_SESSION['user_id']);
+        $goods_id = empty($_GET['goods_id']) ? 0 : $_GET['goods_id'];
+        $game_id = empty($_GET['game_id']) ? 0 : $_GET['game_id'];
+        $goods_number = empty($_GET['goods_number']) ? 0 : intval($_GET['goods_number']);
+        if ($goods_number == 0 && $type_info == 0) {
+            remove_hotel_info($goods_id);
+            $GLOBALS['db']->query("delete from " . $GLOBALS['ecs']->table('cart') . " where session_id='" . SESS_ID . "' and goods_id='" . $goods_id . "'");
+        } elseif ($goods_number > 2 && $type_info == 0) {
+
+        } else {
+            $GLOBALS['db']->query("update " . $GLOBALS['ecs']->table('cart') . " set goods_number='" . $goods_number . "' where session_id='" . SESS_ID . "' and goods_id='" . $goods_id . "'");
+        }
+
+        $url = 'game_search.php?game_id=' . $game_id;
+        ecs_header("Location: $url\n");
+        exit;
+    }
+} elseif ($act == 'update_goods_number_pc') {
+    if ($_SESSION['user_id'] == 0) {
+        $goods_id = empty($_GET['goods_id']) ? 0 : $_GET['goods_id'];
+        $game_id = empty($_GET['game_id']) ? 0 : $_GET['game_id'];
+        $goods_number = empty($_GET['goods_number']) ? 0 : intval($_GET['goods_number']);
+        if ($goods_number == 0) {
+            remove_hotel_info($goods_id);
+            $GLOBALS['db']->query("delete from " . $GLOBALS['ecs']->table('cart') . " where session_id='" . SESS_ID . "' and goods_id='" . $goods_id . "'");
+        } elseif ($goods_number > 4) {
+
+        } else {
+            $GLOBALS['db']->query("update " . $GLOBALS['ecs']->table('cart') . " set goods_number='" . $goods_number . "' where session_id='" . SESS_ID . "' and goods_id='" . $goods_id . "'");
+        }
+
+        $url = 'game_search.php?game_id=' . $game_id;
+        ecs_header("Location: $url\n");
+        exit;
+    } else {
+        $type_info = get_user($_SESSION['user_id']);
+        $goods_id = empty($_GET['goods_id']) ? 0 : $_GET['goods_id'];
+        $game_id = empty($_GET['game_id']) ? 0 : $_GET['game_id'];
+        $goods_number = empty($_GET['goods_number']) ? 0 : intval($_GET['goods_number']);
+        if ($goods_number == 0 && $type_info == 0) {
+            remove_hotel_info($goods_id);
+            $GLOBALS['db']->query("delete from " . $GLOBALS['ecs']->table('cart') . " where session_id='" . SESS_ID . "' and goods_id='" . $goods_id . "'");
+        } elseif ($goods_number > 4 && $type_info == 0) {
+
+        } else {
+            $GLOBALS['db']->query("update " . $GLOBALS['ecs']->table('cart') . " set goods_number='" . $goods_number . "' where session_id='" . SESS_ID . "' and goods_id='" . $goods_id . "'");
+        }
+
+        $url = 'game_search.php?game_id=' . $game_id;
+        ecs_header("Location: $url\n");
+        exit;
+    }
+}
+
+
+function get_relateds($type, $grand, $parent)
+{
+    $arr = array();
+    if ($type == 1) {
+
+
+        foreach ($sche_list as $key => $val) {
+            $arr[$key]['related_id'] = $val['id'];
+            $arr[$key]['related_name'] = $val['sche_name'];
+        }
+    }
+    if ($type == 2) {
+        /* 获取地区列表  */
+        __load("RegionService");
+        $region_obj = new RegionService();
+        $region_list = $region_obj->region_list($parent);
+        foreach ($res as $key => $val) {
+            $arr[$key]['related_id'] = $val['id'];
+            $arr[$key]['related_name'] = $val['num_name'] . "--" . $val['pitch_name'];
+            __log($arr[$key]['related_id']);
+        }
+    }
+    return $arr;
+}
+
+
+function get_cart_info($session_id, $game_id)
+{
+    $sql = "SELECT c.*,n.*,g.*,cm.color_value,c.goods_number as cart_goods_number FROM " . $GLOBALS['ecs']->table('cart') . "AS c," . $GLOBALS['ecs']->table('color_manage') . "AS cm," . $GLOBALS['ecs']->table('goods') . "AS g," . $GLOBALS['ecs']->table('number') . "AS n WHERE c.session_id= '$session_id' AND g.game_id={$game_id} AND c.goods_id=g.goods_id AND g.number_id=n.id AND n.color_id=cm.color_id ";
+    return $GLOBALS['db']->getAll($sql);
+}
+
+function search_game($condition)
+{
+    return $GLOBALS['db']->getAll("SELECT * FROM " . $GLOBALS['ecs']->table('game') . "WHERE game_name LIKE\"%$condition%\" AND is_type=1");
+}
+
+function game_count($condition)
+{
+    return $GLOBALS['db']->getOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('game') . "WHERE game_name LIKE\"%$condition%\"");
+}
+
+function search_teams($condition)
+{
+    return $GLOBALS['db']->getAll("SELECT g.* FROM " . $GLOBALS['ecs']->table('game') . "AS g," . $GLOBALS['ecs']->table('schedule') . "AS s," . $GLOBALS['ecs']->table('number') . "AS n," . $GLOBALS['ecs']->table('num_team') . "AS nt," . $GLOBALS['ecs']->table('teams') . "AS t " . "WHERE g.id=s.game_id AND s.id=n.sche_id  AND n.id=nt.num_id AND nt.team_id=t.id AND t.team_name LIKE\"%$condition%\" GROUP BY g.id");
+}
+
+function teams_count($condition)
+{
+    $sql = "SELECT COUNT(*) FROM (SELECT g.* FROM " . $GLOBALS['ecs']->table('game') . "AS g," . $GLOBALS['ecs']->table('schedule') . "AS s," . $GLOBALS['ecs']->table('number') . "AS n," . $GLOBALS['ecs']->table('num_team') . "AS nt," . $GLOBALS['ecs']->table('teams') . "AS t " . "WHERE g.id=s.game_id AND s.id=n.sche_id  AND n.id=nt.num_id AND nt.team_id=t.id AND t.team_name LIKE\"%$condition%\" GROUP BY g.id) aa";
+    return $GLOBALS['db']->getOne($sql);
+}
+
+function search_city($condition)
+{
+    $sql = "SELECT g.* FROM " . $GLOBALS['ecs']->table('game') . "AS g," . $GLOBALS['ecs']->table('schedule') . "AS s," . $GLOBALS['ecs']->table('number') . "AS n," . $GLOBALS['ecs']->table('pitch') . "AS p," . $GLOBALS['ecs']->table('region') . "AS r " . "WHERE g.id=s.game_id AND s.id=n.sche_id  AND n.pitch_id=p.id AND p.region_id=r.region_id AND r.region_name LIKE\"%$condition%\"  AND r.region_type=2 GROUP BY g.id";
+    return $GLOBALS['db']->getAll($sql);
+}
+
+function city_count($condition)
+{
+    $sql = "SELECT COUNT(*) FROM (SELECT g.* FROM " . $GLOBALS['ecs']->table('game') . "AS g," . $GLOBALS['ecs']->table('schedule') . "AS s," . $GLOBALS['ecs']->table('number') . "AS n," . $GLOBALS['ecs']->table('pitch') . "AS p," . $GLOBALS['ecs']->table('region') . "AS r " . "WHERE g.id=s.game_id AND s.id=n.sche_id  AND n.pitch_id=p.id AND p.region_id=r.region_id AND r.region_name LIKE\"%$condition%\"  AND r.region_type=2 GROUP BY g.id) aa";
+    return $GLOBALS['db']->getOne($sql);
+}
+
+function remove_hotel_info($goods_id)
+{
+    $sql = "select rec_id from " . $GLOBALS['ecs']->table('cart') . " where goods_id = '" . $goods_id . "' and session_id='" . SESS_ID . "'";
+
+    $result = $GLOBALS['db']->getAll($sql);
+    foreach ($result as $key => $value) {
+        $sql = "delete from " . $GLOBALS['ecs']->table('cart') . " where parent_id = " . $value['rec_id'] . " and goods_type='hotel' ";
+
+        $GLOBALS['db']->query($sql);
+    }
+
+}
+
+//判断购物车是否有商品
+function get_cart_num($sess)
+{
+    $sql = "SELECT c.* FROM sk_cart AS c WHERE c.session_id = '$sess' AND (c.goods_type = 'ticket' OR c.goods_type='goods' OR c.goods_type='plane' OR c.goods_type = 'combo')";
+    return $GLOBALS['db']->getAll($sql);
+}
+
+//获取用户的属性是否为代理商
+function get_user($user_id)
+{
+    $sql = "SELECT type FROM sk_users WHERE user_id=$user_id";
+    return $GLOBALS['db']->getOne($sql);
+}
+
+//查询赛事
+//    function get_game($scat_id){
+//        $sql = "SELECT id,game_name FROM " .$GLOBALS['ecs']->table('game')." WHERE scat_id = $scat_id";
+//        return $GLOBALS['db']->getAll($sql);
+//    }
+//查询运动类别
+function get_scat_name($scat_id)
+{
+    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('sportcat') . " WHERE id = $scat_id";
+    return $GLOBALS['db']->getRow($sql);
+}
+
+//获取所有运动类别
+function get_scat_list()
+{
+    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('sportcat') . " WHERE is_display = 1";
+    return $GLOBALS['db']->getAll($sql);
+}
+
+//取得票务(坐席)等级
+//game_id 比赛id
+//sche_id 赛程id
+function get_game_rank_list($game_id, $sche_id = 0)
+{
+    //查询这个球场的票的等级
+    $sql = "SELECT DISTINCT g.rank FROM " . $GLOBALS['ecs']->table('goods') . " AS g," . $GLOBALS['ecs']->table('number') . " AS n WHERE g.game_id=$game_id AND g.number_id=n.id";
+    if ($sche_id > 0) {
+        $sql .= " AND g.sche_id = {$sche_id}";
+    }
+    $rank = $GLOBALS['db']->getAll($sql);
+    $num = count($rank);
+    for ($i = 0; $i < $num; $i++) {
+        if (empty($rank[$i]['rank'])) {
+            unset($rank[$i]);
+        }
+    }
+    $rank = array_merge($rank);
+    return $rank;
+}
+?>
+
+

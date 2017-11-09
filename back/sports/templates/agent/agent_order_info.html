@@ -1,0 +1,114 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader.htm"}
+{insert_scripts files="common.js,select.js"}
+
+
+<div class="main-div">
+    <div class="form-div">
+        <form method="post" action="route.php?con=agent&act=insert_order" name="theForm">
+            <table id="gallery-table">
+                <tr>                   
+                    <td>                      
+                        <h1>
+<!--                            订单编号：<input type="text" name="order_sn"/>&nbsp;&nbsp;-->
+                            代理商：<select name="agent_id">
+                                <option value="0">----请选择----</option>
+                                {foreach from=$agents item=agent}
+                                <option value="{$agent.id}">{$agent.agent}</option>
+                                {/foreach}
+                            </select>
+
+                        </h1>  
+                    </td>                    
+                </tr>
+                <tr>
+                    <td style="height: 60px">
+                        <div class="form-div" style="height: 60px  ;line-height:60px; ">
+                            <table style="width: 100%">
+                                <tr >
+                                    <td>
+                                        赛事：<select name="game[]" onchange="select.select_game(this)">
+                                            <option value="0">----请选择----</option>
+                                            {foreach from=$games item=game}
+                                            <option value="{$game.id}">{$game.game_name}</option>
+                                            {/foreach}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        赛程：<select name="sche[]" onchange="select.select_sche(this)" >
+                                            <option value="0">----请选择----</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        场次：<select name="number[]"onchange="select.select_number(this)">
+                                            <option value="0">----请选择----</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        球票：<select name="goods_id[]">
+                                            <option value="0">----请选择----</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        数量：<input type="text" name="g_number[]"/>
+                                    </td>
+                                    <td>
+                                        <a href="javascript:void(0);" onclick="add_dom(this)">增加</a>
+                                    </td>
+                                </tr>
+
+                            </table>
+
+
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <input type="submit" class="button" value="{$lang.button_submit}" />
+                        <input type="reset" class="button" value="{$lang.button_reset}" />
+                    </td>
+
+                </tr>
+
+            </table>
+        </form>
+
+
+
+
+
+
+    </div>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+    function dom_delete(obj) {
+        obj.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.remove();
+    }
+    function add_dom(obj) {
+        var src = obj.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+        var idx = rowindex(src);
+        var tbl = document.getElementById('gallery-table');
+        var row = tbl.insertRow(idx + 1);
+        var cell = row.insertCell(-1);
+        cell.innerHTML = src.cells[0].innerHTML.replace(/(.*)(add_dom)(.*)(\增加)/i, "$1dom_delete$3删除");
+    }
+    function select_game(obj) {
+//        console.log(obj.options[obj.selectedIndex].value);
+        Ajax.call("route.php?con=agent&act=ajax_game", "id=" + obj.options[obj.selectedIndex].value, res_select, "GET", "JSON");
+
+    }
+    function res_select(result, txt) {
+        console.log(arguments);
+        console.log(result);
+        console.log(txt);
+    }
+
+
+
+//-->
+</script>
+
+
+{include file="pagefooter.htm"}

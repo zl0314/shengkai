@@ -1,0 +1,60 @@
+<!-- $Id: agency_list.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,newlisttable.js"}
+<div class="list-div" id="listDiv">
+{/if}
+    <table class="list-td" cellpadding="0" cellspacing="1" style="txet-align:center;">
+        <tr>
+            <th width="10%">编号</th>
+            <th>排序编号</th>
+            <th>地址</th>
+            <th>电脑端跳转地址</th>
+            <th>手机端跳转地址</th>
+            <th>备注</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        {foreach from=$banners item=banner} 
+        <tr>                                     
+            <td align="center">{$banner.id}</td>
+            <td align="center">{$banner.sequence}</td>
+            <td align="center">{$banner.img_url}</td>
+            <td align="center">{$banner.link}</td>
+            <td align="center">{$banner.mobile_link}</td>
+            <td align="center">{$banner.notes}</td>
+            <td align="center">{if $banner.status==0}开启{else}关闭{/if}</td>
+            <td align="center"><a href="route.php?con=banner&act=banner_remove&id={$banner.id}" title="{$lang.edit_order}">删除</a>|
+                <a href="route.php?con=banner&act=update_banner&id={$banner.id}&place_id={$place_id}" title="{$lang.edit_order}">编辑</a>
+            </td>
+        </tr> 
+        {foreachelse}
+        <tr><td class="no-records" colspan="5">{$lang.no_records}</td></tr>
+        {/foreach}
+    </table>
+    <table id="page-table" cellspacing="0">
+        <tr>
+            <td>
+                <input name="remove" type="submit" id="btnSubmit" value="{$lang.drop}" class="button" disabled="true" />
+                <input name="act" type="hidden" value="batch" />
+            </td>
+            <td align="right" nowrap="true">
+                {include file="page2.htm"}
+            </td>
+        </tr>
+    </table>
+{if $full_page}
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+  listTable.new_url = 'route.php?is_ajax=1&con=banner';
+  listTable.act = 'banner_list_query';
+  {foreach from = $filter item = item key = key}
+    listTable.filter.{$key} = '{$item}';
+  {/foreach}
+//-->
+</script>
+{include file="pagefooter.htm"}
+{/if}

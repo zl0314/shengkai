@@ -1,0 +1,39 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader2.htm"}
+{insert_scripts files="validator.js,jquery.min.js,../js/region.js"}
+<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
+<div class="main-div">
+    <form method="post" action="route.php?con=space&act=edit" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td class="label">航位名称：</td>
+                <td><input type="text" name="space_name" maxlength="60" value="{$space.space_name}" />{$lang.require_field}</td>
+            </tr>                         
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" class="button" value="{$lang.button_submit}" />
+                    <input type="reset" class="button" value="{$lang.button_reset}" />
+                    <input type="hidden" name="act" value="{$act}" />
+                    <input type="hidden" name="id" value="{$space.s_id}" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script language="JavaScript">
+<!--
+    /**
+     * 检查表单输入的数据
+     */
+    function validate()
+    {
+        validator = new Validator("theForm");
+        validator.required("space_name", '航位名称不能为空！');
+        return validator.passed();
+    }
+//-->
+</script>
+{/literal}
+{include file="pagefooter.htm"}

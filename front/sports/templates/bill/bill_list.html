@@ -1,0 +1,58 @@
+<!-- $Id: agency_list.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,newlisttable.js"}
+<div class="list-div" id="listDiv">
+{/if}
+    <table class="list-td" cellpadding="0" cellspacing="1" style="txet-align:center;">
+        <tr>
+            <th width="10%">编号</th>
+            <th>广告名称</th>
+            <th>媒体类型</th>
+            <th>链接地址</th>
+            <th>投放页面</th>
+            <th>开始时间</th>
+            <th>结束时间</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        {foreach from=$bill_list item=bill} 
+        <tr>                                     
+            <td align="center">{$bill.bill_id}</td>
+            <td align="center">{$bill.bill_name}</td>
+            <td align="center">{if $bill.media_type eq 0}图片{elseif $bill.media_type eq 1}Flash{elseif $bill.media_type eq 2}视频{else}其他{/if}</td>
+            <td align="center">{if $bill.bill_link}{$bill.bill_link}{else}-{/if}</td>
+            <td align="center">{if $bill.show_page eq 0}首页{else}全站{/if}</td>
+            <td align="center">{$bill.start_time}</td>
+            <td align="center">{$bill.end_time}</td>
+            <td align="center">{if $bill.status==1}开启{else}关闭{/if}</td>
+            <td align="center"><a href="route.php?con=bill&act=remove&id={$bill.bill_id}" title="{$lang.edit_order}">删除</a>|
+                <a href="route.php?con=bill&act=update&id={$bill.bill_id}" title="{$lang.edit_order}">编辑</a>
+            </td>
+        </tr> 
+        {foreachelse}
+        <tr><td class="no-records" colspan="5">{$lang.no_records}</td></tr>
+        {/foreach}
+    </table>
+    <table id="page-table" cellspacing="0">
+        <tr>
+            <td align="right" nowrap="true">
+                {include file="page2.htm"}
+            </td>
+        </tr>
+    </table>
+{if $full_page}
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+  listTable.new_url = 'route.php?is_ajax=1&con=bill';
+  listTable.act = 'bill_list_query';
+  {foreach from = $filter item = item key = key}
+    listTable.filter.{$key} = '{$item}';
+  {/foreach}
+//-->
+</script>
+{include file="pagefooter.htm"}
+{/if}

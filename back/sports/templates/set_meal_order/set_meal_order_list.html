@@ -1,0 +1,61 @@
+<!-- $Id: games_list.htm 17053 2010-03-15 06:50:26Z sxc_shop $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,newlisttable.js"}
+<form method="POST" action="route.php?con=set_meal_order&act=batch_drop" name="listForm" onsubmit="return confirm_bath()">
+    <!-- start set_meal_order list -->
+    <div class="list-div" id="listDiv">
+{/if}
+        <!--用户列表部分-->
+        <table cellpadding="3" cellspacing="1">
+            <tr>
+                <th>
+                    <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox">
+                    <a href="javascript:listTable.sort('set_meal_order_id'); ">编号</a>{$sort_set_meal_order_id}
+                </th>
+                <th>套餐名称</th>
+                <th>用户名</th>
+                <th>手机号码</th>
+                <th>处理状态</th>
+                <th>{$lang.handler}</th>
+            <tr>
+                {foreach from=$set_meal_order_list item=set_meal_order}
+            <tr>
+                <td><input type="checkbox" name="checkboxes[]" value="{$set_meal_order.set_meal_order_id}" notice="{if $set_meal_order.set_meal_order_money ne 0}1{else}0{/if}"/>{$set_meal_order.set_meal_order_id}</td>
+                <td class="first-cell">{$set_meal_order.set_meal_name}</td>
+                <td  align="center">{$set_meal_order.set_meal_order_name}</td>
+                <td  align="center">{$set_meal_order.set_meal_order_mobile}</td>
+                 <td width="10%" align="center"><img src="images/{if $set_meal_order.is_manage eq '1'}yes{else}no{/if}.gif" /></td>
+                <td align="center">
+                    <a href="route.php?con=set_meal_order&act=update&id={$set_meal_order.set_meal_order_id}" title="{$lang.view}详情"><img src="images/icon_view.gif" border="0" height="16" width="16" /></a>
+                </td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="5">{$lang.no_records}</td></tr>
+            {/foreach}
+            <tr>
+                <td colspan="2">
+
+                <td align="right" nowrap="true" colspan="8">
+                    {include file="page2.htm"}
+                </td>
+            </tr>
+        </table>
+        {if $full_page}
+    </div>
+</form>
+<script type="text/javascript" language="JavaScript">
+    listTable.recordCount = {$record_count};
+    listTable.pageCount = {$page_count};
+    listTable.new_url = 'route.php?is_ajax=1&con=set_meal_order';
+    listTable.act = 'index_query';
+    {foreach from = $filter item = item key = key}
+    listTable.filter.{$key} = '{$item}';
+    {/foreach}
+    function confirm_bath()
+  {
+    return confirm("确定要批量删除吗");
+  }
+</script>
+{include file="pagefooter.htm"}
+{/if}

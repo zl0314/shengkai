@@ -1,0 +1,68 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader2.htm"}
+{insert_scripts files="jquery.min.js,adddate.js"}
+<!--<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>-->
+<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+<div class="main-div">
+    <form method="post" action="route.php?con=set_meal_order&act=edit&is_manage=1" name="theForm">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td class="label">套餐名称：</td>
+                <td>{$set_meal_order_info.set_meal_name}</td>
+            </tr>
+           <tr>
+                <td class="label">用户姓名：</td>
+                <td>{$set_meal_order_info.set_meal_order_name}</td>
+            </tr>
+            <tr>
+                <td class="label">手机号码：</td>
+                <td>{$set_meal_order_info.set_meal_order_mobile}</td>
+            </tr>
+            <tr>
+                <td class="label">电子邮件：</td>
+                <td>{$set_meal_order_info.set_meal_order_email}</td>
+            </tr>
+            <tr>
+                <td class="label">身份证号：</td>
+                <td>{$set_meal_order_info.set_meal_order_card}</td>
+            </tr>
+
+        </table>
+        <table align="center">
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" class="button" value="标为已处理" />
+                    <input type="button" class="button" value="标为未处理" onclick="no_manage({$set_meal_order_info.set_meal_order_id})"/>
+                    <input type="hidden" name="act" value="{$act}" />
+                    <input type="hidden" name="set_meal_order_id" value="{$set_meal_order_info.set_meal_order_id}" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+
+<script type="text/javascript" charset="utf-8" src="js/qiniu/plupload.full.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/qiniu.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/qiniu_init.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/color/jscolor.js"></script>
+<script language="JavaScript">
+    new QiniuInit().upload({
+        browse_button:"img_upload",
+        drop_element:"container",
+        upload_status:"upload_status",
+        img_id:"img_id"
+    });
+     new QiniuInit().upload({
+        browse_button:"img_upload2",
+        drop_element:"container2",
+        upload_status:"upload_status2",
+        img_id:"img_id2"
+    });
+    function no_manage(set_meal_order_id){
+        location.href="route.php?con=set_meal_order&act=edit&is_manage=0&set_meal_order_id="+set_meal_order_id;
+    }
+</script>
+{/literal}
+{include file="pagefooter.htm"}

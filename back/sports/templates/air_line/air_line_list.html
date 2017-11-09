@@ -1,0 +1,76 @@
+<!-- $Id: agency_list.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,newlisttable.js"}
+<form method="post" action="route.php?con=air_line&act=batch_drop" name="listForm" onsubmit="return confirm_bath();">
+    <div class="list-div" id="listDiv">
+{/if}
+        <table cellpadding="3" cellspacing="1">
+            <tr>
+                <th width="10%"> <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" />
+                    <a href="javascript:listTable.sort('agency_id'); ">{$lang.record_id}</a>{$sort_agency_id} </th>
+                <th>航程标题</th>
+                <th>类型</th>
+                <th>出发城市</th>
+                <th>到达城市</th>
+                <!--<th>起飞时间</th>-->
+                <th>价格</th>
+                <th>操作</th>
+            </tr>
+            {foreach from=$air_line_list item=air_line}
+            <tr>
+                <td><input type="checkbox" name="checkboxes[]" value="{$air_line.id}" />
+                    {$air_line.id}</td>
+                <td align="center" class="first-cell">{$air_line.title}</td>
+                <td align="center">{if $air_line.type == 1}去程{elseif $air_line.type == 2}返程{elseif $air_line.type == 0}往返{/if}</td>
+                <td align="center">{$air_line.from_city|address}</td>
+                <td align="center">{$air_line.to_city|address} </td>
+                <!--<td class="first-cell">{$air_line.fly_time}</td>-->
+                <td class="first-cell">{$air_line.price}</td>
+                <td align="center">
+                    <a href="route.php?con=air_ticket&air_line_id={$air_line.id}&type=1" title="{$lang.edit}">去程航班</a> |
+                    <a href="route.php?con=air_ticket&air_line_id={$air_line.id}&type=2" title="{$lang.edit}">返程航班</a> |
+                    <a href="route.php?con=air_line_num&air_line_id={$air_line.id}" title="{$lang.edit}">查看库存</a> |
+                    <a href="route.php?con=air_line&act=update&id={$air_line.id}" title="{$lang.edit}">{$lang.edit}</a> |
+                    <a href="javascript:confirm_redirect('确定要删除机票?', 'route.php?con=air_line&act=remove&id={$air_line.id}')" title="{$lang.remove}">{$lang.remove}</a>      </td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="5">{$lang.no_records}</td></tr>
+            {/foreach}
+        </table>
+        <table id="page-table" cellspacing="0">
+            <tr>
+                <td>
+                    <input name="remove" type="submit" id="btnSubmit" value="{$lang.drop}" class="button" disabled="true" />
+                    <input name="act" type="hidden" value="batch" />
+                </td>
+                <td align="right" nowrap="true">
+                    {include file="page2.htm"}
+                </td>
+            </tr>
+        </table>
+{if $full_page}
+    </div>
+</form>
+
+<script type="text/javascript" language="javascript">
+<!--
+    listTable.recordCount = {$record_count};
+    listTable.pageCount = {$page_count};
+    listTable.new_url = 'route.php?is_ajax=1&con=air_line';
+  listTable.act = 'index_query';
+    {foreach from = $filter item = item key = key}
+    listTable.filter.{$key} = '{$item}';
+    {/foreach}
+
+    {literal}
+    onload = function()
+    {
+    // 开始检查订单
+    startCheckOrder();
+    }
+    {/literal}
+//-->
+</script>
+{include file="pagefooter.htm"}
+{/if}

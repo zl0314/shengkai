@@ -1,0 +1,82 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+    <title>购物车-souvenir</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=720 user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css"  href="css/base.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+    <link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/header.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/footer.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/souvenir.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/liucheng.css" media="all" />
+    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+    <script src="js/ticket.js"></script>
+</head>
+<body>
+<!--start 头部-->
+{include file="header.html"}
+<!--container starts here-->
+<div class="container">
+    <div class="section1">
+        <div class="clearfloat">
+            <div class="fl left">
+                <div class="symbol fl">
+                    <img src="images/symbol.png"/>
+                </div>
+                <h1 class="fr">官方纪念品</h1>
+            </div>
+            <div class="fr right">
+                <a href="javascript:void(0)" onclick="wipe_data()" class="buttonOne fl" >清空</a>
+                <h1 class="fl">合计：<b>￥<span id="total_ambitus">0.00</span></b></h1>
+                <a href="javascript:void(0)" onclick="mobile_ambitus_sub()" class="fr buttonSecond">提交</a>
+            </div>
+        </div>
+    </div>
+     <!--{foreach from=$ambitus item=ambitus_info}-->
+    <div class="wrapper ">
+       
+<div class="section2">
+            <h1>{$ambitus_info.goods_name}</h1>
+            <div class="clearfloat">
+                <div class="fl section2Left">
+                    <div class="boyImage">
+                        <img src="{$ambitus_info.goods_img}"/>
+                    </div>
+                </div>
+                <div class="fr section2Right ">
+                    <!--{foreach from=$ambitus_info.attribute item=info}-->
+                    <div class="rightSub clearfloat">
+                        <div class="fl subSection2">
+                            <h1 class="fl">{$info.attr_value}</h1>
+                            <h2 class="fr text">￥{$info.attr_price}</h2>
+                        </div>
+                        <div class="fr tab02" id="control_{$info.goods_attr_id}">
+                            <a href="javascript:void(0)" onclick="mobile_ambitu_subtract({$info.goods_attr_id},{$info.attr_price})">-</a>
+                            <a href="javascript:void(0)" name="ambitu_goods_num_{$info.goods_attr_id}" id="ambitu_goods_num_{$info.goods_attr_id}">0</a>
+                            <input type="hidden" name="goods_id" value="{$ambitus_info.goods_id}"/>
+                            <input type="hidden" name="goods_attr_id" value="{$info.goods_attr_id}"/>
+                            <input type="hidden" name="price" value="{$info.attr_price}"/>
+                            <a href="javascript:void(0)" onclick="mobile_ambitu_plus({$info.goods_attr_id},{$info.attr_price})">+</a>
+                        </div>
+                        <input type="hidden" name="attr_ambitus_{$info.goods_attr_id}" id="attr_ambitus_{$info.goods_attr_id}" value="0"/>
+                    </div>
+                    <!--{/foreach}-->
+                </div>
+            </div>
+        </div>
+      
+    </div>
+      <!--{/foreach}-->
+</div>
+<!--container ends here-->
+<!--end 头部-->
+</body>
+<script type="text/javascript" src="js/pulldown.js"></script>
+</html>

@@ -1,0 +1,61 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader.htm"}
+{insert_scripts files="validator.js,jquery.min.js,../js/region.js"}
+<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
+<div class="main-div">
+    <form method="post" action="route.php?con=airticket&act=edit_air_info" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td class="label">航班号：</td>
+                <td>{$flight.flight}</td>
+            </tr>
+            <tr>
+                <td class="label">舱位等级：</td>
+                <td>
+                    <select name="s_id">
+                        <option value="">--请选择舱位--</option>
+                        <!--{foreach from=$space_all item=space}-->
+                        <option value="{$space.s_id}" {if $air_info.s_id eq $space.s_id}selected{/if}>{$space.space_name}</option>
+                        <!--{/foreach}-->
+                    </select>{$lang.require_field}
+                </td>
+            </tr>   
+            <tr>
+                <td class="label">舱位价格：</td>
+                <td><input type="text" name="s_price" value="{$air_info.s_price}" /><b>元</b>{$lang.require_field}</td>
+            </tr>
+            <tr>
+                <td class="label">舱位座位：</td>
+                <td><input type="text" name="s_num" value="{$air_info.s_num}" /><b>个</b>{$lang.require_field}</td>
+            </tr>     
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" class="button" value="{$lang.button_submit}" />
+                    <input type="reset" class="button" value="{$lang.button_reset}" />
+                    <input type="hidden" name="act" value="{$act}" />
+                    <input type="hidden" name="air_id" value="{$air_id}{$air_info.air_id}" />
+                    <input type="hidden" name="id" value="{$air_info.id}" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script language="JavaScript">
+    /**
+     * 检查表单输入的数据
+     */
+    function validate()
+    {
+        validator = new Validator("theForm");
+        validator.required("s_id", '舱位等级不能为空！');
+        validator.required("s_price", '座位单价不能为空！');
+        validator.isNumber("s_price", '座位单价为纯数字！');
+        validator.required("s_num", '座位数不能为空！');
+        validator.isNumber("s_num", '座位数为数字！');
+        return validator.passed();
+    }
+</script>
+{/literal}
+{include file="pagefooter.htm"}

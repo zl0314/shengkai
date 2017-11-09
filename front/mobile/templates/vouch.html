@@ -1,0 +1,332 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+    <title>核对订单详情</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=720 user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css" href="css/base.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+    <link rel="stylesheet" type="text/css" href="css/header.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="css/footer.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="css/index.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="css/vouch.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="css/liucheng.css" media="all"/>
+    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+</head>
+<body>
+<!--start-->
+<!--end-->
+<!--start 头部-->
+{include file="header.html"}
+<!--end 头部-->
+<h3 class="accounts debugTop">购物清单</h3>
+<!--{if $combo_info}-->
+<!--{foreach from=$combo_info item=combo}-->
+<div class="grayBg">
+    <div class="grayLogo fl">
+        <img src="{$combo.combo_logo}">
+    </div>
+    <p class="fl quais">{$combo.combo_name}</p>
+</div>
+<div class="strip1">
+    <div class="fl stripLeft">
+        <div class="square fl"><img style="width:100%;" src="{$combo.combo_logo}"/></div>
+        <p class="fl">{$combo.combo_name}</p>
+    </div>
+    <p class="fr moths">X&nbsp;{$combo.goods_number}</p>
+</div>
+<div class="strip1">
+    <p class="costs fl">价格：￥<span>{$combo.combo_price}</span></p>
+
+    <p class="extens fr">小计：￥<span>{$combo.cart_combo_money}</span></p>
+</div>
+<!--{/foreach}-->
+<!--{/if}-->
+<!--{foreach from=$cart_list.ticket.game_info item=game}-->
+<div class="grayBg">
+    <div class="grayLogo fl">
+        <img src="{$game.game_logo}">
+    </div>
+    <p class="fl quais">{$game.game_name} 门票</p>
+</div>
+<!--{foreach from=$cart_list.ticket.t item=ticket}-->
+<!--{if $game.id==$ticket.game_id}-->
+<div class="strip1">
+    <div class="fl stripLeft">
+        <div class="square fl" style=" background:#{$ticket.ticket_info.color_value};">
+            {$ticket.ticket_info.numbers}
+        </div>
+        <p class="fl" style="color:#{$ticket.ticket_info.color_value};">{$ticket.goods_name}</p>
+    </div>
+    <p class="fr moths">X&nbsp;{$ticket.goods_number}</p>
+</div>
+<div class="strip1">
+    <p class="fl pieces">{$ticket.ticket_info.room_type}</p>
+
+    <p class="fr session">{$ticket.ticket_info.region_name}主场&nbsp;<a href="">{$ticket.ticket_info.region_name}</a></p>
+</div>
+<div class="strip1">
+    <p class="costs fl">价格：￥<span>{$ticket.goods_price}</span></p>
+
+    <p class="extens fr">小计：￥<span>{$ticket.ticket_money}</span></p>
+</div>
+<!--{/if}-->
+<!--{/foreach}-->
+<!--{/foreach}-->
+
+
+<!--{if $hotel.info}-->
+<div class="grayBg">
+    <div class="grayLogo fl">
+
+    </div>
+    <p class="fl quais">酒店</p>
+</div>
+<!--{foreach from=$hotel.info item=hotel}-->
+<div class="strip1">
+    <div class="fl stripLeft">
+        <p class="fl">{$hotel.hotel_info.hotel_name}</p>
+        <div class="tradem fl"></div>
+    </div>
+    <p class="fr moths">X&nbsp;{$hotel.goods_number}</p>
+</div>
+<div class="strip1">
+    <p class="fl pieces"></p>
+
+    <p class="fr session">入住日期:{$hotel.hotel_start_date}
+        退房日期:{$hotel.hotel_end_date}</p>
+</div>
+<div class="strip1">
+    <p class="costs fl">价格：￥<span>{$hotel.goods_price}/天</span> x {$hotel.day} 天</p>
+
+    <p class="extens fr">小计：￥<span>{$hotel.money}</span></p>
+</div>
+<!--{/foreach}-->
+<!--{/if}-->
+
+<!--{if $goods.info}-->
+<div class="grayBg">
+    <div class="grayLogo fl">
+        <img src="images/infl.png">
+    </div>
+    <p class="fl quais">官方纪念品</p>
+</div>
+<!--{foreach from=$goods.info item=goods}-->
+<div class="strip1">
+    <div class="fl stripLeft">
+        <p class="fl">{$goods.goods_info.goods_name}</p>
+
+        <div class="tradem fl"><img src="{$goods.goods_info.goods_img}"></div>
+    </div>
+    <p class="fr moths">X&nbsp;{$goods.goods_number}</p>
+</div>
+<div class="strip1">
+    <p class="costs fl">价格：￥<span>{$goods.goods_price}</span></p>
+
+    <p class="extens fr">小计：￥<span>{$goods.money}</span></p>
+</div>
+<!--{/foreach}-->
+<!--{/if}-->
+<!--{if $plane.info}-->
+<div class="grayBg">
+    <div class="grayLogo fl">
+        <img src="images/infl.png">
+    </div>
+    <p class="fl quais">机票</p>
+</div>
+<!--{foreach from=$plane.info item=plane_info}-->
+<div class="strip1">
+    <div class="fl stripLeft">
+        <p class="fl" style="width: auto;">{$plane_info.fly_date} {$plane_info.air_line.title} <i style="font-size:13px;color: #696969;font-weight: bold;">￥</i>{$plane_info.air_line.price} </p>
+    </div>
+    <p class="fr moths">X&nbsp;{$plane_info.goods_number}</p>
+</div>
+
+<div class="strip1">
+    <p class="fl pieces">去</p>
+</div>
+{foreach from=$plane_info.air_info[1] item=air_ticket}
+<div class="strip1">
+    <p class="fl pieces"></p>
+
+    <p class="fr session">{$air_ticket.flight} {$air_ticket.from_city|address} - {$air_ticket.to_city|address}</p>
+</div>
+{/foreach}
+
+<div class="strip1">
+    <p class="fl pieces">返</p>
+</div>
+{foreach from=$plane_info.air_info[2] item=air_ticket}
+<div class="strip1">
+    <p class="fl pieces"></p>
+
+    <p class="fr session">{$air_ticket.flight} {$air_ticket.from_city|address} - {$air_ticket.to_city|address}</p>
+</div>
+{/foreach}
+
+<div class="strip1">
+    <p class="costs fl">价格：￥<span>{$plane.goods_price}</span></p>
+
+    <p class="extens fr">小计：￥<span>{$plane.money}</span></p>
+</div>
+<div class="shapeds"></div>
+<!--{/foreach}-->
+<!--{/if}-->
+<form method="post" action="submit.php?act=done">
+    <div class="shapeds"></div>
+    <h3 class="accounts">取票方式</h3>
+
+    <div class="strip2">
+        <p class="ways"><span class="fl"></span>国外取票</p>
+        <input type="hidden" name="get_ticket_type" value="国外取票">
+    </div>
+    <!--<div class="strip2">-->
+    <!--<input type="radio" data-toggle="radio" name="get_ticket_type" value="国外"-->
+    <!--checked="checked">-->
+    <!--国外取票-->
+    <!--</div>-->
+    <div class="shapeds"></div>
+    <h3 class="accounts">联系地址</h3>
+    <!--{foreach from=$user_address_list item=address}-->
+    <div class="strip3">
+        <div class="region">
+            <div class="fl regionLeft">
+                <label class="fr hintd">联系人：</label>
+            </div>
+            <div class="fl regionRight">{$address.consignee}</div>
+        </div>
+        <div class="region">
+            <div class="fl regionLeft">
+                <label class="fr hintd">常用邮箱：</label>
+            </div>
+            <div class="fl regionRight">{$address.email}</div>
+        </div>
+        <div class="region">
+            <div class="fl regionLeft">
+                <label class="fr hintd">
+
+                    <input class="fl markd" type="radio" name="address_id"
+                           checked="checked" value="{$address.address_id}" id="{$address.address_id}" required/> 手机号码：
+                </label>
+            </div>
+            <div class="fl regionRight">{$address.mobile}</div>
+        </div>
+        <div class="region">
+            <div class="fl regionLeft">
+                <label class="fr hintd">证件类型：</label>
+            </div>
+            <div class="fl regionRight">{$address.card_type_text}</div>
+        </div>
+        <div class="region">
+            <div class="fl regionLeft">
+                <label class="fr hintd">证件号码：</label>
+            </div>
+            <div class="fl regionRight">{$address.card_num}</div>
+        </div>
+    </div>
+    <!--{/foreach}-->
+    <a href="personal.php" class="addition">+&nbsp;&nbsp;添加联系人信息</a>
+
+    <div class="shapeds  replenish"></div>
+    <h3 class="accounts">付款方式</h3>
+    <ul class="payings" id="payings">
+        <li id="li_pay"><span class="fl" id="pay_way" onclick="change_pay();"></span>线下支付</li>
+        <!--<input type="hidden" name="pay_id" id="pay_id" value="2" >-->
+        <!--{if $is_wx}-->
+        <li id="li_zhifu"><span class="fl" id="pay_model" onclick="change_pay_model();"></span>微信</li>
+        <input type="hidden" name="pay_id" id="zhifu" value="99">
+        <!--{else}-->
+        <li id="li_zhifu"><span class="fl grayMark" id="pay_model" onclick="change_pay_model();"></span>支付宝</li>
+        <input type="hidden" name="pay_id" id="zhifu" value="6">
+        <li id="li_zhifu"><span class="fl" onclick="cmb_pay_model(this, 9);"></span>招行掌上支付<b style="color:red">（分期金额300-50000,超过50000自动分多次支付）</b></li>
+        <!--{/if}-->
+        <input type="hidden" name="is_wx" id="is_wx" value="{$is_wx}">
+
+    </ul>
+
+    <h3 class="accounts">发票信息</h3>
+
+    <div class="invoice">
+        <div class="needer">
+            <div class="fl pocut">
+                <div class="trues">
+                    <img src="images/trues.png">
+                </div>
+            </div>
+            <p class="fl">需要发票</p>
+        </div>
+        <div class="feeds">
+            <div class="nice-select  offbeat" name="nice-select">
+                <input type="text" value="普通发票" id="inv_type" name="inv_type" readonly>
+                <!--<ul>-->
+                <!--<li data-value="1">纸制发票</li>-->
+                <!--<li data-value="2">机打发票</li>-->
+                <!--<li data-value="3">增值发票</li>-->
+                <!--</ul>-->
+            </div>
+        </div>
+        <div class="feeds">
+            <input type="text" id="inv_payee" name="inv_payee" placeholder="个人/单位名称"/>
+        </div>
+        <div class="feeds">
+            <input type="text" id="inv_content" name="inv_content" placeholder="服务费" readonly/>
+        </div>
+        <!--<a onclick="save_invoice()" class="covserves">保存</a>-->
+    </div>
+    <div class="graysBg debugBottom"></div>
+    <div class="refersBg">
+        <div class="fl refersLeft">
+            <div class="accepts fl">
+                <div class="fl pocut">
+                    <div class="trues">
+                        <img src="images/trues.png">
+                    </div>
+                </div>
+                <p class="fl protocol">我已阅读并同意<span>购买协议书</span></p>
+            </div>
+            <div class="figuren fr">
+                <span>应付款金额</span>
+
+                <p>¥<i>{$cart_money.all}</i></p>
+            </div>
+        </div>
+        <button class="fr refersRight">提交订单</button>
+    </div>
+</form>
+</body>
+<script type="text/javascript" src="js/pulldown.js"></script>
+<script>
+    function change_pay() {
+        $("#pay_way").addClass("grayMark");
+        $("#pay_model").removeClass("grayMark");
+        $("#zhifu").remove();
+        var str = '<input type="hidden" name="pay_id" id="pay_id" value="2" >';
+        $("#li_pay").append(str);
+    }
+    function change_pay_model() {
+        var is_wx = $("#is_wx").val();
+        $("#pay_model").addClass("grayMark");
+        $("#pay_way").removeClass("grayMark");
+        if (is_wx == '') {
+            $("#pay_id").remove();
+            var str = '<input type="hidden" name="pay_id" id="zhifu" value="6" >';
+            $("#li_zhifu").append(str);
+        } else {
+            $("#pay_id").remove();
+            var str = '<input type="hidden" name="pay_id" id="zhifu" value="99" >';
+            $("#li_zhifu").append(str);
+        }
+    }
+
+    function cmb_pay_model(obj, pay_id) {
+        $("span.grayMark").removeClass("grayMark");
+        $(obj).addClass("grayMark");
+        $("input[name=pay_id]").val("9");
+    }
+</script>
+</html>

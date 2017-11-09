@@ -1,0 +1,87 @@
+<!-- $Id: agency_list.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,newlisttable.js"}
+<form method="post" action="route.php?con=coupon_cluster&act=batch_drop" name="listForm" onsubmit="return confirm_bath();">
+  <div class="list-div" id="listDiv">
+    {/if}
+    <table cellpadding="3" cellspacing="1">
+      <tr>
+        <th width="10%"><input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox"/>
+          <a href="javascript:listTable.sort('agency_id'); ">{$lang.record_id}</a>{$sort_agency_id}
+        </th>
+        <th>标题</th>
+        <th>生成数量</th>
+        <th>已生成</th>
+        <th>每人限领次数</th>
+        <th>优惠券兑换码</th>
+        <th>领券后有效天数</th>
+        <th>最低启用金额</th>
+        <th>扣减金额</th>
+        <th>有效结束时间</th>
+        <th>已领取</th>
+        <th>操作</th>
+      </tr>
+      {foreach from=$coupon_cluster_list item=coupon_cluster}
+      <tr>
+        <td><input type="checkbox" name="checkboxes[]" value="{$coupon_cluster.coupon_cluster_id}" />
+          {$coupon_cluster.coupon_cluster_id}</td>
+        <td align="center" class="first-cell">{$coupon_cluster.title}</td>
+        <td align="center">{$coupon_cluster.demand_count}</td>
+        <td align="center">{$coupon_cluster.generated_count}</td>
+        <td align="center">{$coupon_cluster.limitation}</td>
+        <td align="center">{$coupon_cluster.coupon_key}</td>
+        <td align="center">{$coupon_cluster.expire_day}</td>
+        <td align="center">{$coupon_cluster.min_amount}</td>
+        <td align="center">{$coupon_cluster.amount}</td>
+        <td align="center">{$coupon_cluster.end_time}</td>
+        <td align="center">{$coupon_cluster.exchange_count}</td>
+        <td align="center">
+          <a href="route.php?con=coupon_cluster&act=update&coupon_cluster_id={$coupon_cluster.coupon_cluster_id}" title="{$lang.edit}">编辑</a> |
+          <a href="route.php?con=coupon_cluster&act=exchange&coupon_cluster_id={$coupon_cluster.coupon_cluster_id}" title="{$lang.edit}">兑换</a> |
+          <a href="route.php?con=user_coupon&act=index&coupon_cluster_id={$coupon_cluster.coupon_cluster_id}" title="{$lang.edit}">查看已领券的用户</a> |
+          {if $coupon_cluster.is_gen eq 0}
+          <a href="route.php?con=coupon&act=generate&coupon_cluster_id={$coupon_cluster.coupon_cluster_id}" title="{$lang.edit}">生成优惠券</a> |
+          {/if}
+          <a href="javascript:confirm_redirect('确定要删除优惠券?', 'route.php?con=coupon_cluster&act=remove&coupon_cluster_id={$coupon_cluster.coupon_cluster_id}')" title="{$lang.remove}">{$lang.remove}</a>      </td>
+      </tr>
+      {foreachelse}
+      <tr><td class="no-records" colspan="5">{$lang.no_records}</td></tr>
+      {/foreach}
+    </table>
+    <table id="page-table" cellspacing="0">
+      <tr>
+        <td>
+          <input name="remove" type="submit" id="btnSubmit" value="{$lang.drop}" class="button" disabled="true" />
+          <input name="act" type="hidden" value="batch" />
+        </td>
+        <td align="right" nowrap="true">
+          {include file="page2.htm"}
+        </td>
+      </tr>
+    </table>
+    {if $full_page}
+  </div>
+</form>
+
+<script type="text/javascript" language="javascript">
+  <!--
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+  listTable.new_url = 'route.php?is_ajax=1&con=coupon_cluster';
+  listTable.act = 'index_query';
+  {foreach from = $filter item = item key = key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+
+  {literal}
+  onload = function()
+  {
+    // 开始检查订单
+    startCheckOrder();
+  }
+  {/literal}
+  //-->
+</script>
+{include file="pagefooter.htm"}
+{/if}

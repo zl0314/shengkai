@@ -1,0 +1,112 @@
+<!-- $Id: goods_info.htm 17126 2010-04-23 10:30:26Z liuhui $ -->
+{include file="pageheader2.htm"}
+{insert_scripts files="../js/utils.js,../js/jquery.min.js,selectzone.js,colorselector.js,../js/linkage.js"}
+<script type="text/javascript" charset="utf-8" src="js/color/jscolor.js"></script>
+{if $warning}
+<ul style="padding:0; margin: 0; list-style-type:none; color: #CC0000;">
+    <li style="border: 1px solid #CC0000; background: #FFFFCC; padding: 10px; margin-bottom: 5px;" >{$warning}</li>
+</ul>
+{/if}
+
+<!-- start combo form -->
+<div class="tab-div">
+    <!-- tab bar -->
+    <div id="tabbar-div">
+        <p>
+            <span class="tab-back" id="pitch-table">场馆信息</span>
+        </p>
+    </div>
+
+    <!-- tab body -->
+    <div id="tabbody-div">
+        <form enctype="multipart/form-data" action="route.php?con=combo_pitch&act=edit" method="post" name="theForm" >
+            <!-- 场馆-->
+            <table width="90%" align="center">
+                <tr id="pitchContent">
+                    <td class="label">场馆名称：</td>
+                    <td><input type="text" id="combo_pitch_name" name="combo_pitch_name" maxlength="60" value="{$combo_pitch.combo_pitch_name}" />{$combo.combo_pitch_name}</td>
+                </tr>
+                <tr>
+                    <td class="label">可容纳人数：</td>
+                    <td><input type="text" id="combo_pitch_contain" name="combo_pitch_contain" maxlength="60" value="{$combo_pitch.combo_pitch_contain}" /></td>
+                </tr>
+                <tr>
+                    <td class="label">场馆描述：</td>
+                    <td><textarea id="combo_pitch_desc" name="combo_pitch_desc" value="{$combo_pitch.combo_pitch_desc}">{$combo_pitch.combo_pitch_desc}</textarea></td>
+                </tr>
+                <tr>
+                    <td class="label">场馆图片：</td>
+                    <td>
+                        <div id="container3">
+                            <a class="btn btn-default btn-lg " id="img_upload3" href="#" >
+                                <i class="glyphicon glyphicon-plus"></i>
+                                <span>选择文件</span>
+                            </a>
+                            <font id="upload_status3"></font>
+                            <input type="hidden" name="combo_pitch_img" id="img_id3" value="{$combo_pitch.combo_img}"/>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <!--表单提交&&重置-->
+            <div class="button-div">
+                <input type="submit" value="{$lang.button_submit}" class="button"/>
+                <input type="hidden" name="act" value="{$act}"/>
+                <input type="hidden" name="id" value="{$combo_pitch.combo_pitch_id}" />
+            </div>
+
+        </form>
+    </div>
+</div>
+<!-- end goods form -->
+{insert_scripts files="../js/utils.js,validator.js,tab.js"}
+<script type="text/javascript" charset="utf-8" src="js/qiniu/plupload.full.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/qiniu.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/qiniu_init.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/color/jscolor.js"></script>
+<script language="JavaScript">
+    linkage.isAdmin = true;
+    //套餐logo
+    new QiniuInit().upload({
+        browse_button:"img_upload",
+        drop_element:"container",
+        upload_status:"upload_status",
+        img_id:"img_id"
+    });
+    //套餐图片
+    new QiniuInit().upload({
+        browse_button:"img_upload2",
+        drop_element:"container2",
+        upload_status:"upload_status2",
+        img_id:"img_id2"
+    });
+    //套餐场馆图片
+    new QiniuInit().upload({
+        browse_button:"img_upload3",
+        drop_element:"container3",
+        upload_status:"upload_status3",
+        img_id:"img_id3"
+    });
+    //套餐介绍头图
+    new QiniuInit().upload({
+        browse_button:"img_upload4",
+        drop_element:"container4",
+        upload_status:"upload_status4",
+        img_id:"img_id4"
+    });
+    //套餐介绍底图
+    new QiniuInit().upload({
+        browse_button:"img_upload5",
+        drop_element:"container5",
+        upload_status:"upload_status5",
+        img_id:"img_id5"
+    });
+    //套餐行程图片
+    new QiniuInit().upload({
+        browse_button:"img_upload6",
+        drop_element:"container6",
+        upload_status:"upload_status6",
+        img_id:"img_id6"
+    });
+</script>
+{include file="pagefooter.htm"}

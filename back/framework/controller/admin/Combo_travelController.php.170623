@@ -1,0 +1,145 @@
+<?php
+
+/**
+ * Description of ColorController
+ *
+ * @author Kevin
+ */
+__load("Controller", "controller");
+
+class Combo_travelController extends Controller {
+
+    //put your code here
+    private $combo_travel;
+
+    public function __construct() {
+        parent::__construct();
+        __load("Combo_travelService"); 
+        $this->combo_travel = new Combo_travelService();
+    }
+
+    public function index() {
+        $this->assign('ur_here', "套餐列表");
+        $this->assign('action_link', array('text' => "添加套餐", 'href' => 'route.php?con=combo_travel&act=add'));
+        $combo_travel_list = $this->combo_travel->get_All_Combo_travel();
+        $this->assign('combo_travel_list', $combo_travel_list['combo_travel_list']);     
+        $this->assign("record_count", $combo_travel_list['record_count']);
+        $this->assign("page_count", $combo_travel_list['page_count']);
+        $this->assign("filter", $combo_travel_list['filter']);
+        $this->assign("full_page", 1);
+        $this->display("combo_travel/combo_travel_list.html");
+    }
+    
+    /* ------------------------------------------------------ */
+    //-- js 分页
+    /* ------------------------------------------------------ */
+    public function index_query(){
+        $combo_travel_list = $this->combo_travel->get_All_Combo_travel();
+        $this->assign('combo_travel_list', $combo_travel_list['combo_travel_list']);     
+        $this->assign("record_count", $combo_travel_list['record_count']);
+        $this->assign("page_count", $combo_travel_list['page_count']);
+        $this->assign("filter", $combo_travel_list['filter']);  
+        make_json_result($this->fetch("combo_travel/combo_travel_list.html"), '', array('filter' => $combo_travel_list['filter'], 'page_count' => $combo_travel_list['page_count']));  
+    }
+
+    public function add(){
+        $this->assign('act', "add");
+        $this->assign('ur_here', "添加套餐信息");
+        $this->assign('action_link', array('text' => "套餐列表", 'href' => 'route.php?con=combo'));
+        //获取套餐行程信息
+        $this->display("combo_travel/combo_travel_info.html");
+    }
+
+    public function edit() {
+        $act = empty($_POST['act']) ? "add" : trim($_POST['act']);
+        if ($act == "add")
+            {
+            $res = $this->combo_travel->add_Combo_travel($_POST);
+            $link = array(array('text' => "套餐列表", 'href' => 'route.php?con=combo'), array('text' => "继续添加套餐", 'href' => 'route.php?con=combo&act=add'));
+            if (empty($res)) {
+                sys_msg("添加失败", 0, $link);
+            } else {
+                admin_log(addslashes($_POST['combo_travel_title']), 'add', 'combo_travel');// 记录日志
+                sys_msg("添加成功", 0, $link);
+            }
+        } else {
+            $res = $this->combo_travel->update($_POST);
+            $link = array(array('text' => "套餐列表", 'href' => 'route.php?con=combo'));
+            if ($res) {
+                admin_log(addslashes($_POST['combo_travel_title']), 'edit', 'combo_travel');// 记录日志
+                sys_msg("更新成功", 0, $link);
+            } else {
+                sys_msg("更新失败", 0, $link);
+            }
+        }
+    }
+
+    public function update() {
+        $combo_travel = $this->combo_travel->get_combo_travel($_GET['id']);
+        $this->assign('combo_travel', $combo_travel);
+        $this->assign('ur_here', "编辑套餐行程");
+        $this->assign('action_link', array('text' => "套餐列表", 'href' => 'route.php?con=combo_travel','text' => '添加套餐行程','href' => 'route.php?con=combo_travel&act=add'));
+        $this->assign('act', "update");
+        $this->display("combo_travel/combo_travel_info.html");
+    }
+
+    public function batch_drop() {
+        $link = array(array('text' => "套餐列表", 'href' => 'route.php?con=combo_travel'));
+        $res = $this->combo_travel->remove_b($_POST['checkboxes']);
+        if ($res) {
+            sys_msg("批量删除套餐信息成功", 0, $link);
+        } else {
+            sys_msg("批量删除套餐信息失败", 0, $link);
+        }
+    }
+    
+    public function remove() {
+        //--hechengbin -- 删除套餐行程 --start
+        $result = $this->combo_travel->get_Combo_travel($_GET['id']);
+        //--hechengbin -- end
+        $res = $this->combo_travel->remove($_GET['id']);
+        $link = array(array('text' => "套餐列表", 'href' => 'route.php?con=combo_travel'));
+        if ($res) {
+            admin_log(addslashes($result['combo_travel_title']), 'remove', 'combo_travel');// 记录日志
+            sys_msg("删除成功", 0, $link);
+        } else {
+            sys_msg("删除失败", 0, $link);
+        }
+    }
+    
+    public function ajaxEdit() {
+        $returnArray = array("error"=>0,"content"=>"","message"=>"");
+        $act = empty($_POST['act']) ? "add" : trim($_POST['act']);
+        if ($act == "add")
+        {
+            $result = $this->combo_travel->add_Combo_travel($_POST);
+            $combo_insert_id = mysql_insert_id();
+            if (!empty($result)) {
+                $content = $this->combo_travel->get_Combo_travel($combo_insert_id);
+                $returnArray = array("error"=>0, "content"=>$content, "message"=>"新增套餐行程成功");
+            }else{
+                $returnArray = array("error"=>1, "content"=>"", "message"=>"新增套餐行程失败");
+            }
+        } else {
+            $result = $this->combo_travel->update($_POST);
+            if (!empty($result)) {
+                $returnArray = array("error"=>0,"content"=>"","message"=>"更新套餐行程成功");
+            }else{
+                $returnArray = array("error"=>1,"content"=>"","message"=>"更新套餐行程失败");
+            }
+        }
+        die(json_encode($returnArray));
+    }
+    
+    public function ajaxRemove() {
+        $returnArray = array("error"=>0,"content"=>"","message"=>"");
+        $result = $this->combo_travel->remove($_REQUEST['id']);
+        if (!empty($result)) {
+            $combo_travel_list = $this->combo_travel->get_All_Combo_travel();
+            $returnArray = array("error"=>0, "content"=>$combo_travel_list['combo_travel_list'], "message"=>"删除场馆成功");
+        }else{
+            $returnArray = array("error"=>1, "content"=>"", "message"=>"删除场馆失败");
+        }
+        die(json_encode($returnArray));
+    }
+}

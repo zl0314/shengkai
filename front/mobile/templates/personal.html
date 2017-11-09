@@ -1,0 +1,170 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+    <title>添加联系地址</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=720 user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css"  href="css/base.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+    <link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/header.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/footer.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="css/personal-data.css" />
+    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+    <script src="js/utils.js"></script>
+</head>
+<body>
+<!--start-->
+<!--end-->
+<!--start 头部-->
+<div class="boxBg debugTop">
+    {include file="header.html"}
+</div>
+<!--end 头部-->
+<!-- 个人资料 -->
+<form name="form1"  method="post" action="" >
+    <div class="wrapBox">
+
+        <div class="formRight">
+            <div class="inp">
+                <span>姓名</span>
+                <input id="consignee" name="consignee"  type="text" maxlength="30"  maxlength="30" onblur="check_consignee()"/>
+            </div>
+            <div  class="inp">
+                <span>常用邮箱</span>
+                <input id="email" name="email" type="text" maxlength="30"  maxlength="30" onblur="check_email(this.value)"/>
+            </div>
+            <div class="inp">
+                <span>证件类型</span>
+                <select  name="card_type" id="card_type">
+                    <option value="0" {if $consignee_info.card_type eq 0}selected{/if}>身份证</option>
+                    <option value="1" {if $consignee_info.card_type eq 1}selected{/if}>护照</option>
+                </select>
+            </div>
+            <div  class="inp">
+                <span>证件号码</span>
+                <input id="card_num" name="card_num" type="text" maxlength="30"  maxlength="30" onblur="check_card_num()"/>
+            </div>
+            <div class="inp">
+                <span>手机</span>
+                <input  id="mobile" name="mobile" type="text" maxlength="30"  maxlength="30" onblur="check_mobile(this.value)"/>
+            </div>
+            <div style="font-size:12px;position:relative;top:-10px;left:152px;color:#C6151D;">手机号码前加国家区号（如：加 86）</div>
+        </div>
+
+    </div>
+    <!--<button class="btn01" type="submit">确定</button>-->
+    <button class="btn01" > <a href="javascript:sub_consignee()" class="btn btn-block btn-lg btn-danger"
+                               id="sub_consignee" style="width:100%;height:100%;line-height:60px;color:#fff;">确定</a></button>
+</form>
+</body>
+<script type="text/javascript" src="js/pulldown.js"></script>
+<script language=JavaScript>
+    function check_consignee() {
+        var msg = null;
+        var submit = false;
+        if ($("#consignee").val() == '') {
+            msg = "用户名不能为空";
+            $("#consignee").attr("placeholder", msg);
+        } else {
+            submit = true;
+        }
+        return submit;
+    }
+
+    function check_email(email) {
+        var submit = false;
+        var msg = null;
+        if (email == '') {
+            msg = "邮箱不能为空";
+            document.getElementById('email').placeholder = msg;
+        } else if (!Utils.isEmail(email)) {
+            msg = "邮箱格式不正确";
+            $("#email").val("");
+            document.getElementById('email').setAttribute("placeholder", msg);
+        } else {
+            submit = true;
+        }
+        return submit;
+    }
+
+    function check_mobile(mobile) {
+        var submit = false;
+        var msg = null;
+        if ($("#mobile").val() == '') {
+            msg = "手机号不能为空";
+            $("#mobile").attr("placeholder", msg);
+//        } else if (!Utils.isMobile(mobile)) {
+//            msg = "手机号格式不正确";
+//            $("#mobile").val("");
+//            $("#mobile").attr("placeholder", msg);
+        } else {
+            submit = true;
+        }
+        return submit;
+    }
+
+    function check_card_num() {
+        var submit = false;
+        if ($("#card_num").val() == '') {
+            $("#card_num").attr("placeholder", "证件号码不能为空");
+            submit = false;
+        } else {
+            if($("#card_type").val() == 1){
+                submit = true;
+            }else {
+                if ($("#card_num").val().length == 15 || $("#card_num").val().length == 18) {
+                    submit = true;
+                } else {
+                    alert("证件号码格式不正确！");
+                    submit = false;
+                }
+            }
+        }
+        return submit;
+    }
+    /* 提交联系人信息 */
+    //        document.forms.submit=function(){
+    function sub_consignee(){
+        var consignee = check_consignee();
+        var email = check_email($('#email').val());
+        var card_type = $('#card_type').val();
+        var mobile = check_mobile($('#mobile').val());
+        var card_num = check_card_num();
+        if (consignee && email && card_type && mobile && card_num) {
+            $.ajax({
+                'url':"personal.php?act=add_user",
+                'dataType':'json',
+                'type':'POST',
+                'data':{
+                    consignee: $("#consignee").val(),
+                    email: $('#email').val(),
+                    card_type: $('#card_type').val(),
+                    mobile: $("#mobile").val(),
+                    card_num: $("[name=card_num]").val()
+                },
+                success:function(data){
+                    if (data.code == 1 ){
+                        location.href='vouch.php';
+                    } else {
+                        $("#fail_consignee").show();
+                    }
+                },
+                error:function(){
+                    $("#fail_consignee").show();
+                }
+
+            });
+        } else {
+            $("#fail_consignee").show();
+        }
+
+    }
+
+</script>
+</html>

@@ -1,0 +1,14 @@
+/temp/
+/images/
+/DATA_DIR/
+/.settings/
+/.project
+/nbproject/
+/data/config.php
+/tcpdf/nbproject/private/
+/data/pdf_data/
+/.idea/
+/data/
+/mobile/wx/logs/
+/logs/
+/wx/logs/

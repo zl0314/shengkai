@@ -1,0 +1,22 @@
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,listtable.js"}
+
+    <!-- start games list -->
+    <div class="list-div" id="listDiv">
+        <table cellpadding="3" cellspacing="1">
+            <tr>               
+                {foreach from=$pitch_list item=pitch}
+                    <th style="width:20px">{$pitch.pitch_name}</th>
+                {/foreach}
+            </tr>
+            {foreach from=$schedule_list item=schedule_info}
+            <tr>
+                {foreach from=$schedule_info item=schedule}
+                   <td style="width:20px">{$schedule}</td>
+                {/foreach}
+            </tr>
+            {/foreach}
+        </table>
+    </div>
+{include file="pagefooter.htm"}
+

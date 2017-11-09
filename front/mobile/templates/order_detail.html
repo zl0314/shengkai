@@ -1,0 +1,395 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+<title>订单详情</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=720 user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css"  href="css/base.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+<link rel="stylesheet" type="text/css"  href="css/header.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/footer.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/vouch.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/details.css" media="all" />
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+</head>
+<body>
+<!--start-->
+<!--end-->
+<!--start 头部-->
+{include file="header.html"}
+<!--end 头部-->
+<h3 class="accounts debugTop">订单状态</h3>
+<div class="strip3 bordtop">
+	<div class="region">
+		<div class="fl regionLeft">
+			<label class="fr hintd">订单号：</label>
+		</div>
+		<div class="fl regionRight">{$order.order_sn}</div>
+	</div>
+	<div class="region">
+		<div class="fl regionLeft">
+			<label class="fr hintd">下单时间：</label>
+		</div>
+		<div class="fl regionRight">{$order.add_time}</div>
+	</div>
+	<div class="region">
+		<div class="fl regionLeft">
+			<label class="fr hintd">订单状态：</label>
+		</div>
+		<div class="fl regionRight">{$order.order_status}</div>
+	</div>
+	<div class="region">
+		<div class="fl regionLeft">
+			<label class="fr hintd">付款状态：</label>
+		</div>
+		<div class="fl regionRight">{$order.pay_status}</div>
+                
+	</div>
+	<div class="region">
+		<div class="fl regionLeft">
+			<label class="fr hintd">金额：</label>
+		</div>
+		<div class="fl regionRight">{$order.order_amount}</div>
+	</div>
+	<!--{if $order.pay_status == '已付款' && $order.order_status == '已审核通过'}-->
+	<!--<a href="insurance.php?order_id={$order.order_id}" class="payBtn">购买保险</a>-->
+	<!--{elseif $order.pay_status == '已付款' && $order.order_status == '未审核通过'}-->
+	<!--{elseif $order.pay_status == '未付款' && $order.order_status == '未审核通过'}-->
+		<!--{if $pay_online}-->
+			<div class="dzhuangtai">{$pay_online}</div>
+		<!--{elseif $is_wx_pay == 1 && $openid != 1 }-->
+				<a class="payBtn" onclick="weixin();">支付</a>
+				<input type="hidden" id="WIDout_trade_no_99" name="WIDout_trade_no" value="{$order.order_sn}"/>
+		<!--{elseif $is_wx_pay == 1 && $openid == 1 }-->
+			<a class="payBtn" style="width: 280px">请到微信端进行支付</a>
+		<!--{elseif $is_wx_pay == 2 && $openid == 1}-->
+			<a class="payBtn" onclick="zhifubao();">支付</a>
+			<input type="hidden" id="WIDout_trade_no" name="WIDout_trade_no" value="{$order.order_sn}"/>
+			<input type="hidden" id="WIDsubject" name="WIDsubject" value="门票"/>
+			<input type="hidden" id="WIDshow_url" name="WIDshow_url"/>
+			<input type="hidden" id="WIDbody" name="WIDbody"/>
+		<!--{elseif $is_wx_pay == 2 && $openid != 1 }-->
+			<a class="payBtn" style="width: 280px">请用手机浏览器打开订单进行支付</a>
+		<!--{elseif $is_wx_pay == 3 }-->
+			<a class="payBtn" style="width: 280px">请到电脑端进行支付</a>
+			<!--<input style="margin-left: 460px;" type="button" value="请到电脑端进行支付">-->
+		<!--{elseif $is_wx_pay == 9 }-->
+			<a href="submit.php?act=cmbuat_pay_status&order_sn={$order.order_sn}" class="payBtn" style="width: 280px">继续支付(招行掌上生活支付)</a>
+			<!--<input style="margin-left: 460px;" type="button" value="请到电脑端进行支付">-->
+		<!--{/if}-->
+	<!--{elseif $order.pay_status == '付款中' && $order.order_status == '未审核通过'}-->
+		<!--{if $is_wx_pay == 9 }-->
+		<a href="submit.php?act=cmbuat_pay_status&order_sn={$order.order_sn}" class="payBtn" style="width: 280px">继续支付(招行掌上生活支付)</a>
+		<!--{/if}-->
+	<!--{/if}-->
+	{if $order.pay_status == '已付款' && $contract_file}
+		<a class="payBtn" href="{$contract_file}" download="{$contract_file}">合同下载</a>
+	{/if}
+</div>
+
+{if $contract_info.contract_no}
+<div class="shapeds"></div>
+<h3 class="accounts">合同内容</h3>
+<div class="region">
+	<div class="fl regionLeft">
+		<label class="fr hintd">单票：</label>
+	</div>
+	<div class="fl regionRight" style="word-wrap: break-word;
+    width: 304px;line-height: 37px;">{if $contract_info.goods} {$contract_info.goods} {else}无{/if}</div>
+</div>
+<div class="region">
+	<div class="fl regionLeft">
+		<label class="fr hintd">套餐：</label>
+	</div>
+	<div class="fl regionRight"  style="word-wrap: break-word;
+    width: 304px;line-height: 37px;">{if $contract_info.combos} {$contract_info.combos} {else}无{/if}</div>
+</div>
+<div class="region">
+	<div class="fl regionLeft">
+		<label class="fr hintd">酒店：</label>
+	</div>
+	<div class="fl regionRight"  style="word-wrap: break-word;
+    width: 304px;line-height: 37px;">{if $contract_info.hotels} {$contract_info.hotels} {else}无{/if}</div>
+</div>
+<div class="region">
+	<div class="fl regionLeft">
+		<label class="fr hintd">机票：</label>
+	</div>
+	<div class="fl regionRight"  style="word-wrap: break-word;
+    width: 304px;line-height: 37px;">{if $contract_info.airtickets} {$contract_info.airtickets} {else}无{/if}</div>
+</div>
+{/if}
+{if !empty($contract_info.consignee)}
+<div class="shapeds"></div>
+<h3 class="accounts">商品列表</h3>
+{if $combo_order_info}
+{foreach from=$combo_order_info item=combo}
+<div class="grayBg">
+	<div class="grayLogo fl">
+		<img src="{$combo.combo_logo}">
+	</div>
+	<p class="fl quais">{$combo.combo_name}门票（套餐）</p>
+	<!--<p class="fl quais">套餐数量：{$combo.order_combo_number}</p>-->
+</div>
+<div class="strip1">
+	<div class="fl stripLeft">
+		<div class="square fl"><img src="{$combo.combo_logo}" style="width:100%;"></div>
+		<p class="fl">{$combo.combo_name}</p>
+		<!--<div class="tradem fl"><img src="{$combo.seat_logo}"></div>-->
+	</div>
+	<p class="fr moths">X&nbsp;{$combo.order_combo_number}</p>
+</div>
+<div class="strip1">
+	<p class="costs fl">价格：￥<span>{$combo.order_combo_price}</span></p>
+	<p class="extens fr">小计：￥<span>{$combo.order_combo_money}</span></p>
+</div>
+{/foreach}
+{/if}
+<!--{foreach from=$game_info item=game}-->
+<div class="grayBg">
+	<div class="grayLogo fl">
+		<img src="{$game.game_logo}">
+	</div>
+	<p class="fl quais">{$game.game_name}门票</p>
+</div>
+<!--{foreach from=$order_menpiao item=mp}-->
+<!--{if $game.id==$mp.gameid}-->
+<div class="strip1">
+	<div class="fl stripLeft">
+		<div class="square fl" style="background: #{$mp.color_value}">{$mp.numbers}</div>
+		<p class="fl" style="color: #{$mp.color_value}">{$mp.goods_name}</p>
+		<div class="tradem fl"><img src="{$mp.seat_logo}"></div>
+	</div>
+	<p class="fr moths">X&nbsp;{$mp.order_goods_number}</p>
+</div>
+<div class="strip1">
+	<p class="fr session">{$mp.pitch_name}&nbsp;<a href="">{$mp.region_name}</a></p>
+</div>
+<div class="strip1">
+	<p class="costs fl">价格：￥<span>{$mp.goods_price}</span></p>
+	<p class="extens fr">小计：￥<span>{$mp.order_goods_price}</span></p>
+</div>
+<!--{/if}-->
+<!--{/foreach}-->
+<!--{/foreach}-->
+<!--{if $goods_list}-->
+<!--{foreach from=$goods_list item=goods}-->
+<div class="grayBg">
+	<div class="grayLogo  fl" style="background:#DCA00F;">
+		<img src="images/infl.png">
+	</div>
+	<p class="fl quais">周边商品</p>
+</div>
+<div class="strip1">
+	<div class="fl stripLeft">
+		<p class="fl">{$goods.goods_name}</p>
+		<!--<div class="tradem fl"><img src="images/zbsp2.png"></div>-->
+	</div>
+	<p class="fr moths">X&nbsp;{$goods.goods_number}</p>
+</div>
+<div class="strip1">
+	<p class="fr session">{$goods.goods_attr}&nbsp;</p>
+</div>
+<div class="strip1">
+	<p class="costs fl">价格：￥<span>{$goods.goods_price}</span></p>
+	<p class="extens fr">小计：￥<span>{$goods.subtotal}</span></p>
+</div>
+<!--{/foreach}-->
+<!--{/if}-->
+<div class="shapeds"></div>
+<h3 class="accounts">联系地址</h3>
+<div class="strip3 padbto">
+	<div class="region">
+		<div class="fl regionLeft">
+			<label class="fr hintd">联系人姓名：</label>
+		</div>
+		<div class="fl regionRight">{$order_lianxiren.consignee}</div>
+	</div>
+	<div class="region">
+		<div class="fl regionLeft">
+			<label class="fr hintd">电子邮件：</label>
+		</div>
+		<div class="fl regionRight">{$order_lianxiren.email}</div>
+	</div>
+	<div class="region">
+		<div class="fl regionLeft">
+			<label class="fr hintd"></span>手机：</label>
+		</div>
+		<div class="fl regionRight">{$order_lianxiren.mobile}</div>
+	</div>
+	<div class="region">
+		<div class="fl regionLeft">
+			<label class="fr hintd">证件类型：</label>
+		</div>
+		<!--{if $order_lianxiren.card_type==0}-->
+		<div class="fl regionRight">身份证</div>
+		<!--{elseif $order_lianxiren.card_type==1}-->
+		<div class="fl regionRight">护照</div>
+		<!--{/if}-->
+	</div>
+	<div class="region">
+		<div class="fl regionLeft">
+			<label class="fr hintd">证件号码：</label>
+		</div>
+		<div class="fl regionRight">{$order_lianxiren.card_num}</div>
+	</div>
+</div>
+<div class="shapeds  replenish"></div>
+<h3 class="accounts">持票人列表</h3>
+
+<div class="strip3">
+	<!--{foreach from=$order_info.info item=combo}-->
+	<!--{if $combo.type == 'combo' && $combo.bearer_id != '0'}-->
+	<div class="region">
+		<div class="fl regionLeft">
+			<label class="fr hintd">球票（套餐）：</label>
+		</div>
+		<div class="fl regionRight">{$combo.goods_name}</div>
+	</div>
+	<div class="region">
+		<div class="fl regionLeft">
+			<label class="fr hintd">持票人：</label>
+		</div>
+		<div class="fl regionRight">{$combo.cn_customer_name}</div>
+	</div>
+	<div class="region">
+		<div class="fl regionLeft">
+			<label class="fr hintd"></span>护照：</label>
+		</div>
+		<div class="fl regionRight">{$combo.passport_number}</div>
+	</div>
+	<div class="region">
+		<div class="fl regionLeft">
+			<label class="fr hintd">时间：</label>
+		</div>
+		<div class="fl regionRight">{$combo.date_birth}</div>
+	</div>
+	<div class="region">
+		<div class="fl regionLeft">
+			<label class="fr hintd">电话：</label>
+		</div>
+		<div class="fl regionRight">{$combo.mobile}</div>
+	</div>
+	<!--{/if}-->
+	<!--{if $combo.type == 'ticket' && $combo.bearer_id != 0}-->
+	<div class="region">
+		<div class="fl regionLeft">
+			<label class="fr hintd">球票：</label>
+		</div>
+		<div class="fl regionRight">{$combo.goods_name}</div>
+	</div>
+	<div class="region">
+		<div class="fl regionLeft">
+			<label class="fr hintd">持票人：</label>
+		</div>
+		<div class="fl regionRight">{$combo.cn_customer_name}</div>
+	</div>
+	<div class="region">
+		<div class="fl regionLeft">
+			<label class="fr hintd"></span>护照：</label>
+		</div>
+		<div class="fl regionRight">{$combo.passport_number}</div>
+	</div>
+	<div class="region">
+		<div class="fl regionLeft">
+			<label class="fr hintd">时间：</label>
+		</div>
+		<div class="fl regionRight">{$combo.date_birth}</div>
+	</div>
+	<div class="region">
+		<div class="fl regionLeft">
+			<label class="fr hintd">电话：</label>
+		</div>
+		<div class="fl regionRight">{$combo.mobile}</div>
+	</div>
+	<!--{/if}-->
+	<!--{/foreach}-->
+</div>
+{include file=pages.html}
+<!--{if $order_info.pay_status=='2' && $order_info.type == '0'}-->
+<a href="bearer.php?act=add_bearer_info&order_sn={$order.order_sn}" class="addition">+&nbsp;&nbsp;添加持票人信息</a>
+<!--{else}-->
+<!--{/if}-->
+<!--{if $order_info.pay_status=='2' && $order_info.order_status=='1'}-->
+<div class="eclipsd">
+	<a href="download.php?type=vouch&file_name=vouch_{$order.order_sn}.pdf" class="downdBtn">点击生成购票凭证</a>
+</div>
+<!--{/if}-->
+<h3 class="accounts">支付方式</h3>
+<div class="strip3 padbto">
+	<div class="region">
+		<div class="fl regionLeft difWidth">
+			<label class="fr hintd">所选支付方式：</label>
+		</div>
+		<div class="fl regionRight">{$order.pay_name}</div>
+	</div>
+	<div class="region">
+		<div class="fl regionLeft difWidth">
+			<label class="fr hintd">应付款金额：</label>
+		</div>
+		<div class="fl regionRight" style="color:#c6151d;">￥{$order.order_amount}</div>
+	</div>
+</div>
+<!--<div class="botblak"></div>-->
+{/if}
+</body>
+<script type="text/javascript" src="js/pulldown.js"></script>
+<script>
+	function remove_bearer(order_id,bearer_id) {
+		$.ajax({
+			url: 'bearer.php?act=remove_ticket',
+			data: 'bearer_id=' + bearer_id + 'order_id' + order_id,
+			type: "POST",
+			dataType: "JSON",
+			success: delete_success
+		});
+	}
+	function remove_bearer_order(order_id,bearer_id) {
+		$.ajax({
+			url: 'bearer.php?act=remove_combo',
+			data: 'bearer_id=' + bearer_id + 'order_id' + order_id,
+			type: "POST",
+			dataType: "JSON",
+			success: delete_success
+		});
+	}
+	function delete_success() {
+		location.reload();
+	}
+</script>
+<script>
+	function weixin(){
+		var WIDout_trade_no = $("#WIDout_trade_no_99").val();
+        $.ajax({
+            url: 'submit.php?act=info_order_detail&order_sn='+WIDout_trade_no,
+            type: 'POST',
+            dataType: 'json',
+            success: function (data) {
+                var WIDtotal_fee = data;
+                window.location.href="http://webshop.shankaisports.com/mobile/wx/example/jsapi.php?WIDout_trade_no="+WIDout_trade_no+"&WIDtotal_fee="+WIDtotal_fee;
+            }
+        });
+	}
+	function zhifubao(){
+		var WIDout_trade_no = $("#WIDout_trade_no").val();
+        var WIDsubject = $("#WIDsubject").val();
+        var WIDshow_url = $("#WIDshow_url").val();
+        var WIDbody = $("#WIDbody").val();
+        $.ajax({
+            url: 'submit.php?act=info_order_detail&order_sn='+WIDout_trade_no,
+            type: 'POST',
+            dataType: 'json',
+            success: function (data) {
+                var WIDtotal_fee = data;
+                window.location.href="alipayapi.php?WIDout_trade_no="+WIDout_trade_no+"&WIDshow_url="+WIDshow_url+"&WIDtotal_fee="+WIDtotal_fee+"&WIDsubject="+WIDsubject+"&WIDbody="+WIDbody;
+            }
+        });
+	}
+</script>
+</html>

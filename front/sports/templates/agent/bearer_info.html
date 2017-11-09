@@ -1,0 +1,140 @@
+<!-- $Id: agency_list.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,jquery.min.js,listtable.js"}
+<div class="tab-div">
+<div id="tabbar-div">
+    <p>
+      <span id="general-tab">&nbsp;</span>        
+    </p>     
+</div>
+<div id="tabbody-div">    
+        <table width="90%" id="general-table" align="center">
+            <!-- 持票人 -->
+            <tr><td style="font-weight:bold;">新增持票人信息</td><td align="right">注:中英文对照填写</td></tr>
+            <tr><td colspan="2"><hr/></td></tr>
+            <tr><td width="40%" align='right' style="font-weight:bold;">{$lang.cn_customer_name}</td><td><input type="text" readonly="" name="cn_customer_name" value="{$bearer_info.cn_customer_name}"/></td></tr>
+            <tr><td align='right' style="font-weight:bold;">{$lang.us_customer_name}</td><td><input type="text" readonly="" name="us_customer_name" size="25" value="{$bearer_info.us_customer_name}"/></td></tr>
+            <tr ><td align='right' style="font-weight:bold;">{$lang.gender_appellation}</td>
+                <td>
+                    <!--<input type="text" name="gender_appellation" value="{$bearer_info.gender_appellation}"/>-->
+                    <select name="gender_appellation" readonly="">
+                        {if $bearer_info.gender_appellation eq 1}
+                            <option value="1">先生Mr.</option>
+                        {/if}
+                        {if $bearer_info.gender_appellation eq 2}
+                            <option value="2">女士Mrs.</option>
+                        {/if}                                                
+                    </select>
+                </td>
+           </tr>
+            <tr><td colspan="2"><hr/></td></tr>
+            <!-- 护照 -->
+            <tr><td align='right' style="font-weight:bold;">{$lang.passport_number}</td><td><input type="text" size="25" name="passport_number" value="{$bearer_info.passport_number}"/></td></tr>
+            <tr><td align='right' style="font-weight:bold;">{$lang.date_birth}</td>
+                <td>
+                    <!--<input type="text" name="date_birth" value="{$bearer_info.date_birth}"/>-->
+                    <div class="controls input-append date form_datetime" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy" data-link-field="date_birth">
+                        <input size="16" name="date_birth" type="text" value="{$bearer_info.date_birth}" readonly="">
+                        <span class="add-on"><i class="icon-remove"></i></span>
+                        <span class="add-on"><i class="icon-th"></i></span>
+                    </div>
+                    <!--<input type="hidden" id="date_birth" value="" name="date_birth"/><br/>-->
+                </td>
+            </tr>            
+            <tr><td align='right' style="font-weight:bold;">{$lang.issue_date}</td>
+                <td>
+                    <!--<input type="text" name="issue_date" value="{$bearer_info.issue_date}"/>-->
+                    <div class="controls input-append date form_datetime" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy" data-link-field="issue_date">
+                        <input size="16" name="issue_date" type="text" value="{$bearer_info.issue_date}" readonly="">
+                        <span class="add-on"><i class="icon-remove"></i></span>
+                        <span class="add-on"><i class="icon-th"></i></span>
+                    </div>
+                    <!--<input type="hidden" id="issue_date" value="" name="issue_date"/><br/>-->
+                </td>
+            </tr>
+            <tr><td align='right' style="font-weight:bold;">{$lang.expire_date}</td>
+                <td>
+                    <!--<input type="text" name="expire_date" value="{$bearer_info.expire_date}"/>-->
+                    <div class="controls input-append date form_datetime" data-date="1979-09-16T05:25:07Z" data-date-format="dd MM yyyy" data-link-field="expire_date">
+                        <input size="16" type="text"  name="expire_date" value="{$bearer_info.expire_date}" readonly="">
+                        <span class="add-on"><i class="icon-remove"></i></span>
+                        <span class="add-on"><i class="icon-th"></i></span>
+                    </div>
+                    <!--<input type="hidden" id="expire_date" value="" name="expire_date"/><br/>-->
+                </td>
+            </tr>            
+            <tr><td align="right" style="font-weight:bold;">{$lang.cn_nationality}</td><td><input type="text" readonly="" name="cn_nationality" value="{$bearer_info.cn_nationality}"/></td></tr>
+            <tr><td align="right" style="font-weight:bold;">{$lang.us_nationality}</td><td><input type="text" readonly="" name="us_nationality" value="{$bearer_info.us_nationality}"/></td></tr>
+            <tr><td colspan="2"><hr/></td></tr>
+            <tr><td align='right' style="font-weight:bold;">{$lang.cn_name_street}</td><td><input type="text" readonly="" size="25" name="cn_name_street" value="{$bearer_info.cn_name_street}"/></td></tr>
+            <tr><td align='right' style="font-weight:bold;">{$lang.us_name_street}</td><td><input type="text" readonly="" size="35" name="us_name_street" value="{$bearer_info.us_name_street}"/></td></tr>
+            <tr><td align='right' style="font-weight:bold;">{$lang.post_code}</td><td><input type="text" readonly="" name="post_code" value="{$bearer_info.post_code}"/></td></tr>
+            <tr><td align='right' style="font-weight:bold;">{$lang.cn_country}</td><td><input type="text" readonly="" name="cn_country" value="{$bearer_info.cn_country}"/></td></tr>
+            <tr><td align='right' style="font-weight:bold;">{$lang.us_country}</td><td><input type="text" readonly="" name="us_country" value="{$bearer_info.us_country}"/></td></tr>
+            <tr><td align='right' style="font-weight:bold;">{$lang.cn_state}</td><td><input type="text" readonly="" name="cn_state" value="{$bearer_info.cn_state}"/></td></tr>
+            <tr><td align='right' style="font-weight:bold;">{$lang.us_state}</td><td><input type="text" readonly="" name="us_state" value="{$bearer_info.us_state}"/></td></tr>
+            <tr><td align='right' style="font-weight:bold;">{$lang.cn_city}</td><td><input type="text" readonly="" name="cn_city" value="{$bearer_info.cn_city}"/></td></tr>
+            <tr><td align='right' style="font-weight:bold;">{$lang.us_city}</td><td><input type="text" readonly="" name="us_city" value="{$bearer_info.us_city}"/></td></tr>
+            <tr><td align='right' style="font-weight:bold;">{$lang.telephone}</td><td><input type="text" readonly="" name="telephone" value="{$bearer_info.telephone}"/></td></tr>
+            <tr><td align='right' style="font-weight:bold;">{$lang.mobile}</td><td><input type="text" readonly="" name="mobile" value="{$bearer_info.mobile}"/></td></tr>
+            <tr><td align='right' style="font-weight:bold;">{$lang.mail}</td><td><input type="text" readonly="" name="mail" value="{$bearer_info.mail}"/></td></tr>
+            <tr><td colspan="2"><hr/></td></tr>           
+<!--            <tr><td align='right' style="font-weight:bold;">{$lang.ticket_category}</td><td><input type="text" readonly="" name="ticket_category" value="{$bearer_info.ticket_category}"/></td></tr>
+            <tr><td align='right' style="font-weight:bold;">{$lang.quantity_pakcges}</td><td><input type="text" readonly="" name="quantity_pakcges" value="{$bearer_info.quantity_pakcges}"/></td></tr>
+            -->
+            <tr><td align='right' style="font-weight:bold;">{$lang.contacts_tel}</td><td><input type="text" readonly="" name="contacts_tel" value="{$bearer_info.contacts_tel}"/></td></tr>
+            <tr><td align='right' style="font-weight:bold;">{$lang.emergency_contacts_tel}</td><td><input type="text" readonly="" name="emergency_contacts_tel" value="{$bearer_info.emergency_contacts_tel}"/></td></tr>
+            <tr><td align='right' style="font-weight:bold;">{$lang.cn_remarks}</td>
+                <td>
+                    <!--<input type="text" name="cn_remarks" value="{$bearer_info.cn_remarks}"/>-->
+                    <textarea rows="5" cols="40" name="cn_remarks" readonly="">{$bearer_info.cn_remarks}</textarea>
+                </td>
+            </tr>
+            <tr><td align='right' style="font-weight:bold;">{$lang.us_remarks}</td>
+                <td>
+                    <!--<input type="text" name="us_remarks" value="{$bearer_info.us_remarks}"/>-->
+                    <textarea rows="5" cols="40" name="us_remarks" readonly="">{$bearer_info.us_remarks}</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td align='right' style="font-weight:bold;" >票号</td>
+                <td><input type='text' name='ticket_code' id='zh_ticket_code' value='{$bearer_info.ticket_code}'/><input type='button' value="点击修改" onclick="editCode();"/></td>
+            </tr>
+            <tr>
+               <td align='right'>
+                   <input type='button' id="pass" onclick="auditor({$bearer_info.id},2,'pass')" value="审核通过" {if $bearer_info.audit_bearer}disabled ="true"{/if}/>
+                   <!-- <a href="javascript:void(0)" id="pass" disabled = 'disabled' name="button" onclick="auditor({$bearer_info.id},2,'pass')" style="width:60px;height:19px;line-height:19px;text-align:center;text-decoration:none;display:block;FILTER:progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=#d9e9fc,endColorStr=#a6c6f2);border:1px solid #4d82c4;background-color:#BBDDE5;">审核通过</a> -->
+               </td>
+               <td align='left'>
+                   <input type='button' id="onpass" onclick="auditor({$bearer_info.id},3,'onpass')" value="审核不通过" {if $bearer_info.audit_bearer}disabled ="true"{/if}/>
+                  <!-- <a href="javascript:void(0)" id="onpass" name="button" onclick="auditor({$bearer_info.id},3,'onpass')" style="width:60px;height:19px;line-height:19px;text-align:center;text-decoration:none;display:block;FILTER:progid:DXImageTransform.Microsoft.Gradient(gradientType=0,startColorStr=#d9e9fc,endColorStr=#a6c6f2);border:1px solid #4d82c4;background-color:#BBDDE5;">审核不通过</a></td> -->
+               </td>
+            </tr>
+            <!--<tr>
+               <td  colspan="2" align='right'><input type="submit" name="button" value="{$lang.button_submit}" class="button" /></td>
+               <td  colspan="2" align='left'><input type="reset" value="{$lang.button_reset}" class="button" /></td>
+           </tr>-->
+        </table>
+</div>
+</div>
+<script type="text/javascript" language="javascript">
+    function auditor(bearer_id,status,id){
+        document.getElementById("onpass").disabled = true;
+        document.getElementById("pass").disabled = true;
+        Ajax.call('route.php?con=agent&act=audit_bearer', "bearer_id=" + bearer_id + "&status=" + status, callback, "GET", "TEXT");
+    }
+    function callback(result){
+        alert(result);
+    }
+    function editCode(){
+        var id = '{$bearer_id}';
+        var ticket_code = $("#zh_ticket_code").val();
+        if(ticket_code){
+            Ajax.call('route.php?con=agent&act=edit_agent_ticket_code', "id=" + id + "&val=" + ticket_code, editCodeCallBack, "POST", "JSON");
+        }
+    }
+    function editCodeCallBack(result){
+        alert(result);
+    }
+</script>
+{include file="pagefooter.htm"}

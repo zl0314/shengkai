@@ -1,0 +1,46 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader2.htm"}
+
+<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
+<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+<div class="main-div">
+    <form method="post" action="route.php?con=banner&act=edit" name="theForm">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td class="label">位置名称：</td>
+                <td> <input type="text" name="place_name" value="{$place.place_name}" /></td>
+            </tr>
+            <tr>
+                <td class="label">位置编码：</td>
+                <td>
+                    <input type="text" name="place_code" value="{$place.place_code}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="label">状态：</td>
+                <td>
+                    <input type="radio" name="place_status" value="0" {if $place.place_status == 0 } checked {/if}>开启 
+                           <input type="radio" name="place_status" value="1" {if $place.place_status == 1 } checked {/if} >关闭 
+
+                </td>
+            </tr>
+
+
+        </table>
+        <table align="center">
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" class="button" value="{$lang.button_submit}" />
+                    <input type="reset" class="button" value="{$lang.button_reset}" />
+                    <input type="hidden" name="act" value="{$act}" />
+                    <input type="hidden" name="hotel_id" value="{$hotel_id}" />
+                    <input type="hidden" name="id" value="{$place.id}" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js,jquery.min.js"}
+{literal}
+{/literal}
+{include file="pagefooter.htm"}

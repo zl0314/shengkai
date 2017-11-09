@@ -1,0 +1,184 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader2.htm"}
+{insert_scripts files="validator.js,jquery.min.js,../js/region.js"}
+<link href="./js/jquery.datetimepicker/jquery.datetimepicker.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
+<div class="main-div">
+    <form method="post" action="route.php?con=air_line&act=edit" name="theForm" enctype="multipart/form-data">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td class="label">标题：</td>
+                <td><input type="text" name="title" maxlength="100" value="{$air_line.title}" />{$lang.require_field}</td>
+            </tr>
+            <tr>
+                <td class="label">类型：</td>
+                <td>
+                    <input type="hidden" name="type" value="0">
+                    往返
+                </td>
+            </tr>
+            <tr>
+                <td class="label">价格：</td>
+                <td><input type="text" name="price" maxlength="100" value="{$air_line.price}" />{$lang.require_field}</td>
+            </tr>
+            <tr>
+                <td class="label">描述：</td>
+                <td>
+                    <textarea name="description">{$air_line.description}</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">出发城市：</td>
+                <td><font id="from">{$air_line.from_city|address}</font><input type="hidden" name="from_city" id="from_id" value="{$air_line.from_city}" /></td>
+            </tr>
+            <tr>
+                <td class="label">到达城市：</td>
+                <td><font id="to">{$air_line.to_city|address}</font><input type="hidden" name="to_city" id="to_id" value="{$air_line.to_city}" /></td>
+            </tr>
+            <tr>
+                <td class="label">去程时间：</td>
+                <td><input type="text" name="fly_time" maxlength="20" value="{$air_line.fly_time}" />{$lang.require_field}</td>
+            </tr>
+            <tr>
+                <td class="label">返程时间：</td>
+                <td><input type="text" name="return_fly_time" maxlength="20" value="{$air_line.return_fly_time}" />{$lang.require_field}</td>
+            </tr>
+        </table>
+        <hr>
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <caption><strong>从下面的列表中选择地区，点加号按钮添加到酒店所在的地区</strong></caption>
+            <tr>
+                <td width="30%">&nbsp;</td>
+                <td>国家</td>
+                <td>省</td>
+                <td>市</td>
+                <td width="10%">&nbsp;</td>
+                <td width="10%">&nbsp;</td>
+                <td width="10%">&nbsp;</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td><select name="country" id="selCountries" onChange="region.changed(this, 1, 'selProvinces')" size="10">
+                        {foreach from=$countries item=country name="fe_country"}
+                        <option value="{$country.region_id}" {if $smarty.foreach.fe_country.first}selected{/if}>{$country.region_name|escape:html}</option>
+                        {/foreach}
+                    </select></td>
+                <td><select name="province" id="selProvinces" onChange="region.changed(this, 2, 'selCities')" size="10">
+                        <option value="">{$lang.select_please}</option>
+                    </select></td>
+                <td><select name="city" id="selCities" size="10">
+                        <option value="">{$lang.select_please}</option>
+                    </select></td>
+                <td>&nbsp;</td>
+                <td><input type="button" value="设为出发地" class="button" onclick="addFrom()" /> <br /><input type="button" value="设为目的地" class="button" onclick="addTo()" /></td></td>
+               
+                <td>&nbsp;</td>
+            </tr>
+        </table>
+
+        <table align="center">
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" class="button" value="{$lang.button_submit}" />
+                    <input type="reset" class="button" value="{$lang.button_reset}" />
+                    <input type="hidden" name="act" value="{$act}" />
+                    <input type="hidden" name="id" value="{$air_line.id}" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js,jquery.datetimepicker/jquery.datetimepicker.full.min.js"}
+{literal}
+<script language="JavaScript">
+<!--
+
+    jQuery(document).ready(function () {
+        'use strict';
+        jQuery.datetimepicker.setLocale('ch');
+        jQuery('input[name=date]').datetimepicker({
+            timepicker:false,
+            format:'Y-m-d'
+        });
+    });
+
+    region.isAdmin = true;
+    /**
+     * 检查表单输入的数据
+     */
+    function validate() {
+        validator = new Validator("theForm");
+        validator.required("agency_name", no_agencyname);
+        return validator.passed();
+    }
+
+    /**
+     * 添加一个区域
+     */
+    function addFrom() {
+        var selCountry = document.forms['theForm'].elements['country'];
+        var selProvince = document.forms['theForm'].elements['province'];
+        var selCity = document.forms['theForm'].elements['city'];
+        var regionCell = document.getElementById("from");
+        var region_id = document.getElementById("from_id");
+        if(!selCity.value){
+            alert("请选择出发城市");
+            return false;
+        }
+        if (selCity.selectedIndex > 0) {
+            regionId = selCity.options[selCity.selectedIndex].value;
+            regionName = selCity.options[selCity.selectedIndex].text;
+        } else {
+            if (selProvince.selectedIndex > 0) {
+                regionId = selProvince.options[selProvince.selectedIndex].value;
+                regionName = selProvince.options[selProvince.selectedIndex].text;
+            } else {
+                if (selCountry.selectedIndex >= 0) {
+                    regionId = selCountry.options[selCountry.selectedIndex].value;
+                    regionName = selCountry.options[selCountry.selectedIndex].text;
+                } else {
+                    return;
+                }
+            }
+        }
+        regionCell.innerHTML = regionName;
+        region_id.value = regionId;
+    }
+     /**
+     * 添加一个区域
+     */
+    function addTo() {
+        var selCountry = document.forms['theForm'].elements['country'];
+        var selProvince = document.forms['theForm'].elements['province'];
+        var selCity = document.forms['theForm'].elements['city'];
+        var regionCell = document.getElementById("to");
+        var region_id = document.getElementById("to_id");
+        
+        if(!selCity.value){
+            alert("请选择到达城市");
+            return false;
+        }
+        if (selCity.selectedIndex > 0) {
+            regionId = selCity.options[selCity.selectedIndex].value;
+            regionName = selCity.options[selCity.selectedIndex].text;
+        } else {
+            if (selProvince.selectedIndex > 0) {
+                regionId = selProvince.options[selProvince.selectedIndex].value;
+                regionName = selProvince.options[selProvince.selectedIndex].text;
+            } else {
+                if (selCountry.selectedIndex >= 0) {
+                    regionId = selCountry.options[selCountry.selectedIndex].value;
+                    regionName = selCountry.options[selCountry.selectedIndex].text;
+                }
+                else {
+                    return;
+                }
+            }
+        }
+        regionCell.innerHTML = regionName;
+        region_id.value = regionId;
+    }
+//-->
+</script>
+{/literal}
+{include file="pagefooter.htm"}

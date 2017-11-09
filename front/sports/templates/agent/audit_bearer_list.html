@@ -1,0 +1,75 @@
+<!-- $Id: agency_list.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,newlisttable.js"}
+<form method="POST" action="route.php?con=agent&act=batch_update_audit" name="listForm">
+<div class="list-div" id="listDiv">
+{/if}
+    <table class="list-td" cellpadding="0" cellspacing="2" style="txet-align:center;">
+        <tr>   
+            <th width="10%"><input onclick="listTable.selectAll(this, 'checkboxes')" type="checkbox">选择</th>
+            <th>状态</th>
+            <th>赛事</th>
+            <th>赛程</th>
+            <th>场次</th>           
+<!--            <th>票务等级</th>-->
+            <th>商品名称</th>
+            <th>姓名</th>
+            <th>护照号码</th>
+            <th>联系电话</th>            
+            <th>操作</th>
+        </tr>
+        {foreach from=$pitch_info item=pitch} 
+            <tr>
+                <td align="center"><input type="checkbox" name="checkboxes[]" value="{$pitch.bearer_info}"></td>
+                <td align="center">{if $pitch.audit_bearer eq 2}审核通过{elseif $pitch.audit_bearer eq 3}审核不通过{elseif $pitch.audit_bearer eq 1}未审核{/if}</td>
+                <td align="center">{$pitch.game_name}</td>
+                <td align="center">{$pitch.sche_name}</td>             
+                <td align="center">{$pitch.num_name}</td>
+                <!--<td align="center">{$pitch.attr_value}</td>-->
+                <td align="center">{$pitch.goods_name}</td>
+                <td align="center">{$pitch.cn_customer_name}</td>
+                <td align="center">{$pitch.passport_number}</td>
+                <td align="center">{$pitch.mobile}</td>               
+                <td align="center"><a href="route.php?con=agent&act=bearer_info&bearer_id={$pitch.bearer_info}">查看</a></td>                    
+            </tr> 
+        {foreachelse}
+        <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+        {/foreach}
+    </table>
+    <table id="page-table" cellspacing="0">
+        <tr>
+            <td>
+                <input name="remove" type="submit" id="btnSubmit" value="批量审批" class="button" disabled="true" />
+                <input name="act" type="hidden" value="batch" />
+                <input name="id" type="hidden" value="{$id}" />
+                <input name="audit_bearer" type="hidden" value="{$audit_bearer}" />
+            </td>
+            <td align="right" nowrap="true">
+                {include file="page2.htm"}
+            </td>
+        </tr>
+    </table>
+{if $full_page}
+</div>
+</form>
+<script type="text/javascript" language="javascript">
+<!--
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+  listTable.new_url = 'route.php?is_ajax=1&con=agent';
+    listTable.act = 'see_audit_bearer_query';
+  {foreach from = $filter item = item key = key}
+    listTable.filter.{$key} = '{$item}';
+  {/foreach}
+{literal}
+    onload = function()
+    {
+        // 开始检查订单
+        startCheckOrder();
+    } 
+{/literal}
+//-->
+</script>
+{include file="pagefooter.htm"}
+{/if}

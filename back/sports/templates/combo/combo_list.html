@@ -1,0 +1,106 @@
+<!-- $Id: games_list.htm 17053 2010-03-15 06:50:26Z sxc_shop $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,newlisttable.js,jquery.min.js"}
+
+  {if $smarty.get.select}
+<input type="button" value="确认选择" onclick="select_goods()">
+{/if}
+
+<form method="POST" action="route.php?con=combo&act=batch_drop" name="listForm" onsubmit="return confirm_bath()">
+    <!-- start number list -->
+    <div class="list-div" id="listDiv">
+{/if}
+        <table cellpadding="3" cellspacing="1">
+            <tr>
+                <th>
+                    <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox">
+                    <a href="javascript:listTable.sort('id'); ">编号</a>{$sort_id}
+                </th>
+                <th>套餐名称</th>
+                <th>套餐标题</th> 
+                <th>套餐副标题</th> 
+                <th>排序</th>
+                <th>是否显示</th>
+                <th>{$lang.handler}</th>
+            </tr>
+                {foreach from=$combo_list item=combo}
+            <tr>
+                <td><input type="checkbox" name="checkboxes[]" value="{$combo.combo_id}" notice="" />{$combo.combo_id}</td>
+                <td class="first-cell" align="center">{$combo.combo_name}</td>
+                <td align="center">{$combo.combo_title}</td>
+                <td align="center">{$combo.combo_intro}</td>
+                <td align="center">{$combo.sort_order}</td>
+                <td width="10%" align="center"><img src="images/{if $combo.is_show eq '1'}yes{else}no{/if}.gif" /></td>
+
+                {if !$smarty.get.select}
+                <td align="center">
+                    <a href="route.php?con=combo&act=update&id={$combo.combo_id}" title="{$lang.edit}"><img src="images/icon_edit.gif" border="0" height="16" width="16" /></a>
+                    <a href="javascript:confirm_redirect('确定要删除该套餐?', 'route.php?con=combo&act=remove&id={$combo.combo_id}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16" /></a>
+                </td>
+                {else}
+                <td><input type="checkbox" class="radio checkbox" name="sel"  itemname="{$combo.combo_name}"  value="{$combo.combo_id}">
+                数量 <input type="text" style="width:15px;" id="count_{$combo.combo_id}" >
+             </td>
+                {/if}
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="9">{$lang.no_records}</td></tr>
+            {/foreach}
+            <tr>
+                <td colspan="2">
+                    <input type="hidden" name="act" value="batch_remove" />
+                    <input type="submit" id="btnSubmit" value="删除" disabled="true" class="button" /></td>
+                    <td align="right" nowrap="true" colspan="8">
+                    {include file="page2.htm"}
+                </td>
+            </tr>
+            
+        </table>
+{if $full_page}
+    </div>
+</form>
+<script type="text/javascript" language="JavaScript">
+    {if $smarty.get.select}
+    //选择商品后，关闭
+    var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+   function select_goods(obj){
+        var ids = names = '';
+        var con = '';
+        var id = count = '';
+
+        var checked = $('.checkbox').each(function(index, el) {
+          console.log($(this).prop('checked'));
+          if($(this).prop('checked')){
+            id = $(this).val();
+            count = $('#count_'+id).val();
+            ids += con + $(this).val();
+            names +=  con +  $(this).attr('itemname') + '（ X ' + count + '）';
+            con = ',';
+          }
+        });
+        //给父页面传值
+        var val = $(obj).val();
+        parent.$('#combo_id').val(ids);
+        parent.$('#contract_type').val(2);
+        parent.$('#combo_id_name').html(names);
+        parent.$('#combos').val(names);
+
+        parent.layer.close(index);
+    }
+    {/if}
+
+    listTable.recordCount = {$record_count};
+    listTable.pageCount = {$page_count};
+    listTable.new_url = 'route.php?is_ajax=1&con=combo';
+    listTable.act = 'index_query';
+    {foreach from = $filter item = item key = key}
+    listTable.filter.{$key} = '{$item}';
+    {/foreach}
+    function confirm_bath()
+  {
+    return confirm("确定要批量删除所选套餐吗");
+  }
+</script>
+{include file="pagefooter.htm"}
+{/if}

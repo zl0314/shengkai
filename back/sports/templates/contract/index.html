@@ -1,0 +1,68 @@
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,newlisttable.js"}
+<div class="list-div" id="listDiv">
+    {/if}
+    <table class="list-td" cellpadding="0" cellspacing="1" style="txet-align:center;">
+        <tr>
+            <th width="10%">编号</th>
+            <th>合同名称</th>
+            <th>合同号</th>
+            <th>对应订单号</th>
+            <th>添加时间</th>
+            <th>合同路径</th>
+            <th>签约人/手机号</th>
+            <th>合同内容</th>
+            <th>操作</th>
+        </tr>
+        {foreach from=$item_list item=row}
+        <tr>
+            <td align="center">{$row.contract_id}</td>
+            <td align="center">{$row.contract_name}</td>
+            <td align="center">{$row.contract_no}</td>
+            <td align="center">{$row.order_sn}</td>
+            <td align="center">{$row.addtime}</td>
+            <td align="center">
+            {if $row.contract_file}
+                <a href="{$row.contract_file}" target="_blank">点击查看</a>
+                {else}
+                未上传
+                {/if}
+            </td>
+            <td align="center">{$row.user_name} / {$row.mobile_phone}</td>
+         <td align="left">
+             {if $row.goods}<b>商品：</b>{$row.goods}<br>{/if}
+             {if $row.combos}<b>套餐：</b>{$row.combos}<br>{/if}
+             {if $row.hotels}<b>酒店：</b>{$row.hotels}<br>{/if}
+             {if $row.airtickets}<b>航班：</b>{$row.airtickets}<br>{/if}
+
+         </td>
+            <td align="center">
+                <a href="route.php?con=contract&act=remove&id={$row.contract_id}"  >删除</a>|
+                <a href="route.php?con=contract&act=update&id={$row.contract_id}"  >编辑</a>
+            </td>
+        </tr>
+        {foreachelse}
+        <tr><td class="no-records" colspan="5">{$lang.no_records}</td></tr>
+        {/foreach}
+    </table>
+
+    <table id="page-table" cellspacing="0">
+        <tr>
+            <td align="right" nowrap="true">
+                {include file="page2.htm"}
+            </td>
+        </tr>
+    </table>
+    {if $full_page}
+</div>
+<script type="text/javascript" language="javascript">
+    <!--
+    listTable.recordCount = {$record_count};
+    listTable.pageCount = {$page_count};
+    listTable.new_url = 'route.php?is_ajax=1&con=contract';
+    listTable.act = 'contract_list_query';
+    //-->
+</script>
+{include file="pagefooter.htm"}
+{/if}

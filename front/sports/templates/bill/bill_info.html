@@ -1,0 +1,131 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader2.htm"}
+
+<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
+<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+<div class="main-div">
+    <form method="post" action="route.php?con=bill&act=edit" name="theForm">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td  class="label">广告名称</td>
+                <td>
+                  <input type="text" name="bill_name" value="{$bill_info.bill_name}" size="35" />
+                  <br /><span class="notice-span">广告名称只是作为辨别多个广告条目之用，并不显示在广告中</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">媒介类型</td>
+                <td>
+                 <select name="media_type" onchange="showMedia(this.value)">
+                 <option value='0' {if $bill_info.media_type eq 0}selected{/if}>图片</option>
+                 <option value='1' {if $bill_info.media_type eq 1}selected{/if}>Flash</option>
+                 <option value='2' {if $bill_info.media_type eq 2}selected{/if}>视频</option>
+                 </select>
+                </td>
+              </tr>
+            <tr>
+                <td  class="label">开始时间</td>
+                <td>
+                  <input name="start_time" type="text" id="start_time" size="22" value='{$bill_info.start_time}' readonly="readonly" /><input name="selbtn1" type="button" id="selbtn1" onclick="return showCalendar('start_time', '%Y-%m-%d', false, false, 'selbtn1');" value="{$lang.btn_select}" class="button"/>
+                </td>
+              </tr>
+            <tr>
+                <td class="label">结束时间</td>
+                <td>
+                  <input name="end_time" type="text" id="end_time" size="22" value='{$bill_info.end_time}' readonly="readonly" /><input name="selbtn2" type="button" id="selbtn2" onclick="return showCalendar('end_time', '%Y-%m-%d', false, false, 'selbtn2');" value="{$lang.btn_select}" class="button"/>
+                </td>
+            </tr>
+            <tbody id="0" style="{if $bill_info.media_type neq 0}display:none;{/if}">
+            <tr>
+                <td class="label">广告图片</td>
+                <td>
+                    <div id="container1">
+                        <a class="btn btn-default btn-lg " id="img_upload1" href="#" >
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>选择文件</span>
+                        </a>
+                        <font id="upload_status1"></font>
+                        <input type="hidden" name="bill_source" id="img_id1" value="{$bill_info.bill_source}"/>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td  class="label">广告链接</td>
+                <td>
+                  <input type="text" name="bill_link" value="{$bill_info.bill_link}" size="35" />
+                </td>
+            </tr>
+            </tbody>
+            <tbody id="1" style="{if $bill_info.media_type neq 1}display:none;{/if}">
+            <tr>
+                <td  class="label">Flash地址</td>
+                <td>
+                  <input type="text" name="bill_source1" value="{$bill_info.bill_source}" size="35" />
+                </td>
+            </tr>
+            </tbody>
+            <tbody id="2" style="{if $bill_info.media_type neq 2}display:none;{/if}">
+            <tr>
+                <td  class="label">视频地址</td>
+                <td>
+                  <input type="text" name="bill_source2" value="{$bill_info.bill_source}" size="35" />
+                </td>
+            </tr>
+            </tbody>
+            <tr>
+                <td  class="label">投放页面</td>
+                <td>
+                  <input type="radio" name="show_page" value="0" {if $bill_info.show_page eq 0} checked="true" {/if} />首页
+                  <input type="radio" name="show_page" value="1" {if $bill_info.show_page eq 1} checked="true" {/if} />全站
+                </td>
+            </tr>
+            <tr>
+                <td  class="label">是否开启</td>
+                <td>
+                  <input type="radio" name="status" value="0" {if $bill_info.status eq 0} checked="true" {/if} />关闭
+                  <input type="radio" name="status" value="1" {if $bill_info.status eq 1} checked="true" {/if} />开启
+                </td>
+            </tr>
+        </table>
+        <table align="center">
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" class="button" value="{$lang.button_submit}" />
+                    <input type="reset" class="button" value="{$lang.button_reset}" />
+                    <input type="hidden" name="act" value="{$act}" />
+                    <input type="hidden" name="bill_id" value="{$bill_info.bill_id}" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js,jquery.min.js"}
+<script type="text/javascript" charset="utf-8" src="js/qiniu/plupload.full.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/qiniu.js"></script>
+<!--<script type="text/javascript" charset="utf-8" src="js/qiniu/main.js"></script>-->
+<script type="text/javascript" charset="utf-8" src="js/qiniu/qiniu_init.js"></script>
+<script language="JavaScript">
+    new QiniuInit().upload({
+        browse_button:"img_upload1",
+        drop_element:"container1",
+        upload_status:"upload_status1",
+        img_id:"img_id1"
+    });
+</script>
+<script type="text/javascript">
+//     UE.getEditor('max_title_editor');
+//     UE.getEditor('min_title_editor');
+</script>
+<script type="text/javascript">
+    document.forms['theForm'].elements['bill_name'].focus();
+    var MediaList = new Array('0', '1', '2');
+    function showMedia(AdMediaType){
+       for (I = 0; I < MediaList.length; I ++){
+         if (MediaList[I] == AdMediaType)
+           document.getElementById(AdMediaType).style.display = "";
+         else
+           document.getElementById(MediaList[I]).style.display = "none";
+       }
+    }
+</script>
+{include file="pagefooter.htm"}

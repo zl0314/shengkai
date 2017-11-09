@@ -1,0 +1,375 @@
+{if $smarty.session.user_name}
+ <div class="header">
+	<div id="link" class="headList fl" >
+		<a href="#"  class="listL fl" onclick="$('#the').show()">
+			<img src="images/lists.png">
+		</a>
+	</div>
+
+	<div class="headTitle fl">        
+               <div class="logos">    
+                   {if $name1}
+                   <a href="index.php">{$name1}</a>
+                   {else}
+                  {$name}
+                    {/if}
+               </div>
+	</div>
+	<div class="headSearch fr" >
+               <a href="login.php" class="searR fr">
+                   <img src="./images/vip.png">
+	      </a>
+	</div>
+</div>
+<div id="one"  class="popupBg" style="display: none;" >
+	<div class="options gauge">
+	   <a href="#" class="fr popusea" onclick="$('#one').hide()"><img src="images/popusea.png"></a>
+	</div>
+<form class="navbar-form navbar-left seeks" role="search" name="ss_sou" id="ss_sou"
+                              method="post" style="width:612px;">
+            <div class="firsearch fl form-group" style="width:612px;">
+                 <input name="search" type="text" value="" placeholder="球队/赛事名/城市"
+                  class="firsearch fl form-control ssuo"  oninput="is_disable()" id="search"/>
+           </div>
+               <button type="submit" name="ss_id" disabled="false" style="margin-top: 15px;"  onclick="is_null()" style="">
+                 <img src="images/searBtn.png"/></button>  
+                        </form>
+   <form id="select_form" action="game_search.php">
+        <input type="hidden" name="scat_id" id="select_scat_id">
+        <input type="hidden" name="game_id" id="select_game_id">
+        <input type="hidden" name="region_id" id="select_region_id">
+        <div class="nice-select"  name="nice-select">
+        <input id="select_cat" type="text" value="运动类别" readonly>
+         <ul>
+             <!--{foreach from=$sportcat_list  item=sportcat }-->
+             <li>
+                <a href="javascript:select_cat('{$sportcat.name}','{$sportcat.id}')" style="color:#898989;">{$sportcat.name}</a>
+            </li>
+             <!--{/foreach}-->
+         </ul>
+		</div>
+		<div class="nice-select" name="nice-select">
+			<input  id="select_game" type="text" value="选择赛事" readonly>
+                        <span class="caret"></span>
+			<ul role="menu"  aria-labelledby="dropdownMenu3" id="game_ul">
+                        </ul>
+                           <input type="hidden" value="-1" id="game_id"/>
+		</div>
+		<div class="nice-select" name="nice-select">
+			<input id="select_city" type="text" value="选择城市" readonly>
+                         <span class="caret"></span>
+			 <ul  role="menu" id="city_ul">
+                          </ul>
+		</div>
+            
+       <input class="hunts btn btn-default " type="submit" value="搜索" id="search2">
+		
+         </form>
+</div>
+
+
+<!--end搜索弹窗-->
+<div id="the" class="popupBg" style="display: none;" >
+	<div class="header popuHead">
+        <div class="headList fl">
+            <a href="#" class="listL fl" onclick="$('#the').hide()">
+                <img src="images/populist.png">
+            </a>
+        </div>
+        <div class="headTitle fl">
+                <a href="index.php">首页</a>
+        </div>
+        <div class="headSearch fr">
+            {if $num == 0}
+            <a class="searR fr neWith">
+                <img src="images/cars.png">
+            </a>
+            {else}
+            <a href="cart.php" class="searR fr neWith">
+                <img src="images/cars.png">
+                {if $num == 0}
+                {else}
+                <span class="yuanquan">{$num}</span>
+                {/if}
+            </a>
+            {/if}
+        </div>
+    </div>
+        <h3 class="cliHide">选择赛事<span class="fr"></span></h3>
+        <div class="ballGroup">
+            <ul class="ballGame fl" id="tabBall">
+                {foreach from=$sportcat_list_info item=scat}
+                {if $scat.is_one==1}
+                <li class="fli"><a href="#" >{$scat.name}</a></li>
+                {else}
+                <li><a href="#" >{$scat.name}</a></li>
+                {/if}
+                {/foreach}
+            </ul>
+            <div id="tab_ball" class="ballCont">
+                {foreach from=$sportcat_list_info item=scat}
+                {if $scat.is_one==1}
+                <ul class="listNone" style="display: block">
+                    {foreach from=$scat.scat item=game}
+                    <li>
+                        <!--{if $game.id == 60}-->
+                        <a href="special.php?act=special&game_id={$game.id}">{$game.game_name}</a>
+                        <!--{else}-->
+                        <a href="lister.php?act=index&game_id={$game.id}">{$game.game_name}</a>
+                        <!--{/if}-->
+                    </li>
+                    {/foreach}
+                </ul>
+                {else}
+                <ul class="listNone" >
+                    {foreach from=$scat.scat item=game}
+                    <li>
+                        <!--{if $game.id == 60}-->
+                        <a href="special.php?act=special&game_id={$game.id}">{$game.game_name}</a>
+                        <!--{else}-->
+                        <a href="lister.php?act=index&game_id={$game.id}">{$game.game_name}</a>
+                        <!--{/if}-->
+                    </li>
+                    {/foreach}
+                </ul>
+                {/if}
+                {/foreach}
+            </div>
+        </div>
+    <div class="regis">
+	   <a href="personal_center.php" class="fl login">用戶中心</a>
+		<a href="user.php?act=logout" class="fr enroll">退出</a>
+    </div>
+</div>
+ {else}
+<!--start-->
+<!--end-->
+<!--start 头部-->
+<div class="header">
+	<div id="link" class="headList fl" >
+		<a href="#"  class="listL fl" onclick="$('#the').show()">
+			<img src="images/lists.png">
+		</a>
+	</div>
+	<div class="headTitle fl">        
+               <div class="logos">    
+                   {if $name1}
+                   <a href="index.php">{$name1}</a>
+                   {else}
+                  {$name}
+                    {/if}
+               </div>
+	</div>
+	<div class="headSearch fr" >
+               <a href="login.php" class="searR fr" >
+                   <img src="./images/vip.png">
+	       </a>
+	</div>
+  </div>
+<!--end 头部-->
+<!--start搜索弹窗-->
+   <div id="one"  class="popupBg" style="display: none;" >
+	<div class="options gauge">
+		<a href="#" class="fr popusea" onclick="$('#one').hide()"><img src="images/popusea.png"></a>
+	</div>
+    <form class="navbar-form navbar-left seeks" role="search" name="ss_sou" id="ss_sou" method="post" style="position:relative;width:676px;">
+        <div class="firsearch fl form-group" style="position: relative">
+            <input name="search" type="text" value="" placeholder="球队/赛事名/城市"
+                   class="firsearch fl "  oninput="is_disable()"
+                   id="search"/>
+        </div>
+        <button class="searBtn fr" type="submit" name="ss_id" disabled="false" onclick="is_null()" style=""><img src="images/searBtn.png"/></button>
+    </form>
+    <form id="select_form" action="game_search.php">
+         <input type="hidden" name="scat_id" id="select_scat_id">
+         <input type="hidden" name="game_id" id="select_game_id">
+         <input type="hidden" name="region_id" id="select_region_id">
+        <div class="nice-select"  name="nice-select">
+            <input id="select_cat" type="text" value="运动类别" readonly>
+            <span class="caret"></span>
+            <ul>
+                <!--{foreach from=$sportcat_list  item=sportcat }-->
+                <li>
+                    <a href="javascript:select_cat('{$sportcat.name}','{$sportcat.id}')">{$sportcat.name}</a>
+                </li>
+                <!--{/foreach}-->
+            </ul>
+        </div>
+        <div class="nice-select" name="nice-select">
+            <input  id="select_game" type="text" value="选择赛事" readonly>
+            <!--<span class="caret"></span>-->
+            <ul role="menu"  aria-labelledby="dropdownMenu3" id="game_ul"></ul>
+            <input type="hidden" value="-1" id="game_id"/>
+        </div>
+        <div class="nice-select" name="nice-select">
+            <input id="select_city" type="text" value="选择城市" readonly>
+            <!--<span class="caret"></span>-->
+            <ul  role="menu" id="city_ul"></ul>
+        </div>
+        <input class="hunts btn btn-default " type="submit" value="搜索" id="search2">
+        <!--<a href="#" id="search2" class="hunts" type="submit">搜索</a>-->
+    </form>
+    
+    
+</div>
+<!--end搜索弹窗-->
+<style>
+
+</style>
+<!-- start列表弹窗 -->
+<div id="the" class="popupBg" style="display: none;" >
+	<div class="header popuHead">
+	<div class="headList fl">
+		<a href="#" class="listL fl" onclick="$('#the').hide()">
+			<img src="images/populist.png">
+		</a>
+	</div>
+	<div class="headTitle fl">
+                <a href="index.php">首页</a>
+	</div>
+	<div class="headSearch fr">
+		<a href="login.php" class="searR fr neWith">
+			<img src="images/cars.png">
+		</a>
+	</div>
+	</div>
+	<h3 class="cliHide">选择赛事<span class="fr"></span></h3>
+    <div class="ballGroup">
+        <ul class="ballGame fl" id="tabBall">
+            {foreach from=$sportcat_list_info item=scat}
+            {if $scat.is_one==1}
+            <li class="fli"><a href="#" >{$scat.name}</a></li>
+            {else}
+            <li><a href="#" >{$scat.name}</a></li>
+            {/if}
+            {/foreach}
+        </ul>
+        <div id="tab_ball" class="ballCont">
+            {foreach from=$sportcat_list_info item=scat}
+            {if $scat.is_one==1}
+            <ul class="listNone" style="display: block">
+                {foreach from=$scat.scat item=game}
+                <li>
+                    <!--{if $game.id == 60}-->
+                    <a href="special.php?act=special&game_id={$game.id}">{$game.game_name}</a>
+                    <!--{else}-->
+                    <a href="lister.php?act=index&game_id={$game.id}">{$game.game_name}</a>
+                    <!--{/if}-->
+                </li>
+                {/foreach}
+            </ul>
+            {else}
+            <ul class="listNone" >
+                {foreach from=$scat.scat item=game}
+                <li>
+                    <!--{if $game.id == 60}-->
+                    <a href="special.php?act=special&game_id={$game.id}">{$game.game_name}</a>
+                    <!--{else}-->
+                    <a href="lister.php?act=index&game_id={$game.id}">{$game.game_name}</a>
+                    <!--{/if}-->
+                </li>
+                {/foreach}
+            </ul>
+            {/if}
+            {/foreach}
+        </div>
+    </div>
+	<div class="regis">
+		<a href="login.php" class="fl login">登录</a>
+		<a href="register.php" class="fr enroll">注册</a>
+	</div>
+</div>
+<!-- end列表弹窗 -->
+{/if}
+<script type="text/javascript">
+    $(function(){
+        $('.ballGame li').click(function(){
+            $(this).addClass('fli').siblings().removeClass('fli');
+            var num = $(this).index();
+            $('.ballCont .listNone').eq(num).css({'display':'block'}).siblings('.listNone').css({'display':'none'});
+        });
+    });
+    function select_cat(val, id) {
+        $("#select_cat").html(val + "<span class='caret'></span>");
+        $("#select_game").html("<span class='caret'></span>");
+        $("#select_city").html("<span class='caret'></span>");
+        $.ajax({
+            url: 'game_search.php?act=ajax_game&id=' + id,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $("#game_ul").find("li").remove();
+                for (var o in data) {
+                    $("#game_ul").append("<li role='presentation'>"+"<a role='menuitem' tabindex='1' "+'href="javascript:select_game(\''+data[o].game_name+'\','+data[o].id+')"'+">" + data[o].game_name + "</a> </li>");
+                }
+                $("#select_scat_id").val(id);
+            }
+        });
+    }
+    
+    function select_game(val, id) {
+        $("#select_game").attr('value',val);
+       // $("#select_game").html(val + "<span class='caret'></span>");
+        $('#game_id').attr("value", id);
+        $.ajax({
+            url: 'game_search.php?act=ajax_game_city&game_id=' + id,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $("#game_ul").css('display','none');
+                $("#city_ul").find("li").remove();
+                for (var o in data) {
+                    $("#city_ul").append("<li style='border-radius:4px;' role='presentation'>"+"<a style='border-radius:4px;' role='menuitem' tabindex='1' "+'href="javascript:select_city(\''+data[o].region_name+'\','+data[o].region_id+')"'+">" + data[o].region_name + "</a> </li>");
+                }
+                $("#select_game_id").val(id);
+            }
+        })
+    }
+    
+    function select_city(val, id) {
+        $("#select_city").attr('value',val);
+        $("#city_ul").css('display','none');
+        //$("#select_city").html(val + "<span class='caret'></span>");
+        $("#select_region_id").val(id);
+    }
+      
+    function is_disable() {
+        var frm = document.forms['ss_sou'];
+        var sea = frm.elements['search'].value;
+        var ss_id = frm.elements['ss_id'];
+        if (sea.length > 0) {
+            frm.elements['ss_id'].disabled = "";
+        }
+        else {
+            frm.elements['ss_id'].disabled = "true";
+        }
+    }
+    function is_null() {
+        var form = document.getElementById('ss_sou').action = "game_search.php?act=search";
+        form.submit();
+    }
+     $(document).ready(function () {
+        $('#search2').click(function () {
+            if ($('#game_id').val() == '-1') {
+
+                $('.error_msg').css("display", "block");
+                alert('请点击选择赛事');
+                return false;
+            }
+        });
+    });
+    $(document).ready(function () {
+        $('.close_window').click(function () {
+            $('.error_msg').css("display", "none");
+          
+        });
+    });
+    $(document).ready(function () {
+        $('#lianjie').click(function () {
+            alert("ds");
+        })
+    })
+    function check(url) {
+        console.log(url);
+    }
+</script>

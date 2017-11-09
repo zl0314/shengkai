@@ -1,0 +1,128 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader2.htm"}
+{insert_scripts files="jquery.min.js,adddate.js"}
+<!--<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>-->
+<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+<div class="main-div">
+    <form method="post" action="route.php?con=game&act=edit" name="theForm">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td class="label">赛事名称：</td>
+                <td><input type="text" name="game_name" maxlength="60" value="{$game.game_name}" /></td>
+            </tr>
+            <tr>
+                <td class="label">运动类别：</td>
+                <td>
+                    <select name="scat_id">
+                    <option>---请选择---</option>
+                    {foreach from=$sportcat_list item=sportcat}
+                    <option  value="{$sportcat.id}" {if $game.scat_id == $sportcat.id}selected{/if}>{$sportcat.name}</option>
+                    {/foreach}
+                    </select>
+                </td>
+            </tr>
+                        <tr>
+                <td class="label">赛事logo：</td>
+                <td>
+                    <div id="container1">
+                        <a class="btn btn-default btn-lg " id="img_upload1" href="#" >
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>选择文件</span>
+                        </a>
+                        <font id="upload_status1"></font>
+                        <input type="hidden" name="game_logo" id="img_id1" value="{$game.game_logo}">
+
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">赛事搜索logo：</td>
+                <td>
+                    <div id="container2">
+                        <a class="btn btn-default btn-lg " id="img_upload2" href="#" >
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>选择文件</span>
+                        </a>
+                        <font id="upload_status2"></font>
+                        <input type="hidden" name="game_sealogo" id="img_id2" value="{$game.game_sealogo}">
+
+                    </div>
+                </td>
+            </tr>
+<!--            <tr >
+                <td class="label" >赛事大标题：</td>
+
+                    <td><input type="text" name="game_intro" maxlength="60" value="{$game.game_intro}" /></td>
+            </tr>-->
+          
+             <tr>
+                <td class="label">赛事详情：</td>
+                <td width="100%"> <script id="editor" name="game_text" type="text/plain" style="width:800px;height:250px;">{$game.game_text}</script></td>
+            </tr>
+            <tr>
+                <td class="label">上线/下线：</td>
+                 <td>
+                    是<input type="radio" name="is_type"  value="1" {if $game.is_type eq 1}checked{/if}/>
+                    否<input type="radio" name="is_type"  value="0" {if $game.is_type eq 0}checked{/if}/>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">是否支持退票险：</td>
+                <td>
+                    是<input type="radio" name="is_insurance"  value="1" {if $game.is_insurance eq 1}checked{/if}/>
+                    否<input type="radio" name="is_insurance"  value="0" {if $game.is_insurance eq 0}checked{/if}/>
+                </td>
+            </tr>
+<!--            <tr>
+                <td class="label">开始时间：</td>
+               <td><input type="text"  value="{$game.start_time|date}" id="end_time" name="start_time" maxlength="60"  onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')"/></td>
+            </tr>
+            <tr>
+                <td class="label">结束时间：</td>
+                <td><input type="text"  value="{$game.end_time|date}" id="end_time" name="end_time" maxlength="60"  onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')"/></td>
+            </tr>-->
+
+        </table>
+        <table align="center">
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" class="button" value="{$lang.button_submit}" />
+                    <input type="reset" class="button" value="{$lang.button_reset}" />
+                    <input type="hidden" name="act" value="{$act}" />
+                    <input type="hidden" name="id" value="{$game.id}" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+
+<script type="text/javascript" charset="utf-8" src="js/qiniu/plupload.full.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/qiniu.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/qiniu_init.js"></script>
+<script language="JavaScript">
+
+    var ue = UE.getEditor('editor');
+    new QiniuInit().upload({
+        browse_button:"img_upload",
+        drop_element:"container",
+        upload_status:"upload_status",
+        img_id:"img_id"
+    });
+     new QiniuInit().upload({
+        browse_button:"img_upload1",
+        drop_element:"container1",
+        upload_status:"upload_status1",
+        img_id:"img_id1"
+    });
+     new QiniuInit().upload({
+        browse_button:"img_upload2",
+        drop_element:"container2",
+        upload_status:"upload_status2",
+        img_id:"img_id2"
+    });
+</script>
+{/literal}
+
+{include file="pagefooter.htm"}

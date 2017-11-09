@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>退票险须知</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=720 user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css"  href="css/base.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+    <link rel="stylesheet" type="text/css"  href="css/header.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/footer.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/vouch.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/details.css" media="all" />
+    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+</head>
+<body style="">
+<div id="container" class="">
+    <!-- start:头部 -->
+    {include file=header.html}
+    <!-- end:头部 -->
+    <div id="main" class="personal-center">
+        <div class="pc_title">
+            <h3 style="color:#c6151d;font-size:16px;font-weight:bold;">{$cat_info.cat_name}</h3>
+        </div>
+        <div class="pc_cont">
+            <div class="left_list fl">
+                <div class="zhanghushezhi">
+                    <h3>{$cat_info.cat_name}</h3>
+                    <ul>
+                        <!-- {foreach from=$article_list item=art}-->
+                        <li><a
+                            <!--{if $art.article_id==$article.article_id }-->
+                            style="color:#c6151d;"
+                            <!--{/if}-->
+                            href="article.php?id={$art.article_id}">{$art.title}</a></li>
+                        <!-- {/foreach}-->
+                    </ul>
+                </div>
+            </div>
+            <div class="right_list fr">
+                <div class="fkpz">
+                    <p style="height: 76px;
+                            line-height: 76px;
+                            font-size: 18px;
+                            background: #F5F5F5;
+                             padding-left: 32px;">{$article.title|escape:html}</p>
+                    <div class="wenzhangneirong">
+                        <div class="neirong">
+                            {$article.content}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/video.js"></script>
+
+<!--{insert_scripts files='common.js,user.js'}-->
+<script>
+    $(function () {
+        $('[data-toggle=tooltip]').tooltip();
+    });
+</script>
+</body>
+</html>

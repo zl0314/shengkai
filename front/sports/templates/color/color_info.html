@@ -1,0 +1,66 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader2.htm"}
+{insert_scripts files="../js/region.js,../js/related.js,adddate.js"}
+<!--<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
+-->
+<!--<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+-->
+<div class="main-div">
+    <form method="post" action="route.php?con=color&act=edit" name="theForm">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td class="label">选择赛事：</td>
+                <td>
+                    <select name="game_id">
+                        
+                    <option>---请选择---</option>
+                    <!--{foreach from=$game_info item=game}-->
+                    <option  value="{$game.id}" {if $game.id == $color.game_id}selected{/if}>{$game.game_name}</option>
+                    <!--{/foreach}-->
+                </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">小组名称：</td>
+                <td><input type="text" name="color_name" maxlength="60" value="{$color.color_name}" /></td>
+            </tr>
+
+            <tr>
+                <td class="label">颜色：</td>
+              <td>
+                   <input class="color" name="color_value"  value="{$color.color_value}">
+                </td>
+            </tr>
+             <tr>
+                <td class="label">是否为小组赛：</td>
+                <td>
+                    <input type="checkbox" id="is_color" name="is_color" value="1" {if $color.is_color==1}checked="checked"{/if}/>小组赛
+                </td>
+            </tr>
+            </table>
+       
+            
+       
+
+
+        <table align="center">
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" class="button" value="{$lang.button_submit}" />
+       
+                    <input type="reset" class="button" value="{$lang.button_reset}" />
+                    <input type="hidden" name="act" value="{$act}" />
+                    <input type="hidden" name="color_id" value="{$color.color_id}" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js,jquery.min.js"}
+{literal}
+<script type="text/javascript" charset="utf-8" src="js/qiniu/plupload.full.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/qiniu.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/main.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/color/jscolor.js"></script>
+{/literal}
+{include file="pagefooter.htm"}

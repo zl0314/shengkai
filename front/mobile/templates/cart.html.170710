@@ -1,0 +1,247 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+<title>购物车</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=720 user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css"  href="css/base.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+<link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/cart.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/header.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/footer.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/flexslider.css" media="all">
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+</head>
+<body>
+<!--start-->
+<!--end-->
+<!--start 头部-->
+{include file="header.html"}
+<!--end 头部-->
+<div class="souvenirBg">
+	<!--<a onclick="souvier({$user_id})" class="souveBtn fl">官方纪念品</a>-->
+	<div class="souveRight fr">
+		<p class="sumed fl">合计：<span class="prices"><i style="font-size:16px;">￥</i>{$cart_money.all}</span></p>
+		<a onclick="check_cart({$user_id})" class="settleBtn fl">结算</a>
+	</div>
+</div>
+<!--{if $cart_combo}-->
+<!--{foreach from=$cart_combo item=combo}-->
+<div class="periodBg">
+	<div class="period">
+		<div class="fl perIcon"><img src="{$combo.combo_logo}"></div>
+		<p class="perFont fl">&nbsp;&nbsp;{$combo.combo_name}</p>
+	</div>
+</div>
+<div class="warpBox" style="width: 100%">
+	<div class="rondaBg clearfloat" style=" width:619px;">
+		<div class="rondaLeft fl">
+			<img src="{$combo.combo_logo}">
+		</div>
+		<div class="rondaRight fr" style="width:445px;">
+			<div class="codeA">
+				<h3 class="fl">{$combo.combo_name}</h3>
+				<h4 class="fr">{$combo.combo_price} </strong>&nbsp;&nbsp;X<span>{$combo.goods_number}</span></h4>
+			</div>
+			<div class="codeB">
+				<div class="package fl">{$combo.combo_title}</div>
+			</div>
+			<div class="codeB">
+				<!--<div class="pinlo fl"><img src="{$combo.combo_logo}"></div>-->
+				<div class="package fl">{$combo.combo_intro}</div>
+				<!--<div class="endorse fr">-->
+					<!--<a href="article.php?id=67" class="fl">支持退票险</a>-->
+					<!--<span class="fl">(需单独购买)</span>-->
+				<!--</div>-->
+			</div>
+			<!--<div class="codeD">-->
+				<!--<a href="#"  id="message_{$ticket.ticket_info.goods_id}"  onclick="details('{$ticket.ticket_info.goods_id}')" class="detaBtn fl">详细信息</a>-->
+				<!--<div class="mones fr">{$combo.cart_combo_money}</div>-->
+			<!--</div>-->
+		</div>
+		<!--<a href="view.php?act=remove_cart&type=plane&cart_id={$plane.rec_id}&game_id={$game_id}"><img-->
+		<!--src="images/shanchu.png"></a>-->
+		<!-- start删除按钮 -->
+		<a href="cart.php?act=remove_cart&type=combo&cart_id={$combo.rec_id}" class="removBtn">
+			<div class="removX"><img src="images/removX.png"></div>
+			<h3 style="margin-top:-22px;">删除</h3>
+		</a>
+		<!-- end删除按钮 -->
+	</div>
+	<div id="messag_{$ticket.ticket_info.goods_id}" class="xiala" style="display:none;" >
+		<span></span>
+		<div class=" myDiv p01">
+			<h5>座位信息及等级</h5>
+			4场小组赛、1场八分之一决赛<br />
+			本球场可容纳观众 45,000 名<br />
+			巴黎王子公园球场曾是1960年与1984年两届欧洲杯决赛举办地，1984年更是见证了法国队的夺冠时刻。<br />
+			坐席等级：左侧图示中黑色线条为白金包厢坐席位置；黄色区域为黄金坐席位置。
+		</div>
+		<div class=" myDiv p02">
+			<h5>票务信息</h5>
+			1. 白金坐席尊享以下服务： 比赛日私人包厢和专属观赛座椅、欢迎香槟、赛前和中场休息的餐饮服务、红酒和软饮、官方赛程表、欧洲杯专属礼品、包厢专属服务人员、比赛名单、专属停车位。<br />
+			2. 以上报价包含欧盟VAT，中国境内营业税以及代理服务费。<br />
+			3. 盛开体育将独家为您提供票务咨询、签证咨询及代办服务、比赛日球场直达接驳和比赛现场中文服务、24小时紧急援助热线。<br />
+			4. 欧足联将保留对购票人资格审查的权利，如未通过将扣除汇款手续费后如数退还购票款。
+		</div>
+	</div>
+</div>
+<!--{/foreach}-->
+<!--{/if}-->
+<!--{foreach from=$cart_list.ticket.game_info item=game}-->
+<div class="periodBg">
+	<div class="period">
+		<div class="fl perIcon"><img src="{$game.game_logo}"></div>
+		<!--<p class="perFont fl">&nbsp;&nbsp;{$game.game_name}  <span>每场比赛同级球票2张起售</span></p>-->
+		<p class="perFont fl">&nbsp;&nbsp;{$game.game_name}</p>
+	</div>
+</div>
+<!--{foreach from=$cart_list.ticket.t item=ticket}-->
+<!--{if $game.id==$ticket.game_id}-->
+<div class="warpBox" style="width: 100%">
+	<div class="rondaBg clearfloat" style=" width:619px;">
+		<div class="rondaLeft fl" style=" background:#{$ticket.ticket_info.color_value}; position: relative; "><img src="{$ticket.ticket_info.big_pitch_img}">
+                     <p class="num">{$ticket.ticket_info.numbers}</p>
+		</div>
+		<div class="rondaRight fr" style="width:445px;">
+			<div class="codeA">
+				<h3 class="fl" style="color:#{$ticket.ticket_info.color_value};">{$ticket.goods_name}</h3>
+				<h4 class="fr"><strong>{$ticket.goods_price} </strong>&nbsp;X&nbsp;<span>{$ticket.goods_number}</span></h4>
+			</div>
+			<div class="codeB">
+				<div class="sidep fl">{$ticket.ticket_info.region_name}</div>
+				<div class="datap fl">{$ticket.ticket_info.num_start}</div>
+				<div class="roundp fl">{$ticket.ticket_info.pitch_name}</div>
+                                 <!--<div class="sidep fl">{$ticket.ticket_info.num_start}</div>-->
+			</div>
+			<!--<div class="codeC">-->
+				<!--<div class="pinlo fl"><img src="{$ticket.ticket_info.pitch_img}"></div>-->
+				<!--<div class="altile fl">{$ticket.ticket_info.room_type}</div>-->
+				<!--&lt;!&ndash;{if $ticket.game_id == '18'}&ndash;&gt;-->
+				<!--&lt;!&ndash;<div class="endorse fr">&ndash;&gt;-->
+					<!--&lt;!&ndash;<a href="article_pro.php?id=45" class="fl">支持退票险</a>&ndash;&gt;-->
+					<!--&lt;!&ndash;<span class="fl">(需单独购买)</span>&ndash;&gt;-->
+				<!--&lt;!&ndash;</div>&ndash;&gt;-->
+				<!--&lt;!&ndash;{else}&ndash;&gt;-->
+				<!--&lt;!&ndash;{/if}&ndash;&gt;-->
+			<!--</div>-->
+			<div class="codeD">
+				<a href="#"  id="message_{$ticket.ticket_info.goods_id}"  onclick="details('{$ticket.ticket_info.goods_id}')" class="detaBtn fl">详细信息</a>
+				<div class="mones fr">{$ticket.ticket_money}</div>
+			</div>
+		</div>
+		<!-- start删除按钮 -->
+		<a href="cart.php?act=remove_cart&type=ticket&cart_id={$ticket.rec_id}" class="removBtn" style="height:100%;">
+			<div class="removX"><img src="images/removX.png"></div>
+			<h3 style="margin-top:-22px;">删除</h3>
+		</a>
+		<!-- end删除按钮 -->
+	</div>
+ 	<div id="messag_{$ticket.ticket_info.goods_id}" class="xiala" style="display:none;" >
+        <div class=" myDiv p01">
+            <h5> <img src="{$ticket.ticket_info.seat_picture}"/></h5>
+               <h5>座位信息及等级</h5>
+            <p>{$ticket.ticket_info.seat_text}</p>
+        </div>
+        <div class=" myDiv p02" style="width:100%;padding-bottom:15px;">
+            <h5>票务信息</h5>
+            <p> {$ticket.ticket_info.ticket_business}</p>
+        </div>
+        </div>
+</div>
+<!--{/if}-->
+<!--{/foreach}-->
+<!--{/foreach}-->
+<!--{if $cart_list.goods}-->
+
+<div class="information">
+	<div class="infTitle">
+		<span></span>官方纪念品
+	</div>
+	<div class="infWrapp">
+		<div class="clearfloat" style="position: relative;width: 100%;margin-left: -100px;">
+				<div class="infLeft fl">
+				<div class="infLog">
+					<img src="images/infl.png">
+				</div>
+			</div>
+			<!--{foreach from=$cart_list.goods item=goods}-->
+			<div class="infRight fr">
+				<h4 class="pridn">￥{$goods.money} </h4>
+				<div class="picTin">
+					{$goods.goods_info.goods_name}
+				</div>
+				<div class="product">
+					<div class="proLeft fl">
+						<img src="{$goods.goods_info.goods_img}">
+					</div>
+					<div class="proRight fr">{$goods.attr_value}&nbsp;&nbsp;&nbsp;&nbsp;<s>￥{$goods.goods_price}&nbsp;&nbsp;&nbsp;&nbsp;</s>{$goods.goods_number}</div>
+				</div>
+			</div>
+			<!-- start删除按钮 -->
+			<a href="cart.php?act=remove_cart&type=goods&cart_id={$goods.rec_id}" class="removBtn">
+				<div class="removX"><img src="images/removX.png"></div>
+				<h3>删除</h3>
+			</a>
+			<!-- end删除按钮 -->
+			<!--{/foreach}-->
+		</div>
+	</div>
+</div>
+<!--{/if}-->
+</body>
+<script type="text/javascript" src="js/jquery.flexslider-min.js"></script>
+<script type="text/javascript" src="js/pulldown.js"></script>
+<script type="text/javascript">
+$(function() {
+    $(".flexslider").flexslider({
+		slideshowSpeed: 4000, //展示时间间隔ms
+		animationSpeed: 400, //滚动时间ms
+		touch: true //是否支持触屏滑动
+	});
+});
+
+function Show_Hidden(obj) {
+ if(obj.style.display=="block") {
+  obj.style.display='none';
+ } else {
+  obj.style.display='block';
+ }
+}
+function details(res) {
+ var olink=document.getElementById("message_"+res);
+ var odiv=document.getElementById("messag_"+res);
+ olink.onclick=function() {
+  Show_Hidden(odiv);
+  return false;
+ }
+}
+function check_cart(user_id) {
+
+	if (user_id == 0) {
+		alert('您还没有登录，请先登录！');
+		window.location.href = "login.php";
+	} else{
+		if ($(".warpBox").length == 0) {
+			alert("没有球票不能结算，请先购买球票~");
+			return false;
+		}else{
+			window.location.href = "vouch.php?act=index&game_id={$game_id}";
+		}
+	}
+}
+function souvier(user_id){
+	if(user_id == 0){
+		alert('您还没有登录，请先登录！');
+	}else{
+		window.location.href = "souvenir.php?act=index";
+	}
+}
+</script>
+</html>

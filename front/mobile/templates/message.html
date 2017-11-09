@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>盛开赛事官方票务</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=720 user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css"  href="css/base.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+    <link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/cart.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/header.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/footer.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="css/flexslider.css" media="all">
+    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+    <style type="text/css">
+    /*.pc_cont{
+        font-size: 28px;
+    }   */
+    .juzhong p{
+        float:left;
+        margin-left:10px;
+        margin-top:20px;
+    }
+    .juzhong p:first-child{
+        margin-left: 0px;
+    }
+    .yicun div:first-child{
+        height: 40px;
+        line-height: 40px;
+    }
+	.navbar-toggle:before{
+	color:#ffffff;
+	content:"";
+	}
+    </style>
+</head>
+<body style="">
+<div id="container" class="">
+    <!-- start:头部 -->
+    {include file=header.html}
+    <!-- end:头部 -->
+    <div id="main" class="personal-center">
+        <div class="pc_title">
+            <p>系统提示</p>
+        </div>
+        <div class="pc_cont" style="background:#fff;padding-bottom:60px;width:auto;">
+            <div style="margin:20px auto;text-align:center;  padding-top: 95px;" >
+                <!--{if $message.type=='cart'} 购物车友好提示-->
+                <img src="images/biggw.png"/>
+                <!--{/if}-->
+                
+                <div class="blank"></div>
+                <div style="position:absolute;left:50%; transform: translate(-50%,-50%);-webkit-transform: translate(-50%,-50%); " class="juzhong" >
+                
+                <!--{if $message=="您的收货地址信息已成功更新"}-->
+                <p  style=""><a href="user.php?act=user_address" style="float:left;height:40px;line-height:40px;font-size:14px;background:#c6151d;color:#fff;padding:0px 20px;border-radius:3px;">返回收货地址列表</a></p>
+                <p  style=""><a href="user.php" style="float:left;height:40px;line-height:40px;font-size:14px;background:#c6151d;color:#fff;padding:0px 20px;border-radius:3px;">返回到个人中心</a></p>
+                <!--{/if}-->
+                <!--{if $message=="修改持票人信息成功"}-->
+                <p  style=""><a href="user.php?act=bearer_manage" style="float:left;height:40px;line-height:40px;font-size:14px;background:#c6151d;color:#fff;padding:0px 20px;border-radius:3px;">返回持票人列表</a></p>
+                <p  style=""><a href="user.php" style="float:left;height:40px;line-height:40px;font-size:14px;background:#c6151d;color:#fff;padding:0px 20px;border-radius:3px;">返回到个人中心</a></p>
+                <!--{/if}-->
+                <!--{if $message=="添加持票人信息成功"}-->
+                    <p  style=""><a href="user.php?act=bearer_manage" style="float:left;height:40px;line-height:40px;font-size:14px;background:#c6151d;color:#fff;padding:0px 20px;border-radius:3px;">返回持票人列表</a></p>
+                <p  style=""><a href="bearer.php?act=add" style="float:left;height:40px;line-height:40px;font-size:14px;background:#c6151d;color:#fff;padding:0px 20px;border-radius:3px;">继续添加持票人</a></p>
+                <p  style=""><a href="user.php" style="float:left;height:40px;line-height:40px;font-size:14px;background:#c6151d;color:#fff;padding:0px 20px;border-radius:3px;">返回到个人中心</a></p>
+                <!--{/if}-->
+
+                 <!--{if $message=="修改密码成功"}-->
+                    <div class="hintCont">
+                        <p style="float:left;height:40px;line-height:40px;font-size:14px;background:#c6151d;color:#fff;padding:0px 20px;border-radius:3px;">修改密码成功</p>
+                   
+                    <p  style=""><a href="index.php" style="float:left;height:40px;line-height:40px;font-size:14px;background:#c6151d;color:#fff;padding:0px 20px;border-radius:3px;">前往首页</a></p>
+                     </div>
+                <!--{/if}-->
+                    <!--{if $message=="修改密码失败"}-->
+                    <div class="hintCont">
+                        <p><a href="user.php?act=edit_password" style="float:left;height:40px;line-height:40px;font-size:14px;background:#c6151d;color:#fff;padding:0px 20px;border-radius:3px;">修改密码失败</a></p>
+                        
+                        <p><a href="user.php" style="float:left;height:40px;line-height:40px;font-size:14px;background:#c6151d;color:#fff;padding:0px 20px;border-radius:3px;">返回到个人中心</a></p>
+                    </div>
+                    <!--{/if}-->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+
+
+
+    <!-- start:底部 -->
+    <!-- #BeginLibraryItem "/library/page_footer.lbi" --><!-- #EndLibraryItem -->
+    <!-- end:底部 -->
+    <script src="{$js_path}/jquery.min.js"></script>
+    <script src="{$js_path}/bootstrap.min.js"></script>
+    <script src="./js/user.js"></script>
+    <!--{insert_scripts files='common.js,user.js'}-->
+</div>
+</body>
+</html>

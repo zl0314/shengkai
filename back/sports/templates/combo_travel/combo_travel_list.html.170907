@@ -1,0 +1,62 @@
+<!-- $Id: games_list.htm 17053 2010-03-15 06:50:26Z sxc_shop $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,newlisttable.js"}
+<form method="POST" action="route.php?con=combo&act=batch_drop" name="listForm" onsubmit="return confirm_bath()">
+    <!-- start number list -->
+    <div class="list-div" id="listDiv">
+        {/if}
+
+        <table cellpadding="3" cellspacing="1">
+            <!--列表部分-->
+            <tr>
+                <th>
+                    <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox">
+                    <a href="javascript:listTable.sort('id'); ">编号</a>{$combo_travel_type_id}
+                </th>
+                <th>行程第*天</th>
+                <th>行程日期</th>
+                <th>行程标题</th>
+                <th>{$lang.handler}</th>
+            </tr>
+            {foreach from=$combo_travel_list item=combo_travel}
+            <tr class="travelContent">
+                <td align="center"><input type="checkbox" name="checkboxes[]" value="{$combo_travel_type.combo_id}" notice="" />{$combo_travel.combo_travel_id}</td>
+                <td align="center">第{$combo_travel.combo_travel_day}天</td>
+                <td align="center">{$combo_travel.combo_travel_date}</td>
+                <td align="left">{$combo_travel.combo_travel_title}</td>
+                <td align="center">
+                    <a href="route.php?con=combo_travel&act=update&id={$combo_travel.combo_travel_id}" title="{$lang.edit}"><img src="images/icon_edit.gif" border="0" height="16" width="16" /></a>
+                    <a href="javascript:removeTravel('{$combo_travel.combo_travel_id}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16" /></a>
+                </td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="9">{$lang.no_records}</td></tr>
+            {/foreach}
+            <tr>
+                <td colspan="2">
+                    <input type="hidden" name="act" value="batch_remove" />
+                    <input type="submit" id="btnSubmit" value="删除" disabled="true" class="button" /></td>
+                <td align="right" nowrap="true" colspan="8">
+                    {include file="page2.htm"}
+                </td>
+            </tr>
+        </table>
+        {if $full_page}
+    </div>
+</form>
+<script type="text/javascript" language="JavaScript">
+    listTable.recordCount = {$record_count};
+    listTable.pageCount = {$page_count};
+    listTable.new_url = 'route.php?is_ajax=1&con=combo_travel';
+    listTable.act = 'index_query';
+    {foreach from = $filter item = item key = key}
+    listTable.filter.{$key} = '{$item}';
+    {/foreach}
+    function confirm_bath()
+    {
+        return confirm("确定要批量删除所选套餐吗");
+    }
+</script>
+{include file="pagefooter.htm"}
+{/if}

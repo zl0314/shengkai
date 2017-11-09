@@ -1,0 +1,102 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+<title>我的订单</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=720 user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css"  href="css/base.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+<link rel="stylesheet" type="text/css"  href="css/header.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/footer.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/order.css" media="all" />
+  <link rel="stylesheet" href="css/personal-center.css">
+</head>
+<body style="background:#edefed;">
+<!--start-->
+<!--end-->
+<!--start 头部-->
+
+{include file="header.html"}
+{foreach from=$orders item=order_data}
+<div class="orderAll debugTop">
+<div class="orderA">
+  	<h3 class="orderNumber" style="margin-bottom:0;margin-top:0;">订单：<span>{$order_data.order_sn}</span></h3>
+		<div class="numberBg">
+			<div class="suited fl" style="background:#{$order_data.color_value}">{$order_data.numbers}</div>
+            <!--<div class="suited colours2 fl">{$order_data.order_id}</div>-->
+		</div>
+        <div class="prixd" style="width:100%;">
+            <p class="fl prixDate">合同编号：<span>{$order_data.contract_no}</span></p>
+        </div>
+		<div class="prixd" style="width:100%;">
+  	<!--<h3 class="orderNumber">订单：<span>{$order_data.order_sn}</span></h3>-->
+         <!---->
+		<!--<div class="numberBg">-->
+                   <!---->
+			<!---->
+                <!--<div id="goods_num{$date.goods_id}">-->
+                    <!--{foreach from=$order.goods_info item=date}-->
+                    <!--{$date.numbers}-->
+                 <!--{/foreach}-->
+                <!--</div>-->
+			   <!---->
+		<!--</div>-->
+    <!---->
+		<!--<div class="prixd">-->
+			<p class="fl prixDate">{$order_data.order_time}</p>
+			<p class="fr moneys">价格：<span>￥{$order_data.total_fee}</span></p>
+		</div>
+		<div class="abolish" style="width:100%;">
+            <!--{if $order_data.is_win == 0}-->
+			<p class="fl fails">订单状态:{$order_data.order_status}</p>
+            <!--{else}-->
+            <p class="fl fails">订单状态:{if $order_data.is_win eq 1}已中签{else}{/if}</p>
+            <!--{/if}-->
+            <p class="fr seltOrder">
+                <!--{if $order_data.order_status==="未审核通过"&&$order_data.pay_status!="已付款"&&$order_data.order_status!="已取消"}-->
+                <!--<a id="cancel_order" onclick="cancel_order({$order_data.order_id},{$order_data.order_id});">取消订单</a>-->
+                <a href="user.php?act=cancel_order&order_id={$order_data.order_id}">取消订单</a>
+                <!--{else]-->
+                <!--{/if}-->
+				<a href="user.php?act=order_detail&order_id={$order_data.order_id}&order_sn={$order_data.order_sn}">查看订单</a>
+		</div>
+</div>
+</div>
+{/foreach}
+<p class="orderNumber" style="margin-top:20px;">
+    {include file=pages.html}
+</p>
+</body>
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+
+
+
+<script type="text/javascript" src="js/pulldown.js"></script>
+<script>
+    function cancel_order(order_id,order_sn){
+      
+        var con=confirm("您确认要取消该订单吗？取消后此订单将视为无效订单！");
+        if(con){
+            $.ajax({
+            url: "user.php?act=cancel_order&order_id="+order_id+"&order_sn="+order_sn,
+            type:"get",
+            datatype:"text",
+            success:function callback(ms){
+                window.location.reload();
+               
+            }
+        })
+        }
+        
+       
+    }
+    </script>
+    <!--{insert_scripts files='common.js,user.js'}-->
+
+</html>

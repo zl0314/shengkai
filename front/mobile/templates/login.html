@@ -1,0 +1,68 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+<title>登录</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=720 user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css"  href="css/base.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+<link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/header.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/footer.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/flexslider.css" media="all">
+<link rel="stylesheet" type="text/css" href="css/login.css" />
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+
+</head>
+<body>
+        <!--start 头部-->
+     {include file="header.html"}
+            <!--end 头部-->
+        <div class="boxBg">
+            <!-- form-01-->
+            <div class="loginBox">
+                <h1 class="logo">
+                    <img src="images/logo_01.png" alt="" />
+                </h1>
+                <div class="login-wenzi">
+                    <div class="left"></div>
+                    <div class="middle">登录</div>
+                    <div class="right"></div>
+                </div>
+                
+                <form class="form-01" method="post" name="formLogin" id="formLogin" action="user.php?act=do_login">
+                    <div class="inp-01 userName-01">
+                        <input type="text"  placeholder="用户名/手机号" onblur="login_username()" id="login-name" name="username"/>
+                            <label class="tubiao user" for="login-name"></label>
+                    </div>
+                    <div style="font-size:12px;position:relative;top:-10px;color:#C6151D;">手机号码前加国家区号（如：加 86）
+                    </div>
+                    <div class="inp-01 password-01">            
+                       <input type="password"  value="" placeholder="密码" onblur="login_password()" id="login-pass" name="pwd"/>
+                            <label class="tubiao lock" for="login-pass"></label>
+                    </div>
+                    <div class="ziDong">
+                        <!--<a></a>-->
+                        <input type="checkbox" name="remember" id="remember_me2"
+                               onclick="getCookie()"/>自动登录
+                        <!--<span>自动登录</span>-->
+                    </div>
+                    <a href="login.php?act=forgot_password" class="wangJi">忘记密码?</a>
+                     <button class="btnLogin" type="submit" >登录</button>
+                     
+                    <p>
+                        <span>还没有账号 ? </span>&nbsp&nbsp
+                        <a href="register.php">注册</a>
+                    </p>
+                </form>
+            </div> 
+        </div>    
+    </body>
+    <script type="text/javascript" src="js/pulldown.js"></script>
+       <script type="text/javascript" src="js/user.js"></script>
+</html>

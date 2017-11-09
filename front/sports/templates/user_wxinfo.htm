@@ -1,0 +1,103 @@
+<!-- $Id: order_info.htm 17060 2010-03-25 03:44:42Z liuhui $ -->
+
+{include file="pageheader.htm"}
+{insert_scripts files="topbar.js,../js/utils.js,listtable.js,selectzone.js,../js/common.js"}
+<form action="order.php?act=operate" method="post" name="theForm">
+    <div class="list-div" style="margin-bottom: 5px">
+        <table width="100%" cellpadding="3" cellspacing="1">
+            <tr>
+                <th colspan="4">{$lang.base_info}</th>
+            </tr>
+            <tr>
+                <td width="18%"><div align="right"><strong>{$lang.label_order_sn}</strong></div></td>
+                <td width="34%">{$order.order_sn}{if $order.extension_code eq "group_buy"}<a href="group_buy.php?act=edit&id={$order.extension_id}">{$lang.group_buy}</a>{elseif $order.extension_code eq "exchange_goods"}<a href="exchange_goods.php?act=edit&id={$order.extension_id}">{$lang.exchange_goods}</a>{/if}</td>
+                <td width="15%"><div align="right"><strong>{$lang.label_order_status}</strong></div></td>
+                <td>{$order.status}</td>
+            </tr>
+            <tr>
+                <td><div align="right"><strong>{$lang.label_user_name}</strong></div></td>
+                <td>{$order.user_name|default:$lang.anonymous} {if $order.user_id > 0}[ <a href="" onclick="staticbar();return false;">{$lang.display_buyer}</a> ] [ <a href="user_msg.php?act=add&order_id={$order.order_id}&user_id={$order.user_id}">{$lang.send_message}</a> ]{/if}</td>
+                <td><div align="right"><strong>{$lang.label_order_time}</strong></div></td>
+                <td>{$order.formated_add_time}</td>
+            </tr>
+            <tr>
+                <td><div align="right"><strong>{$lang.label_payment}</strong></div></td>
+                <td>{if $order.pay_id > 0}{$order.pay_name}{else}{$lang.require_field}{/if}
+                    <!--<a href="order.php?act=edit&order_id={$order.order_id}&step=payment" class="special">{$lang.edit}</a>-->
+                    ({$lang.action_note}: <span onclick="listTable.edit(this, 'edit_pay_note', {$order.order_id})">{if $order.pay_note}{$order.pay_note}{else}N/A{/if}</span>)</td>
+                <td><div align="right"><strong>{$lang.label_pay_time}</strong></div></td>
+                <td>{$order.pay_time}</td>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+                <td><div align="right"><strong>{$lang.label_inv_type}</strong></div></td>
+                <td>{$order.inv_type}</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td><div align="right"><strong>{$lang.label_inv_payee}</strong></div></td>
+                <td>{$order.inv_payee}</td>
+                <td><div align="right"><strong>{$lang.label_inv_content}</strong></div></td>
+                <td>{$order.inv_content}</td>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+                <td><div align="right"><strong>{$lang.label_consignee}</strong></div></td>
+                <td>{$order.consignee|escape}</td>
+                <td><div align="right"><strong>{$lang.label_email}</strong></div></td>
+                <td>{$order.email}</td>
+            </tr>
+            <tr>
+                <td><div align="right"><strong>证件类型</strong></div></td>
+                <td>{if $order.card_type == '0'}身份证{else}护照{/if}</td>
+                <td><div align="right"><strong>证件号码</strong></div></td>
+                <td>{$order.card_num}</td>
+            </tr>
+
+
+            <tr>
+                <td><div align="right"><strong>{$lang.label_mobile}</strong></div></td>
+                <td><a href="sms.php?act=display_send_ui&mobile={$order.mobile} "><font color="red">{$order.mobile|escape}</font></a></td>
+                <td><div align="right"><!--<strong>{$lang.label_tel}</strong>--></div></td>
+                <td><!--{$order.tel}--></td>
+
+            </tr>
+        </table>
+    </div>
+</form>
+{literal}
+<script language="JavaScript">
+    {/literal}
+    var oldAgencyId = {$order.agency_id|default:0};
+    {literal}
+    onload = function()
+    {
+        // 开始检查订单
+        startCheckOrder();
+    }
+
+    /**
+     * 把订单指派给某办事处
+     * @param int agencyId
+     */
+    function assignTo(agencyId)
+    {
+        if (agencyId == 0)
+        {
+            alert(pls_select_agency);
+            return false;
+        }
+        if (oldAgencyId != 0 && agencyId == oldAgencyId)
+        {
+            alert(pls_select_other_agency);
+            return false;
+        }
+        return true;
+    }
+</script>
+{/literal}
+
+{include file="pagefooter.htm"}

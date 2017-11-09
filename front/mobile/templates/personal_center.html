@@ -1,0 +1,58 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+<title>个人中心</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=720 user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css"  href="css/base.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+<link rel="stylesheet" type="text/css"  href="css/header.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/footer.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/Personal-Center.css" media="all" />
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+</head>
+<body>
+        <!--start-->
+        <!--end-->
+        <!--start 头部-->
+
+        {include file="header.html"}
+            <!--end 头部-->
+            <!-- 个人中心 -->
+
+             {if $login_faild eq 1}
+               <div class="userName">
+                    <h3 style="font-size: 24px;text-align: center;">用户名或密码错误,请重新输入</h3><br/>
+               </div>
+            {else}
+            
+               
+        <div class="userName">
+            <p class="topP">
+                <a href="javascript:;"></a>
+                <span> 欢迎:{$smarty.session.user_name}</span>
+            </p>
+        </div>
+         
+        <form action="" class="form01">
+            <h3>交易管理</h3>
+            <a href="user.php?act=order_list">我的订单</a>
+            <a href="user.php?act=user_address">联系地址管理</a>
+            <a href="user.php?act=buy_proof">付款凭证</a>
+            <a href="user.php?act=bearer_manage" class="last">持票人信息管理</a>
+        </form>
+        <form action="" class="form01 form02">
+            <h3>账户设置</h3>
+            <a href="user.php?act=edit_userInfo">个人资料</a>
+            <a href="user.php?act=edit_password"  class="last">修改密码</a>
+        </form>
+             {/if}
+  </body>
+    <script type="text/javascript" src="js/pulldown.js"></script>
+</html>

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <title>购买退票险</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=720 user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css"  href="css/base.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+    <link rel="stylesheet" type="text/css"  href="css/header.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/footer.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/buy-ticket.css" media="all" />
+    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+</head>
+<body>
+{include file=header.html}
+<div class="gmbxp_left debugTop">
+    <h3 class="fl">购买退票险</h3>
+    <p class="fl">请选择需要退票险的商品</p>
+</div>
+<!--{if $order_combo_menpiao}-->
+<!--{foreach from=$order_combo_menpiao.key item=combo}-->
+<div class="periodBg">
+    <div class="period">
+        <div class="fl perIcon"><img src="{$combo.comgo_logo}"></div>
+        <p class="perFont fl">{$combo.combo_name}</p>
+    </div>
+</div>
+<div class="bearer">
+    <div class="bearerTit">
+        <div class="check fl">
+            <input type="checkbox" name="bx" value="">
+        </div>
+        <div class="num fl" style="background: #C6151D;">
+            <p>1</p>
+        </div>
+        <div class="name fl">
+            <h4 style="color:#C6151D;">法国 vs A2</h4>
+        </div>
+        <div class="fr compile">￥10.00</div>
+    </div>
+    <div class="explain">
+        <img src="images/zhuanti/lbiaozji.jpg" class="fl"/>
+        <p class="fl">黄金体验套餐</p>
+        <span class="fl openingCeremony" style="color:#3C6FC7;">半决赛</span>
+    </div>
+</div>
+<!--{/foreach}-->
+<!--{/if}-->
+<!--{foreach from=$game_info item=game}-->
+<div class="periodBg">
+    <div class="period">
+        <div class="fl perIcon"><img src="{$game.game_logo}"></div>
+        <p class="perFont fl">{$game.game_name}</p>
+    </div>
+</div>
+<!--{foreach from=$rec_menpiao_list item=ticket}-->
+<!--{if $game.id==$ticket.id}-->
+<div class="bearer">
+    <div class="bearerTit">
+        <div class="check fl">
+            <input type="checkbox" name="bx" value="{$ticket.code}">
+        </div>
+        <div class="num fl" style="background: #E79D17;">
+            <p>{$ticket.numbers}</p>
+        </div>
+        <div class="name fl">
+            <h4 style="color:#E79D17;">{$ticket.goods_name}</h4>
+        </div>
+        <div class="fr compile">￥{$ticket.goods_price}</div>
+    </div>
+    <div class="explain">
+        <img src="images/zhuanti/lbiaozji.jpg" class="fl"/>
+        <p class="fl">普通球票</p>
+        <span class="fl openingCeremony" style="color:#3C6FC7;">半决赛</span>
+    </div>
+</div>
+<!--{/if}-->
+<!--{/foreach}-->
+<!--{/foreach}-->
+<div class="buyTicket">
+    <!--<a href="#" class="fl checkAll">全选</a>-->
+    <a href="javascript:on_bx()" class="fl checkAll">全选</a>
+    <a href="javascript:tj_baoxian()" class="fr sub">提交</a>
+    <span class="allPrice fr">总计：￥20.00</span>
+</div>
+</body>
+<!--{insert_scripts files='common.js,user.js'}-->
+<script>
+    //提交
+    function tj_baoxian(order_id_num){
+        var a=document.getElementsByName('bx');
+        var tk_code=new Array();
+        for (var i = 0; i < a.length; i++){
+            if(a[i].checked===true){
+                tk_code[i]=a[i].value;
+                console.log(tk_code[i]);
+                $.ajax({
+                    url: "demo.php?act=pay&&tk_code="+tk_code[i]+"&&order_id_num="+order_id_num,
+                    type: 'GET',
+                    dataType: 'text',
+                    success: function (call) {
+
+                    }
+                });
+            }
+        }
+        function wt(){
+            window.location.href="demo.php?act=pay&&order_id_num="+order_id_num;
+        }
+        setTimeout(wt,1000);
+    }
+    function on_bx(){
+        var a=document.getElementsByName('bx');
+        if(a[0].checked===false){
+            for (var i = 0; i < a.length; i++)
+                a[i].checked = true;
+        }else{
+            for (var i = 0; i < a.length; i++)
+                a[i].checked = false;
+        }
+    }
+    //购买众安保险
+    function pay_insurance(order_id_num) {
+        var pbx = document.getElementById('pay_baoxian');
+        pbx.style.display = "block";
+    }
+
+    $("#pay_baoxian").click(function(e) {
+        var regist_top = $("#dis").offset().top;
+        var regist_left = $("#dis").offset().left;
+        var regist_bottom = $("#dis").offset().top + $("#dis").height();
+        var regist_right = $("#dis").offset().left + $("#dis").width();
+
+        var is_close = 1;
+        if (e.pageX > regist_left && e.pageX < regist_right && e.pageY > regist_top && e.pageY < regist_bottom) {
+            is_close = 0;
+        }
+        if (is_close) {
+            $("#pay_baoxian").css("display", "none");
+        }
+    });
+
+    $(function() {
+        $('[data-toggle=tooltip]').tooltip();
+    });
+
+    function editAddress(id) {
+        window.location.href = "user.php?act=edit_address&address_id=" + id;
+    }
+
+    function removeAddress(id) {
+        if (confirm('你确认要删除该收货地址吗？')) {
+            location.href = 'user.php?act=drop_consignee&id=' + id;
+        }
+    }
+</script>
+</html>

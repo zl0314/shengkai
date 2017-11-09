@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{$page_title}</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta name="format-detection" content="telephone=no">
+        <meta http-equiv=”X-UA-Compatible” content=”IE=edge,chrome=1″/>
+        <link rel="shortcut icon" href="favicon.ico" />
+        <link rel="stylesheet" href="{$css_path}/bootstrap/bootstrap.min.css">
+        <link rel="stylesheet" href="{$css_path}/bootstrap/bootstrap-theme.min.css">
+        <!-- Loading Flat UI -->
+        <link href="{$css_path}/flat-ui/flat-ui.css" rel="stylesheet">
+
+        <link rel="stylesheet" href="{$css_path}/header2.css">
+        <link rel="stylesheet" href="{$css_path}/personal-center.css">
+        <link rel="stylesheet" href="{$css_path}/base.css">
+        <link rel="stylesheet" href="{$css_path}/foot.css">
+        <link rel="stylesheet" href="{$css_path}/liucheng.css">
+		<style> 
+		 .lijizhifu{margin-left:436px;width:70px;height:36px;}
+		 .dzhuangtai{ width:42%;position:absolute;top:34px;left:43%;}
+         a.xizai:hover{
+            color: #fff;
+            background-color: #e74c3c;
+         }
+        .btn-danger{
+            background-image:none;
+            background-color: #e74c3c;
+        }
+            .xiazai:hover{
+                background-color: #e74c3c;
+            }
+
+		</style>
+    </head>
+    <body style="">
+        <div class="gmtuipiaoxian" id="pay_baoxian" >
+            <div class="modal-table">
+                <div class="modal-cell">
+                    <div class="modal-content signup" style="max-width: 85%;" id="dis">
+                        <div class="panel-padding panel-body" >
+                            <div class="gmbxp_title">
+                                <div class="fl gmbxp_left">
+                                    <h3 class="fl">购买退票险</h3>
+                                    <p class="fl">请选择需要退票险的商品</p>
+                                    <a href="javascript:on_bx()" class="quanxuan">全选</a>
+                                </div>
+                                <div class="fr gmbxp_right">
+                                    <a href="javascript:tj_baoxian({$order_id})" class="btn btn-block btn-lg btn-danger red">提交</a>
+                                </div>
+                            </div>
+                            <div class="gmbxp_cont">
+                                <!--{foreach from=$game_info item=game}-->
+                                <table width="90%" style="margin-left:5%;">
+                                    <!-- 门票 -->
+                                    <tr bgcolor="#FFFFFF">
+                                        <th colspan="2" width="80%">
+                                    <dl>
+                                        <dt><img src="{$game.game_logo}" /></dt>
+                                        <dd>{$game.game_name} 门票</dd>
+                                    </dl>
+                                    </th>
+                                    <th width="20%">总计</th>
+                                    </tr>
+                                    <!--{foreach from=$rec_menpiao_list item=ticket}-->
+                                    <!--{if $game.id==$ticket.id}-->
+                                    <tr class="ming" bgcolor="#FFFFFF" >
+                                        <td>
+                                            <input style="float:left;margin-top:10px;zoom:175% " type="checkbox" name="bx" value='{$ticket.code}'/>
+                                            <div class="num fl" style="float:left;background: #{$ticket.color_value};">
+                                                <p>{$ticket.numbers}</p>
+                                            </div>
+                                            <div style="float:left" class="name fl">
+                                                <h4 style="color:#{$ticket.color_value};">{$ticket.goods_name}</h4>
+                                            </div>
+                                        </td>
+                                        <td class="shuxing">
+                                            <div class="huangjin fl">
+                                                <button title="" data-placement="top"  class="btn btn-default mrs fl huangjin" type="button" data-original-title="Tooltip on top"><img src="{$ticket.seat_logo}"></button>
+                                            </div>
+                                            <p class="fl">{foreach from=$ticket.keywords item=keyword}{$keyword}{/foreach}<span style="color:#{$ticket.color_value};">&nbsp;{if $ticket.is_color==1}{$ticket.color_name}组小组赛{elseif $ticket.is_color==0}{$ticket.color_name}{/if}</span></p>
+                                        </td>
+                                        <td>
+                                    <s><i style="font-size:12px;">￥</i>{$ticket.goods_price}</s>
+                                    </td>
+                                    </tr>
+                                    <!--{/if}-->
+                                    <!--{/foreach}-->
+                                </table>
+                                <!--{/foreach}-->
+                                <!--{foreach from=$rec_combo_menpiao_list item=combo}-->
+                                <table width="90%" style="margin-left:5%;">
+                                    <!-- 门票 -->
+                                    <tr bgcolor="#FFFFFF">
+                                        <th colspan="2" width="80%">
+                                    <dl>
+                                        <dt><img src="{$combo.combo_logo}" /></dt>
+                                        <dd>{$combo.combo_name} 套餐</dd>
+                                    </dl>
+                                    </th>
+                                    <th width="20%">总计</th>
+                                    </tr>
+                                    <tr class="ming" bgcolor="#FFFFFF" >
+                                        <td>
+                                            <input style="float:left;margin-top:10px;zoom:175% " type="checkbox" name="bx" value='{$combo.code}'/>
+                                            <div class="num fl" style="float:left;background: #{$combo.color_value};">
+                                                <p>{$combo.numbers}</p>
+                                            </div>
+                                            <div style="float:left" class="name fl">
+                                                <h4 style="color:#{$combo.color_value};">{$combo.goods_name}</h4>
+                                            </div>
+                                        </td>
+                                        <td class="shuxing">
+                                            <div class="huangjin fl">
+                                                <button title="" data-placement="top"  class="btn btn-default mrs fl huangjin" type="button" data-original-title="Tooltip on top"><img src="{$combo.seat_logo}"></button>
+                                            </div>
+                                            <p class="fl">{foreach from=$combo.keywords item=keyword}{$keyword}{/foreach}<span style="color:#{$combo.color_value};">&nbsp;{if $combo.is_color==1}{$combo.color_name}组小组赛{elseif $combo.is_color==0}{$combo.color_name}{/if}</span></p>
+                                        </td>
+                                        <td>
+                                    <s><i style="font-size:12px;">￥</i>{$combo.goods_price}</s>
+                                    </td>
+                                    </tr>
+                                </table>
+                                <!--{/foreach}-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="container" class="">
+            <!-- start:头部 -->
+            <!-- #BeginLibraryItem "/library/page_header.lbi" --><!-- #EndLibraryItem -->
+            <!-- end:头部 -->
+            <div id="main" class="personal-center">
+                <div class="pc_title">
+                    <p>个人中心</p>
+                </div>
+                <div class="pc_cont">
+                    <!-- start:左侧 -->
+                    <div class="left_list fl">
+                        <div class="jiaoyiguanli">
+                            <h2>交易管理</h2>
+                            <ul>
+                                <li><a style="color:#c6151d;" href="user.php?act=sk_order_list">我的订单</a></li>
+                                <li><a  href="user.php?act=sk_user_address">联系地址管理</a></li>
+                                <li><a  href="user.php?act=sk_buy_proof">付款凭证</a></li>
+                                <li><a href="user.php?act=sk_bearer_manage">持票人信息管理</a></li>
+                            </ul>
+                        </div>
+                        <div class="zhanghushezhi">
+                            <h3>账户设置</h3>
+                            <ul>
+                                <li><a  href="user.php?act=sk_edit_userInfo">个人资料</a></li>
+                                <li><a  href="user.php?act=sk_edit_password">修改密码</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- end:左侧 -->
+                    <div class="right_list fr">
+                        <p class="bianhao">{$order.order_sn}</p>
+                        <!-- 订单状态 -->
+                        <div class="ddzt">
+                            <h2>订单状态</h2>
+                            <div class="ddzt_cont gaodu">
+                                <div class="item">
+                                    <p class="fl">订单号</p>
+                                    <s class="fl">{$order.order_sn}</s>
+                                </div>
+                                <div class="item">
+                                    <p class="fl">下单时间</p>
+                                    <s class="fl">{$add_time}</s>
+                                </div>
+                                <div class="item">
+                                    <p class="fl">订单状态</p>
+                                    <s class="fl"><a style="color:#0e417d;">{$order.order_status}</a></s>
+                                </div>
+                                <div style="height:94px;" class="item xiandui">
+                                    <p class="fl">付款状态</p>
+                                    <s class="fl">
+                                        <a style="color:#C6151D;">{$order.pay_status}</a>
+                                    </s>
+                                    {if $order.order_status eq '已取消'}
+                                    {elseif $order.pay_status eq '已付款'}
+
+                                    {if $contract_file}
+                                    <div class="item">
+                                        <p class="fl">&nbsp;</p>
+                                        <s class="fl"><a href="{$contract_file}" download="{$contract_file}" style="color: #999; font-size:20px; text-align: center; text-decoration: underline;">下载购买合同</a></s>
+                                    </div>
+                                    {else}
+
+                                    <div class="item">
+                                        <p class="fl">&nbsp;</p>
+                                        <s class="fl"><a href="javascript:;" style="color: #999; font-size:20px; text-align: center; text-decoration: underline;">未上传合同</a></s>
+                                    </div>
+                                    {/if}
+
+                                    {elseif $order.pay_status eq '未付款' && $order.pay_id == 99 }
+                                    <!--<form action="wx/example/native.php" name="wxpayment" method="post" style="clear:both;padding-top:10px;">-->
+                                        <button type="submit" id="weixinzhifu" class="nowPay">立即支付</button>
+                                        <input type="hidden" id="WIDout_trade_no_99" name="WIDout_trade_no" value="{$order.order_sn}"/>
+                                    <!--</form>-->
+                                    <!--<input style="margin-left: 460px;" type="button" value="请到手机端进行支付">-->
+                                    {elseif $order.pay_status eq '未付款' && $order.pay_id == 6 }
+                                    <!--<form action="alipayapi.php" name="alipayment" method="post" style="clear:both;padding-top:10px;">-->
+                                          <button type="submit" id="zhifubao" class="nowPay">立即支付</button>
+                                          <input type="hidden" id="WIDout_trade_no" name="WIDout_trade_no" value="{$order.order_sn}"/>
+                                          <input type="hidden" id="WIDsubject" name="WIDsubject" value="门票"/>
+                                          <input type="hidden" id="WIDbody" name="WIDbody"/>
+                                      <!--</form>-->
+                                    <!--<input style="margin-left: 460px;" type="button" value="请到手机端进行支付">-->
+                                    {elseif $order.pay_status eq '未付款'}
+                                    {$pay_online}
+                                  {/if}
+                                </div>
+                                <!--{if $order.order_pay_status == 1}-->
+                                <div class="item">
+                                    <p class="fl">已付</p>
+                                    <s class="fl"><a style="color:#f00;">￥{$order.money_paid}</a></s>
+                                </div>
+                                <!--{/if}-->
+
+                                <!--{if $order.pay_id == 9}-->
+                                <!--{if $order.order_pay_status == 1 || $order.order_pay_status == 0}-->
+                                <div class="item">
+                                    <p class="fl">
+                                        &nbsp;
+                                    </p>
+                                    <s class="fl">
+                                        <a class="btn btn-block btn-lg btn-danger" href="check_balance.php?act=zhifu_cmbuat_done&order_sn={$order.order_sn}" style="color: #fff; width: 120px;" onclick="continue_pay_order('{$order.order_sn}')">继续支付</a>
+                                    </s>
+                                </div>
+                                <!--{/if}-->
+                                <!--{/if}-->
+                                <!--{if $order.pay_status==="已付款"&&$order.order_status==="已审核通过"&&$goupiaoxian == 1}-->
+                                <div class="item">
+                                    <p style="float:right;"class="fl" ><input class="lbaoxian" type="button" onclick="pay_insurance('{$order_id}')" value="购买保险"/></p>
+                                </div>
+                                <!--{/if}-->
+                            </div>
+                        </div>
+
+                        {if $contract_info.contract_no}
+                         <div class="gouwuqingdan">
+                            <h3 class="fl">合同内容</h3>
+                        </div>
+                        <div class="menpiao">
+                            <table width="100%">
+                                <tr>
+                                    <th >&nbsp;</th>
+                                    <th >单票</th>
+                                    <th >套餐</th>
+                                    <th >酒店</th>
+                                    <th >机票 </th>
+                                </tr>
+
+                                <tr bgcolor="#F5F5F5">
+                                    <td  > </td>
+                                    <td > {if $contract_info.goods} {$contract_info.goods} {else}无{/if}</td>
+                                    <td > {if $contract_info.combos} {$contract_info.combos} {else}无{/if}</td>
+                                    <td > {if $contract_info.hotels} {$contract_info.hotels} {else}无{/if}</td>
+                                    <td > {if $contract_info.airtickets} {$contract_info.airtickets} {else}无{/if}</td>
+                                </tr>
+                                </table>
+                        </div>
+
+                        {/if}
+
+                        <!--{if $contract_info.consignee}-->
+                        <!-- 商品列表 -->
+                        <div class="gouwuqingdan">
+                            <h3 class="fl">商品列表</h3>
+                        </div>
+                        <div class="menpiao">
+                            <table width="100%">
+                                <tr>
+                                    <th width="25%">&nbsp;</th>
+                                    <th width="45%">属性</th>
+                                    <th width="10%">价格</th>
+                                    <th width="10%">数量</th>
+                                    <th width="10%">小计</th>
+                                </tr>
+                                <!-- 门票 -->
+                                {if $combo_order_info}
+                                {foreach from=$combo_order_info item=combo}
+                                <tr bgcolor="#F5F5F5">
+                                    <td colspan="5">
+                                        <dl>
+                                            <dt><img src="{$combo.combo_logo}" /></dt>
+                                            <dd>{$combo.combo_name}</dd>
+                                        </dl>
+                                        <!--<dl>-->
+                                            <!--<dt class="fontWith">套餐数量 X</dt>-->
+                                            <!--<dd>{$combo.order_goods_number}</dd>-->
+                                        <!--</dl>-->
+                                    </td>
+                                </tr>
+                                <tr class="ming" bgcolor="#FFFFFF">
+                                    <td>
+                                        <div class="num fl" >
+                                            <p><img src="{$combo.combo_logo}" style="width:100%;"></p>
+                                        </div>
+                                        <div class="name fl">
+                                            <h4 style="color:#{$mp.color_value};">{$combo.combo_name}</h4>
+                                        </div>
+                                    </td>
+
+                                    <td class="shuxing">
+                                        <!--<div class="huangjin fl">-->
+                                        <!--<button title="" data-placement="top" data-toggle="tooltip" class="btn btn-default mrs fl huangjin" type="button" ><img src="{$combo.seat_logo}"></button>-->
+                                        <!--{$combo.pitch_name}&nbsp;<a href="">{$combo.region_name}</a>-->
+                                        <!--</div>-->
+                                        <!--<p class="fl"><span style="color:#{$mp.color_value};"> </span></p>-->
+                                    </td>
+                                    <td>
+                                        <s><i style="font-size:13px;color: #696969;font-weight: bold;">￥</i>{$combo.order_combo_price}</s>
+                                    </td>
+                                    <td>
+                                        <s>{$combo.order_combo_number}</s>
+                                        <!--<s>1</s>-->
+                                    </td>
+                                    <td>
+                                        <s><i style="font-size:13px;color: #696969;font-weight: bold;">￥</i>{$combo.order_combo_money}</s>
+                                    </td>
+                                </tr>
+
+                                <tr class="ming" bgcolor="#FFFFFF" >
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="all"><i style="font-size:13px;color: #696969;font-weight: bold;">￥</i>{$combo.order_combo_money}</td>
+                                </tr>
+                                {/foreach}
+                                {/if}
+                                <!--&lt;!&ndash;{if $order_combo_menpiao.key}&ndash;&gt;-->
+                                <!--&lt;!&ndash;{foreach from=$order_combo_menpiao.key item=combo}&ndash;&gt;-->
+                                <!--<tr bgcolor="#F5F5F5">-->
+                                    <!--<td colspan="5">-->
+                                        <!--<dl>-->
+                                            <!--<dt><img src="{$combo.combo_logo}" /></dt>-->
+                                            <!--<dd>{$combo.combo_name}</dd>-->
+                                        <!--</dl>-->
+                                        <!--<dl>-->
+                                            <!--<dt class="fontWith">套餐数量 X</dt>-->
+                                            <!--<dd>{$combo.order_goods_number}</dd>-->
+                                        <!--</dl>-->
+                                    <!--</td>-->
+                                <!--</tr>-->
+                                <!--<tr class="ming" bgcolor="#FFFFFF">-->
+                                    <!--<td>-->
+                                        <!--<div class="num fl" >-->
+                                            <!--<p><img src="{$combo.combo_logo}" style="width:100%;"></p>-->
+                                        <!--</div>-->
+                                        <!--<div class="name fl">-->
+                                            <!--<h4 style="color:#{$mp.color_value};">{$combo.combo_name}</h4>-->
+                                        <!--</div>-->
+                                    <!--</td>-->
+
+                                    <!--<td class="shuxing">-->
+                                        <!--&lt;!&ndash;<div class="huangjin fl">&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<button title="" data-placement="top" data-toggle="tooltip" class="btn btn-default mrs fl huangjin" type="button" ><img src="{$combo.seat_logo}"></button>&ndash;&gt;-->
+                                            <!--&lt;!&ndash;{$combo.pitch_name}&nbsp;<a href="">{$combo.region_name}</a>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<p class="fl"><span style="color:#{$mp.color_value};"> </span></p>&ndash;&gt;-->
+                                    <!--</td>-->
+                                    <!--<td>-->
+                                        <!--<s><i style="font-size:13px;color: #696969;font-weight: bold;">￥</i>{$combo.combo_price}</s>-->
+                                    <!--</td>-->
+                                    <!--<td>-->
+                                        <!--<s>{$combo.order_goods_number}</s>-->
+                                    <!--</td>-->
+                                    <!--<td>-->
+                                        <!--<s><i style="font-size:13px;color: #696969;font-weight: bold;">￥</i>{$combo.order_combo_all}</s>-->
+                                    <!--</td>-->
+                                <!--</tr>-->
+                                <!--&lt;!&ndash;{/foreach}&ndash;&gt;-->
+                                <!--&lt;!&ndash;{/if}&ndash;&gt;-->
+                                <!--{if $order_combo_menpiao.key}-->
+                                <!--{/if}-->
+                                <!--{foreach from=$game_info item=game}-->
+                                <tr bgcolor="#F5F5F5">
+                                    <td colspan="5">
+                                        <dl>
+                                            <dt><img src="{$game.game_logo}" /></dt>
+                                            <dd>{$game.game_name} 门票</dd>
+                                        </dl>
+                                    </td>
+                                </tr>
+                               <!--{foreach from=$order_menpiao item=mp}-->
+                               <!--{if $game.id==$mp.gameid}-->
+                                <tr class="ming" bgcolor="#FFFFFF">
+                                    <td>
+                                        <div class="num fl" style="background: #{$mp.color_value}">
+                                            <p>{$mp.numbers}</p>
+                                        </div>
+                                        <div class="name fl">
+                                            <h4 style="color:#{$mp.color_value};">{$mp.goods_name}</h4>
+                                        </div>
+                                    </td>
+
+                                    <td class="shuxing">
+                                        <div class="huangjin fl">
+                                            <button title="" data-placement="top" data-toggle="tooltip" class="btn btn-default mrs fl huangjin" type="button" ><img src="{$mp.seat_logo}"></button>
+                                          {foreach from=$mp.keywords item=keyword}{$keyword} &nbsp;{/foreach}
+                                        </div>
+                                        <p class="fl">{if $mp.is_color==1}{$mp.color_name}组小组赛{elseif $mp.is_color==0}{$mp.color_name}{/if}<span style="color:#{$mp.color_value};"> {$mp.region_name}</span></p>
+                                    </td>
+                                    <td>
+                                <s><i style="font-size:13px;color: #696969;font-weight: bold;">￥</i>{$mp.goods_price}</s>
+                                </td>
+                                <td>
+                                <s>{$mp.order_goods_number}</s>
+                                </td>
+                                <td>
+                                <s><i style="font-size:13px;color: #696969;font-weight: bold;">￥</i>{$mp.order_goods_price}</s>
+                                </td>
+                                </tr>
+                                <!--{/if}-->
+                                <!--{/foreach}-->
+                               <!--{/foreach}-->
+                                {if $order_menpiao}
+                                <tr class="ming" bgcolor="#FFFFFF">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="all"><i style="font-size:13px;color: #696969;font-weight: bold;">￥</i>{$order_menpiao_sum}</td>
+                                </tr>
+                                {/if}
+                                <!--{if $goods_list}-->
+                                <tr>
+                                    <td style="height:12px;"></td>
+                                </tr>
+                                <tr bgcolor="#F5F5F5" >
+                                    <td colspan="5">
+                                        <dl>
+                                            <dt class="zhoubian"><img src="images/zbsp2.png" /></dt>
+                                            <dd>周边商品</dd>
+                                        </dl>
+                                    </td>
+                                </tr>
+
+                                <!--{foreach from=$goods_list item=goods}-->
+                                <tr class="ming" bgcolor="#FFFFFF">
+                                    <td>
+                                        <div class="jdnum fl" style="background: #DCA00F;">
+                                            <img src="images/zbsp2.png" />
+                                        </div>
+                                        <div class="name fl">
+                                            <h4 style="color:#696969;">{$goods.goods_name}</h4>
+                                        </div>
+                                    </td>
+                                    <td class="xingji">
+                                        <h4 style="color:#696969;">{$goods.goods_attr}</h4>
+                                    </td>
+                                    <td>
+                                        <s><i style="font-size:13px;color: #696969;font-weight: bold;">￥</i>{$goods.goods_price}</s>
+                                    </td>
+                                    <td>
+                                        <s>{$goods.goods_number}</s>
+                                    </td>
+                                    <td>
+                                        <s><i style="font-size:13px;color: #696969;font-weight: bold;">￥</i>{$goods.subtotal}</s>
+                                    </td>
+                                </tr>
+                                <!--{/foreach}-->
+                                <tr class="ming" bgcolor="#FFFFFF">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="all"><i style="font-size:13px;color: #696969;font-weight: bold;">￥</i>{$goods_listtotalprice}</td>
+                                </tr>
+
+                                <!--{/if}-->
+
+
+                                <!--{if $plane_list}-->
+                                <tr>
+                                    <td style="height:12px;"></td>
+                                </tr>
+                                <tr bgcolor="#F5F5F5" >
+                                    <td colspan="5">
+                                        <dl>
+                                            <dt class="jipiao"><img src="images/huiji2.png" /></dt>
+                                            <dd>机票</dd>
+                                        </dl>
+                                    </td>
+                                </tr>
+
+                                <!--{foreach from=$plane_list item=plane}-->
+                                <tr class="ming" bgcolor="#FFFFFF">
+                                    <td>
+                                        <div class="jdnum fl" style="background: #0E7D76;">
+                                            <img src="images/huiji2.png" />
+                                        </div>
+                                        <div class="name fl">
+                                            <h4 style="color:#696969;">{$plane.order_air_line.title}</h4>
+                                        </div>
+                                    </td>
+                                    <td class="xingji">
+                                        {$plane.fly_date}去, {$plane.return_fly_date}返
+                                    </td>
+                                    <td>
+                                        <s><i style="font-size:13px;color: #696969;font-weight: bold;">￥</i>{$plane.goods_price}</s>
+                                    </td>
+                                    <td>
+                                        <s>{$plane.goods_number}</s>
+                                    </td>
+                                    <td>
+                                        <s><i style="font-size:13px;color: #696969;font-weight: bold;">￥</i>{$plane.planesum}</s>
+                                    </td>
+                                </tr>
+                                <!--{foreach from=$plane.ticket_info item=air_ticket}-->
+                                <tr class="ming" bgcolor="#FFFFFF">
+                                    <td>
+                                        <div class="jdnum fl">
+                                        </div>
+                                        <div class="name fl">
+                                            <h4 style="color:#696969;">去程: {$air_ticket.flight}</h4>
+                                        </div>
+                                    </td>
+                                    <td class="xingji">
+                                        <h4 style="color:#696969;">{$plane.fly_time}</h4>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+                                <!--{/foreach}-->
+                                <!--{foreach from=$plane.return_ticket_info item=air_ticket}-->
+                                <tr class="ming" bgcolor="#FFFFFF">
+                                    <td>
+                                        <div class="jdnum fl">
+                                        </div>
+                                        <div class="name fl">
+                                            <h4 style="color:#696969;">返程: {$air_ticket.flight}</h4>
+                                        </div>
+                                    </td>
+                                    <td class="xingji">
+                                        <h4 style="color:#696969;">{$plane.fly_time}</h4>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                    </td>
+                                    <td>
+                                    </td>
+                                </tr>
+                                <!--{/foreach}-->
+                                <!--{/foreach}-->
+                                <tr class="ming" bgcolor="#FFFFFF">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="all"><i style="font-size:13px;color: #696969;font-weight: bold;">￥</i>{$plane_sum}</td>
+                                </tr>
+
+                                <!--{/if}-->
+
+
+                                <!--{if $order_hotel_list}-->
+                                <tr>
+                                    <td style="height:12px;"></td>
+                                </tr>
+                                <tr bgcolor="#F5F5F5" >
+                                    <td colspan="5">
+                                        <dl>
+                                            <dt class="jipiao"><img src="images/huiji2.png" /></dt>
+                                            <dd>酒店</dd>
+                                        </dl>
+                                    </td>
+                                </tr>
+
+                                <!--{foreach from=$order_hotel_list item=hotel}-->
+                                <tr class="ming" bgcolor="#FFFFFF">
+                                    <td>
+                                        <div class="jdnum fl" style="background: #0E7D76;">
+                                            <img src="images/huiji2.png" />
+                                        </div>
+                                        <div class="name fl">
+                                            <h4 style="color:#696969;">{$hotel.region_name}{$hotel.hotel_name}:{$hotel.room_type}</h4>
+                                        </div>
+                                    </td>
+                                    <td class="xingji">
+                                        <h4 style="color:#696969;">{$hotel.hotel_start_date}至{$hotel.hotel_end_date}</h4>
+                                    </td>
+                                    <td>
+                                        <s><i style="font-size:13px;color: #696969;font-weight: bold;">￥</i>{$hotel.gp}</s>
+                                    </td>
+                                    <td>
+                                        <s>{$hotel.goods_number}</s>
+                                    </td>
+                                    <td>
+                                        <s><i style="font-size:13px;color: #696969;font-weight: bold;">￥</i>{$hotel.gp}</s>
+                                    </td>
+                                </tr>
+                                <!--{/foreach}-->
+                                <tr class="ming" bgcolor="#FFFFFF">
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="all"><i style="font-size:13px;color: #696969;font-weight: bold;">￥</i>{$order_hotel_sum}</td>
+                                </tr>
+
+                                <!--{/if}-->
+
+                                <!-- 总计 -->
+                                <tr class="ming2" bgcolor="#C6151D">
+                                    <td colspan="5" class="zongji">
+                                        <div class="fr" style="text-align:right;margin-right:30px;">
+                                            <p>总计</p>
+                                            <span><i style="font-size:13px;color: #fff;font-weight: bold;">￥</i>{$order.goods_amount}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- 应付金额 -->
+                                <tr class="ming2" bgcolor="#FFFFFF">
+                                    <td colspan="5" class="yfje">
+                                        <div class="fr" style="text-align:right;margin-right:30px;">
+                                            <p>应付金额</p>
+                                            <span><i style="font-size:13px;color: #C6151D;font-weight: bold;">￥</i>{$order.order_amount}</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <!-- 收货地址 -->
+                        <div class="ddzt">
+                            <h2>联系人地址</h2>
+                            <div class="ddzt_cont" style="padding-bottom:0px;">
+                                <div class="item">
+                                    <p class="fl">联系人姓名:</p>
+                                    <s class="fl">{$order_lianxiren.consignee}</s>
+                                </div>
+                                <div class="item">
+                                    <p class="fl">电子邮件:</p>
+                                    <s class="fl">{$order_lianxiren.email}</s>
+                                </div>
+                                <div class="item">
+                                    <p class="fl">手机:</p>
+                                    <s class="fl">{$order_lianxiren.mobile}</s>
+                                </div>
+                                <!--{if $order_lianxiren.card_type==0}-->
+                                <div class="item">
+                                    <p class="fl">证件类型:</p>
+                                    <s class="fl">身份证</s>
+                                </div>
+                                <!--{elseif $order_lianxiren.card_type==1}-->
+                                <div class="item">
+                                    <p class="fl">证件类型:</p>
+                                    <s class="fl">护照</s>
+                                </div>
+                                <!--{else}-->
+                                <div class="item">
+                                    <p class="fl">证件类型:</p>
+                                    <s class="fl">未知类型</s>
+                                </div>
+                                <!--{/if}-->
+                                <div class="item">
+                                    <p class="fl">证件号码:</p>
+                                    <s class="fl">{$order_lianxiren.card_num}</s>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 持票人信息 -->
+                        <!--{if $order.pay_status=="已付款"}-->
+                        <div class="gouwuqingdan">
+                            <h3 class="fl">持票人列表</h3>
+                        {if $type == 1 && $button == 1}
+                        {elseif $type == 1 && $button != 1}
+                        <form method="post" action="user.php?act=rb_qxx_excel_read&order_sn={$order_sn}" enctype="multipart/form-data">
+                            <input type="submit" class="fr tianxie btn btn-block btn-lg btn-danger" value="导入" style="width:100px;height:35px;line-height:35px;padding:0px;background-color: #C6151D;" />
+                            <input type="file" name="file_stu" class="fr" style="line-height: 25px;color: #000;margin:5px 0 0 20px;"/>
+                            <input type="hidden" name="file_stu" class="fr" style="line-height: 25px;color: #000;margin:5px 0 0 20px;" value="{$bearer_info_lose}"/>
+                        </form>
+                        {else}
+                        {/if}
+                        </div>
+                        <div class="menpiao">
+                            <table width="100%">
+                                <tr>
+                                    <th width="20%" style="padding-left:10px;">球票</th>
+                                    <th width="10%">持票人</th>
+                                    <th width="15%">护照号</th>
+                                    <th width="20%">时间</th>
+                                    <th width="20%">电话</th>
+                                    <!--<th width="15%">操作</th>-->
+                                </tr>
+                                <!-- 门票 -->
+                                <!--{foreach from=$order_combo_bearer item=cpr}-->
+                                <tr class="ming" bgcolor="#FFFFFF">
+                                    <td>
+                                        <div class="num2 fl" style="background: #{$cpr.color_value};">
+                                            <p>{$cpr.numbers}</p>
+                                        </div>
+                                        <div class="name fl">
+                                            <h4 style="color:#{$cpr.color_value};">{$cpr.goods_name}</h4>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <s>{$cpr.cn_customer_name}</s>
+                                    </td>
+                                    <td>
+                                        <s>{$cpr.passport_number}</s>
+                                    </td>
+                                    <td>
+                                        <p>{$cpr.num_start}</p>
+                                    </td>
+                                    <td>
+                                        <p>{$cpr.mobile}</p>
+                                    </td>
+                                    <!--<td class="bianji">-->
+                                    <!--<a href="download.php?type=user_info&file_name=user_bearer_{$cpr.bearer_id}.pdf"></a>-->
+                                    <!--</td>-->
+                                </tr>
+                                <!--{/foreach}-->
+                                <!--{foreach from=$order_bearer item=cpr}-->
+                                <tr class="ming" bgcolor="#FFFFFF">
+                                    <td>
+                                        <div class="num2 fl" style="background: #{$cpr.color_value};">
+                                            <p>{$cpr.numbers}</p>
+                                        </div>
+                                        <div class="name fl">
+                                            <h4 style="color:#{$cpr.color_value};">{$cpr.goods_name}</h4>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <s>{$cpr.cn_customer_name}</s>
+                                    </td>
+                                    <td>
+                                        <s>{$cpr.passport_number}</s>
+                                    </td>
+                                    <td>
+                                        <p>{$cpr.num_start}</p>
+                                    </td>
+                                    <td>
+                                        <p>{$cpr.mobile}</p>
+                                    </td>
+                                    <!--<td class="bianji">-->
+                                        <!--<a href="download.php?type=user_info&file_name=user_bearer_{$cpr.bearer_id}.pdf"></a>-->
+                                    <!--</td>-->
+                                </tr>
+                                <!--{/foreach}-->
+
+                            </table>
+                        </div>
+                        <input type="hidden" name="order_sn" value="{$order_sn}">
+                        <input type="hidden" name="order_id" value="{$order_id}">
+                        </br></br>
+                        {if $tbinfo == 2 || $tbinfo == 2}
+                        <div style="float: right"><!-- #BeginLibraryItem "/library/pages.lbi" --><!-- #EndLibraryItem --></div>
+                        {/if}
+                        {if $type == 0  && $button == 1}
+                        {elseif $type == 0  && $button != 1}
+                        <div class="tjcprxx fr">
+                            <a href="bearer.php?act=index&order_sn={$order.order_sn}" class="btn btn-block btn-lg btn-danger">添加持票人信息</a>
+                            <input type="hidden" value="{$bearer_lose}">
+                        </div>
+                        {else}
+                        {/if}
+                        <div class="clear"></div>
+                        <!--{/if}-->
+                        <!--{if $order.pay_status=="已付款"&&$order.order_status=="已审核通过"}-->
+                        <div class="clear"></div>
+                        <div class="lyr" style="text-align:center">
+                            <img src="user.php?act=voucher_img&order_sn={$order.order_sn}" />
+                            <a href="download.php?type=vouch&file_name=vouch_{$order.order_sn}.pdf" class="btn btn-block btn-danger xiazai">下载购票凭证</a>
+                        </div>
+                        <div class="clear"></div>
+                        <!--{/if}-->
+                        <!-- 支付方式 -->
+                        <div class="gouwuqingdan">
+                            <h3 class="fl">支付方式</h3>
+                        </div>
+                        <div class="zffs">
+                            <s>
+                                所选支付方式 <p>{$order_pay}</p>&nbsp;&nbsp;&nbsp;&nbsp;应付款金额<p><i style="font-size:13px;color: #696969;font-weight: bold;">￥</i>{$order.order_amount}</p>
+                            </s>
+                        </div>
+                        <!-- 其他信息 -->
+                        {if $order.inv_payee}
+                        <div class="gouwuqingdan">
+                            <h3 class="fl">其他信息</h3>
+                        </div>
+
+                        <div class="zffs">
+                            <s>普通发票  {$order.inv_payee} 服务费</s>
+                        </div>
+
+                    </div>
+                    {/if}
+
+                    <!--{/if}-->
+                </div>
+            </div>
+            <div class="clear"></div>
+            <!-- start:底部 -->
+            <!-- #BeginLibraryItem "/library/page_footer.lbi" --><!-- #EndLibraryItem -->
+            <!-- end:底部 -->
+            <script src="{$js_path}/jquery.min.js"></script>
+            <script src="{$js_path}/bootstrap.min.js"></script>
+            <script src="{$js_path}/video.js"></script>
+
+            <!--{insert_scripts files='common.js,user.js'}-->
+            <script>
+                //提交
+                function tj_baoxian(order_id_num){
+                    var a=document.getElementsByName('bx');
+                    var tk_code=new Array();
+                    for (var i = 0; i < a.length; i++){
+                        if(a[i].checked===true){
+                            tk_code[i]=a[i].value;
+                           $.ajax({
+                                url: "demo.php?act=pay&&order_id_num="+order_id_num+"&&tk_code="+tk_code[i],
+                                type: 'GET',
+                                dataType: 'text',
+                                success: function (call) {
+                                    
+                                    }
+                                });
+                        }
+                    }
+                   function wt(){
+                        window.location.href="demo.php?act=pay&&order_id_num="+order_id_num;
+                   }
+                    setTimeout(wt,1000);
+                }
+                function on_bx(){
+                    var a=document.getElementsByName('bx');
+                    if(a[0].checked===false){
+                        for (var i = 0; i < a.length; i++)
+                        a[i].checked = true;
+                    }else{
+                        for (var i = 0; i < a.length; i++)
+                        a[i].checked = false;
+                    }
+                }
+                
+                //购买众安保险
+                 function pay_insurance(order_id_num) {
+                     var pbx = document.getElementById('pay_baoxian');
+                     pbx.style.display = "block";
+                     //window.open("demo.php?act=pay&&order_id_num="+order_id_num);
+                }
+
+                                        $("#pay_baoxian").click(function(e) {
+                                            var regist_top = $("#dis").offset().top;
+                                            var regist_left = $("#dis").offset().left;
+                                            var regist_bottom = $("#dis").offset().top + $("#dis").height();
+                                            var regist_right = $("#dis").offset().left + $("#dis").width();
+
+                                            var is_close = 1;
+                                            if (e.pageX > regist_left && e.pageX < regist_right && e.pageY > regist_top && e.pageY < regist_bottom) {
+                                                is_close = 0;
+                                            }
+                                            if (is_close) {
+                                                $("#pay_baoxian").css("display", "none");
+                                            }
+                                        });
+
+                                        $(function() {
+                                            $('[data-toggle=tooltip]').tooltip();
+                                        });
+
+                                        function editAddress(id) {
+                                            window.location.href = "user.php?act=edit_address&address_id=" + id;
+                                        }
+
+                                        function removeAddress(id) {
+                                            if (confirm('你确认要删除该收货地址吗？')) {
+                                                location.href = 'user.php?act=drop_consignee&id=' + id;
+                                            }
+                                        }
+
+                                        //      function edit(){
+                                        //        document.getElementById("username").removeAttributeNode(document.getElementById("username").getAttributeNode("readonly")); 
+                                        //        document.getElementById("address").removeAttributeNode(document.getElementById("address").getAttributeNode("readonly")); 
+                                        //        document.getElementById("tel").removeAttributeNode(document.getElementById("tel").getAttributeNode("readonly")); 
+                                        //        document.getElementById("email").removeAttributeNode(document.getElementById("email").getAttributeNode("readonly")); 
+                                        //        document.getElementById("mobile").removeAttributeNode(document.getElementById("mobile").getAttributeNode("readonly"));      
+                                        //      }
+            </script>
+            <script>
+                $(function(){
+                    $("#weixinzhifu").click(function(){
+                        var WIDout_trade_no = $("#WIDout_trade_no_99").val();
+                        $.ajax({
+                            url: 'check_balance.php?act=info_order_detail&order_sn='+WIDout_trade_no,
+                            type: 'POST',
+                            dataType: 'json',
+                            success: function (data) {
+                                console.log(data);
+                                console.log(data.qc_data);
+                                console.log(data.order_amount);
+                                var WIDtotal_fee = data.order_amount;
+                                $.ajax({
+                                    url: 'wx/example/native.php',
+                                    data : {WIDout_trade_no:WIDout_trade_no,WIDtotal_fee:WIDtotal_fee},
+                                    type: 'POST',
+                                    dataType: 'text',
+                                    success: function (data) {
+                                        window.location.href="check_balance.php?act=zhifu_done&order_sn="+WIDout_trade_no+"&order_amount="+WIDtotal_fee+"&data="+data;
+                                        //$(".ewm").attr("src","http://paysdk.weixin.qq.com/example/qrcode.php?data="+data);
+                                    }
+                                })
+                            }
+                        });
+                    })
+                })
+            </script>
+            <script>
+                $(function(){
+                    $("#zhifubao").click(function(){
+                        var WIDout_trade_no = $("#WIDout_trade_no").val();
+                        var WIDsubject = $("#WIDsubject").val();
+                        var WIDbody = $("#WIDbody").val();
+                        $.ajax({
+                            url: 'check_balance.php?act=info_order_detail&order_sn='+WIDout_trade_no,
+                            type: 'POST',
+                            dataType: 'json',
+                            success: function (data) {
+                                var WIDtotal_fee = data.order_amount;
+                                window.location.href="alipayapi.php?WIDout_trade_no="+WIDout_trade_no+"&WIDtotal_fee="+WIDtotal_fee+"&WIDsubject="+WIDsubject+"&WIDbody="+WIDbody;
+                            }
+                        });
+                    })
+                })
+            </script>
+            <script>
+            var time = 0;
+            var timeIntervel = 2000;
+            function myInterval(){
+                var myInterval = setInterval(function(){
+                    var order_sn = $("#WIDout_trade_no_99").val();
+                    $.ajax({
+                        type:'get',
+                        url:'user.php?act=select_order_status&order_sn='+order_sn,
+                        dataType:'text',
+                        success:function(data){
+                            //console.log(data);
+                            time += timeIntervel / 1000;
+                            if(data == 'true'){
+                                clearInterval(myInterval);
+                                location.href="bearer.php?act=index&out_trade_no="+order_sn;
+                            }else if(time > 60){
+                                clearInterval(myInterval);
+                                time = 0;
+                            }
+                        }
+                    });
+                },timeIntervel);
+            }
+            </script>
+        </div>
+    </body>
+</html>

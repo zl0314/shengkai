@@ -1,0 +1,332 @@
+<!-- $Id: agency_list.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,newlisttable.js,jquery-1.7.1.min.js,related.js"}
+{insert_scripts files="../js/transport.js"}
+<script type="text/javascript" src="js/related.js"></script>
+  <form action="route.php?con=batch" name="searchForm">
+      <div id="liandong" style="display:block;">
+          <img src="images/icon_search.gif" width="26" height="22" border="0" alt="SEARCH" style="vertical-align: middle;" />
+          查询方式
+          <select id="change" name="change" onchange="get_change_list(this.value)">
+              <option value='0'> 请选择...</option>
+              <option value='2'> 普通查询</option>
+              <option value='3'> 联动查询.</option>
+          </select>
+          赛事筛选
+          <!--<select name="game_id" id="game_id" onchange="get_game_number();">-->
+          <select name="game_id" id="game_id" onchange="get_number_list(this.value)">
+              <option value=''> 请选择...</option>
+              <!--{foreach from=$game item=game}-->
+              <option value="{$game.id}">{$game.game_name}</option>
+              <!--{/foreach}-->
+          </select>
+          场次名称
+          <select name="number_id" id="number_id" onchange="get_pitch_list(this.value)">
+              <option value=''> 请选择...</option>
+          </select>
+             比赛场馆
+        <select name="pitch_id" id="pitch_id">
+            <option value=''> 请选择...</option>
+        </select>
+          <!-- 套餐/单票
+          <select name="ticket" id="ticket">
+              <option value="">{$lang.select_please}</option>
+              <option value="1">套餐</option>
+              <option value="2">单票</option>
+          </select></br></br> -->
+      </div>
+      <div id="putong" style="display:none;">
+          <img src="images/icon_search.gif" width="26" height="22" border="0" alt="SEARCH" style="vertical-align: middle;" />
+          查询方式
+          <select id="change_1" name="change_1" onchange="get_change_list(this.value)">
+              <option value='0'> 请选择...</option>
+              <option value='2'> 普通查询</option>
+              <option value='3'> 联动查询.</option>
+          </select>
+          赛事筛选
+          <!--<select name="game_id" id="game_id" onchange="get_game_number();">-->
+          <select name="game_id_1" id="game_id_1">
+              <option value=''> 请选择...</option>
+              <!--{foreach from=$game item=game}-->
+              <option value="{$game.id}">{$game.game_name}</option>
+              <!--{/foreach}-->
+          </select>
+          场次名称
+          <select name="number_id_1" id="number_id_1">
+              <option value=''> 请选择...</option>
+              <!--{foreach from=$num_name item=number}-->
+              <option value='{$number.id}'> {$number.num_name}</option>
+              <!--{/foreach}-->
+          </select>
+          比赛场馆
+          <select name="pitch_id_1" id="pitch_id_1">
+              <option value=''> 请选择...</option>
+              <!--{foreach from=$pitch_name item=pitch}-->
+              <option value='{$pitch.id}'> {$pitch.pitch_name}</option>
+              <!--{/foreach}-->
+          </select>
+      </div>
+          套餐/单票
+          <select name="ticket" id="ticket">
+              <option value="">{$lang.select_please}</option>
+              <option value="1">套餐</option>
+              <option value="2">单票</option>
+          </select></br></br>
+    <input type="hidden" name="con" value="batch"/>
+    <input type="submit" value="{$lang.button_search}" class="button" />
+  </form>
+      <input type="hidden" id="batch_game_id" name="batch_game_id" value="{$game_id}">
+      <input type="hidden" id="batch_game_id_1" name="batch_game_id_1" value="{$game_id_1}">
+      <input type="hidden" id="batch_number_id" name="batch_number_id" value="{$number_id}">
+      <input type="hidden" id="batch_number_id_1" name="batch_number_id_1" value="{$number_id_1}">
+      <input type="hidden" id="batch_pitch_id" name="batch_pitch_id" value="{$pitch_id}">
+      <input type="hidden" id="batch_pitch_id_1" name="batch_pitch_id_1" value="{$pitch_id_1}">
+      <input type="hidden" id="batch_change" name="batch_change" value="{$change}">
+      <input type="hidden" id="batch_ticket_id" name="batch_ticket_id" value="{$ticket}">
+<div class="list-div" id="listDiv">
+{/if}
+
+    <table class="list-td" cellpadding="3" cellspacing="1" style="text-align:center;">
+        <tr>
+            <th width="5%"> <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" />
+                <!-- <a href="javascript:listTable.sort('agency_id'); ">{$lang.record_id}</a> -->{$lang.record_id}{$sort_agency_id} </th>
+            <th>批次编号</th>
+            <th>添加时间</th>
+            <th>赛事</th>
+            <th>赛程</th>
+            <th>场次</th>
+            <!-- <th>票务等级</th> -->
+            <th>商品名称</th>
+            <th>添加票数</th>
+            <th>票号区间</th>
+            <th>操作</th>
+        </tr>
+        {foreach from=$batch_list item=batch}
+            <tr>
+                <td><input type="checkbox" name="checkboxes[]" value="{$agent.id}" />{$batch.id}</td>
+
+                <td align="center" class="first-cell">{$batch.batch_sn}</td>
+
+                <td align="center">{$batch.add_time}</td>
+                <td align="center">{$batch.game_name}</td>
+                <td align="center">{$batch.sche_name}</td>
+                <td align="center" class="first-cell">{$batch.num_name}</td>
+                <td align="center">{$batch.goods_name}</td>
+                <!--<td align="center">{$data.attr_value}</td>-->
+                <td align="center">{$batch.number}</td>
+                <td align="center">{$batch.ticket_code}</td>
+                <td align="center" >
+                    {if $batch.status==0}
+                    <a href="route.php?con=batch&act=void&id={$batch.id}" title="{$lang.edit_order}">设为无效</a>
+                    {else}
+                        无效
+                    {/if}
+                </td>
+            </tr>
+		{foreachelse}
+		<tr><td class="no-records" colspan="9">{$lang.no_records}</td></tr>
+		{/foreach}
+    </table>
+    <table id="page-table" cellspacing="0">
+        <tr>
+            <td>
+                <!-- <input name="remove" type="submit" id="btnSubmit" value="{$lang.drop}" class="button" disabled="true" />
+                <input name="act" type="hidden" value="batch" /> -->
+            </td>
+            <td align="right" nowrap="true">
+                {include file="page2.htm"}
+            </td>
+        </tr>
+    </table>
+{if $full_page}
+</div>
+<script type="text/javascript" language="javascript">
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+  listTable.new_url = 'route.php?is_ajax=1&con=batch';
+  listTable.act = 'index_query';
+  {foreach from = $filter item = item key = key}
+    listTable.filter.{$key} = '{$item}';
+  {/foreach}
+{literal}
+//    onload = function()
+//    {
+//        // 开始检查订单
+//        startCheckOrder();
+//    }
+    </script>
+   <script type="text/javascript" language="javascript">
+       function get_change_list(change_id){
+           if(change_id == '2'){
+              $("#game_id").val("");
+              $("#number_id").val("");
+              $("#pitch_id").val("");
+              $("#ticket").val("");
+              $("#batch_ticket_id").val("");
+              $('#putong').css("display","block");
+              $('#liandong').css("display","none");
+              var opt4 = document.getElementById("change_1");
+              for (var i = 0; i < opt4.options.length; i++) {
+                  if (change_id == opt4.options[i].value) {
+                      opt4.options[i].selected = 'selected';
+                  }
+              }
+           }else if(change_id == '3'){
+              $("#game_id_1").val("");
+              $("#number_id_1").val("");
+              $("#pitch_id_1").val("");
+              $("#ticket").val("");
+              $('#liandong').css("display","block");
+              $('#putong').css("display","none");
+              var opt5 = document.getElementById("change");
+              for (var i = 0; i < opt5.options.length; i++) {
+                  if (change_id == opt5.options[i].value) {
+                      opt5.options[i].selected = 'selected';
+                  }
+              }
+           }else{
+              $('#putong').css("display","none");
+              $('#liandong').css("display","block");
+           }
+       }
+       function get_number_list(game_id){
+           if(game_id != "") {
+               $.ajax({
+                   url: 'game.php?act=number&game_id=' + game_id,
+                   type: "POST",
+                   dataType: "text",
+                   success: function (res) {
+                       var aa = JSON.parse(res);
+                       var bb = $("#batch_number_id").val();
+                       $("#number_id").empty();
+                       var str = '<option value=""> 请选择...</option>';
+                       for (var i = 0; i < aa.length; i++) {
+                           str += '<option value="' + aa[i].id + '">' + aa[i].num_name + '</option>';
+                       }
+                       $('#number_id').append(str);
+                       var bb = $("#batch_number_id").val();
+                       if(bb){
+                           $("#number_id").val(bb);
+                           $("#batch_number_id").val("");
+                       }
+                       get_pitch_list(bb);
+                   }
+               });
+           }else{
+               $("#number_id").empty();
+               var str1 = '<option value=""> 请选择...</option>';
+               $('#number_id').append(str1);
+               $("#pitch_id").empty();
+               var str2 = '<option value=""> 请选择...</option>';
+               $('#pitch_id').append(str2);
+           }
+       }
+       function get_pitch_list(number_id){
+           if(number_id != ""){
+               $.ajax({
+                   url: 'game.php?act=pitch&number_id='+number_id,
+                   type:"POST",
+                   dataType:"text",
+                   success:function (res){
+                       var aa = JSON.parse(res);
+                       $("#pitch_id").empty();
+                       var str = '<option value=""> 请选择...</option>';
+                       for(var i=0;i<aa.length;i++){
+                           str +='<option value="'+aa[i].id+'">'+aa[i].pitch_name+'</option>';
+                       }
+                       $('#pitch_id').append(str);
+                       var cc = $("#batch_pitch_id").val();
+                       if(cc){
+                           $("#pitch_id").val(cc);
+                           $("#batch_pitch_id").val("");
+                       }
+                   }
+               });
+           }else{
+               $("#pitch_id").empty();
+               var str2 = '<option value=""> 请选择...</option>';
+               $('#pitch_id').append(str2);
+           }
+       }
+</script>
+{/literal}
+<script type="text/javascript" language="javascript">
+    $(document).ready(function() {
+        var game_id = $("#batch_game_id_1").val();
+        if(game_id != "0" && game_id != ""){
+            $('#putong').css("display","block");
+            $('#liandong').css("display","none");
+            var o = document.getElementById("change_1");
+            var a = $("#batch_change").val();
+            for (var i = 0; i < o.options.length; i++) {
+                if (a == o.options[i].value) {
+                    o.options[i].selected = 'selected';
+                }
+            }
+            var opt = document.getElementById("game_id_1");
+            var value_1 = $("#batch_game_id_1").val();
+            if(value_1 != ""){
+                $('#putong').css("display","block");
+                $('#liandong').css("display","none");
+                for (var i = 0; i < opt.options.length; i++) {
+                    if (value_1 == opt.options[i].value) {
+                        opt.options[i].selected = 'selected';
+                    }
+                }
+            }
+            var opt1 = document.getElementById("number_id_1");
+            var value_2 = $("#batch_number_id_1").val();
+            if(value_2 != ""){
+                for (var i = 0; i < opt1.options.length; i++) {
+                    if (value_2 == opt1.options[i].value) {
+                        opt1.options[i].selected = 'selected';
+                    }
+                }
+            }
+            var opt2 = document.getElementById("pitch_id_1");
+            var value_3 = $("#batch_pitch_id_1").val();
+            if(value_3 != ""){
+                for (var i = 0; i < opt2.options.length; i++) {
+                    if (value_3 == opt2.options[i].value) {
+                        opt2.options[i].selected = 'selected';
+                    }
+                }
+            }
+        }else{
+            $('#putong').css("display","none");
+            $('#liandong').css("display","block");
+            var p = document.getElementById("change");
+            var b = $("#batch_change").val();
+            for (var i = 0; i < p.options.length; i++) {
+                if (b == p.options[i].value) {
+                    p.options[i].selected = 'selected';
+                }
+            }
+            var opts = document.getElementById("game_id");
+            var value = $("#batch_game_id").val();
+            if (value != "") {
+                for (var i = 0; i < opts.options.length; i++) {
+                    if (value == opts.options[i].value) {
+                        opts.options[i].selected = 'selected';
+                    }
+                }
+                get_number_list(value);
+            }
+        }  
+    })
+    $(document).ready(function() {
+        var opts = document.getElementById("ticket");
+        var value = $("#batch_ticket_id").val();
+        if (value != "") {
+            for (var i = 0; i < opts.options.length; i++) {
+                if (value == opts.options[i].value) {
+                    opts.options[i].selected = 'selected';
+                }
+            }
+        }
+    })
+</script>
+{include file="pagefooter.htm"}
+{/if}
+

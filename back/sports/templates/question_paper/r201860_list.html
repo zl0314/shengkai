@@ -1,0 +1,78 @@
+<!-- $Id: agency_list.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,newlisttable.js"}
+<form method="post" action="route.php?con=r201860&act=batch_drop" name="listForm" onsubmit="return confirm_bath();">
+    <div class="list-div" id="listDiv">
+{/if}
+        <table cellpadding="3" cellspacing="1">
+            <tr>
+                <th width="10%"> <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" />
+                    <a href="javascript:listTable.sort('agency_id'); ">{$lang.record_id}</a>{$sort_agency_id} </th>
+                <th>姓名</th>
+                <th>电话</th>
+                <th>邮箱</th>
+                <th>票务等级</th>
+                <th>场次名称</th>
+                <th>备注</th>
+                <th>日期</th>
+            </tr>
+            {foreach from=$r201860_list item=r201860_list_item}
+            <tr>
+                <td><input type="checkbox" name="checkboxes[]" value="{$r201860_list_item.id}" />
+                    {$r201860_list_item.id}</td>
+                <td align="center" class="first-cell">{$r201860_list_item.realname}</td>
+                <td align="center" class="first-cell">{$r201860_list_item.phone}</td>
+                <td align="center" class="first-cell">{$r201860_list_item.email}</td>
+                <td align="center" class="first-cell">
+                    {if $r201860_list_item.ticket_type_level == 1}
+                        普通票
+                    {else}
+                        贵宾票
+                    {/if}
+                    {$r201860_list_item.vip_level_text}
+                </td>
+                <td align="center">{$r201860_list_item.number_name}</td>
+                <td align="center">{$r201860_list_item.notes}</td>
+                <td align="center">{$r201860_list_item.create_time}</td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="5">{$lang.no_records}</td></tr>
+            {/foreach}
+        </table>
+        <table id="page-table" cellspacing="0">
+            <tr>
+                <td>
+                    <input name="remove" type="submit" id="btnSubmit" value="{$lang.drop}" class="button" disabled="true" />
+                    <input name="act" type="hidden" value="batch" />
+                </td>
+                <td align="right" nowrap="true">
+                    {include file="page2.htm"}
+                </td>
+            </tr>
+        </table>
+{if $full_page}
+    </div>
+</form>
+
+<script type="text/javascript" language="javascript">
+<!--
+    listTable.recordCount = {$record_count};
+    listTable.pageCount = {$page_count};
+    listTable.new_url = 'route.php?is_ajax=1&con=r201860';
+  listTable.act = 'index_query';
+    {foreach from = $filter item = item key = key}
+    listTable.filter.{$key} = '{$item}';
+    {/foreach}
+
+    {literal}
+    onload = function()
+    {
+    // 开始检查订单
+    startCheckOrder();
+    }
+    {/literal}
+//-->
+</script>
+{include file="pagefooter.htm"}
+{/if}

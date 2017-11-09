@@ -1,0 +1,94 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader2.htm"}
+{insert_scripts files="jquery.min.js,adddate.js,../js/transport.js,../js/utils.js,listtable.js,make.js"}
+
+<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+        <table cellspacing="1" cellpadding="3" width="150%">
+            <tr>
+                <td class="label">客户姓名：</td>
+                <td>{$bearer_info.cn_customer_name}</td>
+            </tr>
+            <tr>
+                <td class="label">Customer's Name：</td>
+                <td>{$bearer_info.us_customer_name}</td>
+            </tr>
+            <tr>
+                <td class="label">特别称谓：</td>
+                <td>{if $bearer_info.gender_appellation==1}先生{else}女士{/if}</td>
+            </tr>
+            <tr>
+                <td class="label">护照号码：</td>
+                <td>{$bearer_info.passport_number}</td>
+            </tr><tr>
+                <td class="label">出生日期：</td>
+                <td>{$bearer_info.date_birth}</td>
+            </tr>
+            <tr>
+                <td class="label">护照签发日期：</td>
+                <td>{$bearer_info.issue_date}</td>
+            </tr><tr>
+                <td class="label">护照有效期：</td>
+                <td>{$bearer_info.expire_date}</td>
+            </tr>
+            <tr>
+                <td class="label">国籍：</td>
+                <td>{if $bearer_info.cn_nationality==0}中国{else}美国{/if}</td>
+            </tr>
+            <tr>
+                <td class="label">街道门牌号：</td>
+                <td>{$bearer_info.cn_name_street}</td>
+            </tr>
+            <tr>
+                <td class="label">Name of the Street and No.：</td>
+                <td>{$bearer_info.us_name_street}</td>
+            </tr>
+            <tr>
+                <td class="label">邮编：</td>
+                <td>{$bearer_info.post_code}</td>
+            </tr>
+            <tr>
+                <td class="label">地址：</td>
+                <td>{$bearer_info.cn_customer_name}</td>
+            </tr>
+            <tr>
+                <td class="label">座机电话：</td>
+                <td>{$bearer_info.telephone}</td>
+            </tr>
+            <tr>
+                <td class="label">手机电话：</td>
+                <td>{$bearer_info.mobile}</td>
+            </tr>
+            <tr>
+                <td class="label">电子邮件：</td>
+                <td>{$bearer_info.mail}</td>
+            </tr>
+            <tr>
+                <td class="label">备注：</td>
+                <td>{$bearer_info.cn_remarks}</td>
+            </tr>
+            <tr>
+                <td class="label">Type of Product：</td>
+                <td>{$bearer_info.us_remarks}</td>
+            </tr>
+            <tr>
+                <td class="label">票号：</td>
+                {if $bearer_info.ticket_code}
+                <td>{$bearer_info.ticket_code}</td>
+                {else}
+                <!--<td style="color: blue;" onclick="listTable.editTicketCode(this, 'edit_ticket_code', '{$bearer_id}', '{$order_id}')">点击修改票号</td>-->
+                <td style="color: blue;"><input type="text" id="ticket_code" name="ticket_code" value="">
+                    <br/><br/>
+                    <input type="button" id="ticket_button" value="点击生成票号" onclick="make_ticket_code('{$bearer_id}','{$order_id}','{$goods_id}');">
+                    <input type="button" id="ticket_submit" value=" 确定 " onclick="baocun_ticket_code('{$bearer_id}','{$order_id}','{$goods_id}');">
+                    <input type="hidden" id="bearer_id" value="{$bearer_id}">
+                    <input type="hidden" id="order_id" value="{$order_id}">
+                    <input type="hidden" id="goods_id" value="{$goods_id}">
+                    <br/><br/>
+                    <div id="ticker" style="color: red; display: none">目前没有票号可以生成，请您根据实际情况手动生成票号</div>
+                </td>
+                {/if}
+            </tr>
+        </table>
+{/literal}
+
+{include file="pagefooter.htm"}

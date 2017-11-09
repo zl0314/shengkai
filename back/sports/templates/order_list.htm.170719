@@ -1,0 +1,546 @@
+{if $full_page}
+{include file="pageheader.htm"}
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<!--{insert_scripts files="../js/utils.js,listtable.js,related.js"}-->
+
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="js/listtable.js"></script>
+<!--<script type="text/javascript" src="js/newlisttable.js"></script>-->
+<script type="text/javascript" src="js/related.js"></script>
+
+<!-- 订单搜索 -->
+<div class="form-div">
+  <form action="javascript:searchOrder()" name="searchForm">
+    <!-- 赛事 -->
+      <div id="liandong" style="display:block">
+          <label class="labelName">查询方式</label>
+          <select id="change" name="change" onchange="get_change_list(this.value)">
+              <option value='0'> 请选择...</option>
+              <option value='2'> 普通查询</option>
+              <option value='3'> 联动查询.</option>
+          </select>
+        <label class="labelName">选择赛事</label>
+          <!--<select name="game_id" id="game_id" onchange="related.gameChanged(this, 1, 'sche_id')">-->
+          <select name="game_id" id="game_id" onchange="get_number_list(this.value)">
+              <option value="0">{$lang.select_please}</option>
+              {foreach from=$game_list item=game}
+              <option value="{$game.id}">{$game.game_name}</option>
+              {/foreach}
+          </select>
+          <label class="labelName">选择场次</label>
+          <select name="number_id" id="number_id" onchange="get_pitch_list(this.value)">
+              <option value="0">{$lang.select_please}</option>
+          </select>
+          <label class="labelName">选择场馆</label>
+          <select name="pitch_id" id="pitch_id"  onchange="get_rank_list(this.value)">
+              <option value="0">{$lang.select_please}</option>
+          </select>
+          <label class="labelName">票务等级 </label>
+          <select id="rank" name="rank">
+              <option value="0">请选择...</option>
+          </select>
+          <br/><br/>
+      </div>
+      <div id="putong" style="display:none">
+          <label class="labelName">查询方式</label>
+          <select id="change_1" name="change_1" onchange="get_change_list(this.value)">
+              <option value='0'> 请选择...</option>
+              <option value='2'> 普通查询</option>
+              <option value='3'> 联动查询.</option>
+          </select>
+          <label class="labelName">选择赛事</label>
+          <!--<select name="game_id" id="game_id" onchange="related.gameChanged(this, 1, 'sche_id')">-->
+          <select name="game_id_1" id="game_id_1">
+              <option value="0">{$lang.select_please}</option>
+              {foreach from=$game_list item=game}
+              <option value="{$game.id}">{$game.game_name}</option>
+              {/foreach}
+          </select>
+          <label class="labelName">选择场次</label>
+          <select name="number_id_1" id="number_id_1">
+              <option value="0">{$lang.select_please}</option>
+              {foreach from=$num_name item=number}
+              <option value="{$number.id}">{$number.num_name}</option>
+              {/foreach}
+          </select>
+          <label class="labelName">选择场馆</label>
+          <select name="pitch_id_1" id="pitch_id_1">
+              <option value="0">{$lang.select_please}</option>
+              {foreach from=$pitch_list item=pitch}
+              <option value="{$pitch.id}">{$pitch.pitch_name}</option>
+              {/foreach}
+          </select>
+          <label class="labelName">票务等级 </label>
+          <select id="rank_1" name="rank_1">
+              <option value="0">请选择...</option>
+              {foreach from=$rank item=rank}
+              <option value="{$rank.rank}">{$rank.rank}</option>
+              {/foreach}
+          </select>
+          <br/><br/>
+      </div>
+      <label class="labelName">订单编号</label><input name="order_sn" type="text" id="order_sn" size="15" style="width: 15%;">
+
+      <label class="labelName">{$lang.all_status}</label>
+    <select name="status" id="status" style="width: 15.8%;">
+      <option value="0" selected>{$lang.select_please}</option>
+      <option value="1">待付款</option>
+      <option value="2">待审核</option>
+      <option value="3">已审核</option>
+      <option value="4">已取消</option>
+    </select>
+    <label class="labelName">持票人</label> <input name="cn_customer_name" type="text" id="cn_customer_name" size="15" style="width: 15.6%;">
+    <!--<label class="labelName">票务等级 </label>-->
+   <!--<input name="rank" type="text" id="rank" size="15" style="width: 15.6%;"> &lt;!&ndash; 等级名字自己填写&ndash;&gt;-->
+      <br /><br />
+   <label class="labelName">数量</label><input name="goods_number" type="text" id="goods_number" size="15" style="width: 15%;">
+
+      <label class="labelName">会员名称</label><input name="user_name" type="text" id="user_name" size="15" style="width: 16%;">
+      <label class="labelName">联系电话</label><input name="mobile" type="text" id="mobile" size="15" style="width: 15.6%;">
+
+      <!--<label class="labelName">{$lang.consignee|escape}</label><input name="consignee" type="text" id="consignee" size="15" style="width: 15.6%;">-->
+
+
+      <div {if $order_type neq 1 or $order_type neq 2}style="display:none;"{/if}>
+        <label class="labelName">套餐/单票{$order_type}</label>
+        <select name="ticket" id="ticket" style="width: 15%;">
+              <option value="">{$lang.select_please}</option>
+              <option value="1" {if $ticket eq "1"}selected{/if}>套餐</option>
+              <option value="2" {if $ticket eq "2"}selected{/if}>单票</option>
+        </select>
+      </div>
+
+      <input type="hidden" name="order_type" value="{$order_type}">
+      </br></br>
+      <label class="labelName">价格</label>
+       <input name="start_amount" type="text" id="start_amount" size="10">
+            ~
+        <input name="end_amount" type="text" id="end_amount" size="10">
+        <label class="labelName">订单来源</label>
+        <select name="source" id="source" style="width: 15%;">
+            <option value="-1">{$lang.select_please}</option>
+            <option value="1">电脑</option>
+            <option value="2">手机</option>
+        </select>
+        <label class="labelName">商品货号</label>
+        <input type="text" name="goods_sn" id="goods_sn" value="{$goods_sn}"/>
+      <!--<input name="4" type="text" id="4" size="15">-->
+    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    <input type="submit" value="{$lang.button_search}" class="button" style="display: block;margin: 0 auto;margin-top: 20px;margin-bottom: 10px;"/>
+  </form>
+</div>
+{if $order_type == 0 || $order_type == 2}
+<div>
+    <a href="order.php?act=bearerAllCount">导出所有持票人列表</a>
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    <a href="order.php?act=bearerIsWinCount">导出未中签持票人列表</a>
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    <a href="order.php?act=bearerWinCount">导出已中签持票人列表</a>
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    <a href="order.php?act=order_all_info">导出十二强全部订单</a>
+    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+    <!--<a href="order.php?act=rb_qxx_excel_read">导入已中签持票人列表</a>-->
+    <form method="post" action="order.php?act=rb_qxx_excel_read" enctype="multipart/form-data">
+        <input type="file" name="file_stu"/>
+        <input type="submit" class="fr tianxie form-group" value="导入" />
+    </form>
+</div>
+{/if}
+<!--已取票的订单<input type="button" style="width:60px;" name="piaowu" value="{$order_status.order_status}">-->
+<!--已取票的持票人<input type="button" style="width:60px;" name="bearer" value="{$order_status.order_bearer}">-->
+<!-- 订单列表 -->
+  <div class="list-div" id="listDiv">
+{/if}
+<table cellpadding="3" cellspacing="1">
+  <tr>
+    <th>
+      <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" /><a href="javascript:listTable.sort('order_sn', 'DESC'); ">{$lang.order_sn}</a>{$sort_order_sn}
+    </th>
+    <th><a href="javascript:listTable.sort('add_time', 'DESC'); ">{$lang.order_time}</a>{$sort_order_time}</th>
+    <th><a href="javascript:listTable.sort('consignee', 'DESC'); ">{$lang.consignee}</a>{$sort_consignee}</th>
+    <th><a href="javascript:listTable.sort('total_fee', 'DESC'); ">{$lang.total_fee}</a>{$sort_total_fee}</th>
+    <th><a href="javascript:listTable.sort('order_amount', 'DESC'); ">{$lang.order_amount}</a>{$sort_order_amount}</th>
+    <th>{$lang.all_status}</th>
+    <th>{$lang.handler}</th>
+  </tr>
+  {foreach from=$order_list item=order key=key}
+  <tr>
+    <td valign="top" nowrap="nowrap">
+        <!--<input type="checkbox" name="checkboxes" value="{$order.order_sn}" /> <a href="order.php?act=info&order_id={$order.order_id}" id="order_{$okey}">-->
+            {$order.order_sn}
+<!--            {if $order.extension_code eq "group_buy"}<br /><div align="center">{$lang.group_buy}</div>{elseif $order.extension_code eq "exchange_goods"}<br /><div align="center">{$lang.exchange_goods}</div>{/if}</a></td>-->
+    
+<!--    时间-->
+    <td>{$order.buyer|escape}<br />{$order.short_order_time}</td>  
+    
+    <td align="left" valign="top"><a href="mailto:{$order.email}"> {$order.consignee|escape}</a>{if $order.tel} [TEL: {$order.tel|escape}]{/if} <br />{$order.address|escape}</td>
+    <td align="right" valign="top" nowrap="nowrap">{$order.formated_total_fee}</td>
+    <td align="right" valign="top" nowrap="nowrap">{$order.formated_order_amount}</td>
+      <!--{if $order.is_win == 0}-->
+    <td align="center" valign="top" nowrap="nowrap">{$lang.ps[$order.pay_status]},{$lang.os[$order.order_status]}</td>
+      <!--{else}-->
+      <td align="center" valign="top" nowrap="nowrap" style="color:red;">已中签</td>
+      <!--{/if}-->
+    <td align="center" valign="top"  nowrap="nowrap">
+     <a href="order.php?act=info&order_id={$order.order_id}" target="order_detail">{$lang.detail}</a>|
+     <a href="order.php?act=bearer_list&order_id={$order.order_id}" target="order_bearer">持票人信息</a>
+        <input type="hidden" value="{$admin_name}">
+    {if $order.can_remove && $admin_name == 'admin'}
+    <br /><a href="javascript:;" onclick="listTable.remove({$order.order_id}, remove_confirm, 'remove_order')">{$lang.remove}</a>
+        {else}
+    {/if}
+    </td>
+  </tr>
+  {/foreach}
+</table>
+<input type="hidden" name="is_goods" id="is_goods" value="{$is_goods}">
+<!-- 分页 -->
+<table id="page-table" cellspacing="0">
+  <tr>
+    <td align="right" nowrap="true">
+    {include file="page.htm"}
+    </td>
+  </tr>
+</table>
+
+{if $full_page}
+  </div>
+
+<script language="JavaScript">
+listTable.recordCount = {$record_count};
+listTable.pageCount = {$page_count};
+
+{foreach from=$filter item=item key=key}
+listTable.filter.{$key} = '{$item}';
+{/foreach}
+{literal}
+    onload = function()
+    {
+        // 开始检查订单
+        startCheckOrder();
+    }
+        function get_change_list(change_id){
+            if(change_id == '2'){
+                $("#game_id").val("");
+                $("#number_id").val("");
+                $("#pitch_id").val("");
+                $("#rank").val("");
+                $('#putong').css("display","block");
+                $('#liandong').css("display","none");
+                var opt4 = document.getElementById("change_1");
+                for (var i = 0; i < opt4.options.length; i++) {
+                    if (change_id == opt4.options[i].value) {
+                        opt4.options[i].selected = 'selected';
+                    }
+                }
+            }else if(change_id == '3'){
+                $("#game_id_1").val("");
+                $("#number_id_1").val("");
+                $("#pitch_id_1").val("");
+                $("#rank_1").val("");
+                $('#liandong').css("display","block");
+                $('#putong').css("display","none");
+                var opt5 = document.getElementById("change");
+                for (var i = 0; i < opt5.options.length; i++) {
+                    if (change_id == opt5.options[i].value) {
+                        opt5.options[i].selected = 'selected';
+                    }
+                }
+            }else{
+                $('#putong').css("display","none");
+                $('#liandong').css("display","block");
+            }
+        }
+        function get_number_list(game_id){
+            if(game_id != "0") {
+                $.ajax({
+                    url: 'game.php?act=number&game_id=' + game_id,
+                    type: "POST",
+                    dataType: "text",
+                    success: function (res) {
+                        var aa = JSON.parse(res);
+                        $("#number_id").empty();
+                        var str = '<option value="0"> 请选择...</option>';
+                        for (var i = 0; i < aa.length; i++) {
+                            str += '<option value="' + aa[i].id + '">' + aa[i].num_name + '</option>';
+                        }
+                        $('#number_id').append(str);
+                    }
+                });
+            }else{
+                $("#number_id").empty();
+                var str1 = '<option value="0"> 请选择...</option>';
+                $('#number_id').append(str1);
+                $("#pitch_id").empty();
+                var str2 = '<option value="0"> 请选择...</option>';
+                $('#pitch_id').append(str2);
+                $("#rank").empty();
+                var str3 = '<option value="0"> 请选择...</option>';
+                $('#rank').append(str3);
+            }
+        }
+        function get_pitch_list(number_id){
+            if(number_id != "0"){
+                $.ajax({
+                    url: 'game.php?act=pitch&number_id='+number_id,
+                    type:"POST",
+                    dataType:"text",
+                    success:function (res){
+                        var aa = JSON.parse(res);
+                        $("#pitch_id").empty();
+                        var str = '<option value="0"> 请选择...</option>';
+                        for(var i=0;i<aa.length;i++){
+                            str +='<option value="'+aa[i].id+'">'+aa[i].pitch_name+'</option>';
+                        }
+                        $('#pitch_id').append(str);
+                    }
+                });
+            }else{
+                $("#pitch_id").empty();
+                var str2 = '<option value="0"> 请选择...</option>';
+                $('#pitch_id').append(str2);
+                $("#rank").empty();
+                var str3 = '<option value="0"> 请选择...</option>';
+                $('#rank').append(str3);
+            }
+        }
+        function get_rank_list(pitch_id){
+            var game_id = $("#game_id").val();
+            var number_id = $("#number_id").val();
+            if(pitch_id != "0"){
+                $.ajax({
+                    url: 'game.php?act=rank&game_id='+game_id+'&number_id='+number_id+'&pitch_id='+pitch_id,
+                    type:"POST",
+                    dataType:"text",
+                    success:function (res){
+                        var aa = JSON.parse(res);
+                        $("#rank").empty();
+                        var str = '<option value="0"> 请选择...</option>';
+                        for(var i=0;i<aa.length;i++){
+                            str +='<option value="'+aa[i].rank+'">'+aa[i].rank+'</option>';
+                        }
+                        $('#rank').append(str);
+                    }
+                });
+            }else{
+                $("#rank").empty();
+                var str3 = '<option value="0"> 请选择...</option>';
+                $('#rank').append(str3);
+            }
+        }
+    /**
+     * 搜索订单
+     */
+    function searchOrder()
+    {
+        listTable.filter['game_id'] = document.forms['searchForm'].elements['game_id'].value;//赛事名称
+        listTable.filter['game_id_1'] = document.forms['searchForm'].elements['game_id_1'].value;//赛事名称
+        listTable.filter['number_id'] = document.forms['searchForm'].elements['number_id'].value;//场次名称
+        listTable.filter['number_id_1'] = document.forms['searchForm'].elements['number_id_1'].value;//场次名称
+        listTable.filter['pitch_id'] = document.forms['searchForm'].elements['pitch_id'].value;//球场名称
+        listTable.filter['pitch_id_1'] = document.forms['searchForm'].elements['pitch_id_1'].value;//球场名称
+        listTable.filter['cn_customer_name'] = document.forms['searchForm'].elements['cn_customer_name'].value;//持票人
+        listTable.filter['goods_number'] = document.forms['searchForm'].elements['goods_number'].value;//数量
+        listTable.filter['mobile'] = document.forms['searchForm'].elements['mobile'].value;//联系电话
+        listTable.filter['rank'] = document.forms['searchForm'].elements['rank'].value;//票务等级
+        listTable.filter['rank_1'] = document.forms['searchForm'].elements['rank_1'].value;//票务等级
+        listTable.filter['user_name'] = Utils.trim(document.forms['searchForm'].elements['user_name'].value);//会员名称
+        listTable.filter['order_sn'] = document.forms['searchForm'].elements['order_sn'].value;//订单编号
+        listTable.filter['goods_sn'] = document.forms['searchForm'].elements['goods_sn'].value;//货号
+        listTable.filter['ticket'] = document.forms['searchForm'].elements['ticket'].value;//套餐/单票
+        listTable.filter['order_type'] = document.forms['searchForm'].elements['order_type'].value;//套餐/单票
+        listTable.filter['composite_status'] = document.forms['searchForm'].elements['status'].value;//订单状态
+        listTable.filter['start_amount'] = document.forms['searchForm'].elements['start_amount'].value;//价钱
+        listTable.filter['end_amount'] = document.forms['searchForm'].elements['end_amount'].value;//价钱
+        listTable.filter['source'] = document.forms['searchForm'].elements['source'].value;//来源
+        listTable.filter['page'] = 1;//页码1
+        listTable.loadList();
+    }
+
+    function check()
+    {
+      var snArray = new Array();
+      var eles = document.forms['listForm'].elements;
+      for (var i=0; i<eles.length; i++)
+      {
+        if (eles[i].tagName == 'INPUT' && eles[i].type == 'checkbox' && eles[i].checked && eles[i].value != 'on')
+        {
+          snArray.push(eles[i].value);
+        }
+      }
+      if (snArray.length == 0)
+      {
+        return false;
+      }
+      else
+      {
+        eles['order_id'].value = snArray.toString();
+        return true;
+      }
+    }
+    /**
+     * 显示订单商品及缩图
+     */
+    var show_goods_layer = 'order_goods_layer';
+    var goods_hash_table = new Object;
+    var timer = new Object;
+
+    /**
+     * 绑定订单号事件
+     *
+     * @return void
+     */
+    function bind_order_event()
+    {
+        var order_seq = 0;
+        while(true)
+        {
+            var order_sn = Utils.$('order_'+order_seq);
+            if (order_sn)
+            {
+                order_sn.onmouseover = function(e)
+                {
+                    try
+                    {
+                        window.clearTimeout(timer);
+                    }
+                    catch(e)
+                    {
+                    }
+                    var order_id = Utils.request(this.href, 'order_id');
+                    show_order_goods(e, order_id, show_goods_layer);
+                }
+                order_sn.onmouseout = function(e)
+                {
+                    hide_order_goods(show_goods_layer)
+                }
+                order_seq++;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+    listTable.listCallback = function(result, txt)
+    {
+        if (result.error > 0)
+        {
+            alert(result.message);
+        }
+        else
+        {
+            try
+            {
+                document.getElementById('listDiv').innerHTML = result.content;
+                bind_order_event();
+                if (typeof result.filter == "object")
+                {
+                    listTable.filter = result.filter;
+                }
+                listTable.pageCount = result.page_count;
+            }
+            catch(e)
+            {
+                alert(e.message);
+            }
+        }
+    }
+    /**
+     * 浏览器兼容式绑定Onload事件
+     *
+     */
+    if (Browser.isIE)
+    {
+        window.attachEvent("onload", bind_order_event);
+    }
+    else
+    {
+        window.addEventListener("load", bind_order_event, false);
+    }
+
+    /**
+     * 建立订单商品显示层
+     *
+     * @return void
+     */
+    function create_goods_layer(id)
+    {
+        if (!Utils.$(id))
+        {
+            var n_div = document.createElement('DIV');
+            n_div.id = id;
+            n_div.className = 'order-goods';
+            document.body.appendChild(n_div);
+            Utils.$(id).onmouseover = function()
+            {
+                window.clearTimeout(window.timer);
+            }
+            Utils.$(id).onmouseout = function()
+            {
+                hide_order_goods(id);
+            }
+        }
+        else
+        {
+            Utils.$(id).style.display = '';
+        }
+    }
+
+    /**
+     * 显示订单商品数据
+     *
+     * @return void
+     */
+    function show_order_goods(e, order_id, layer_id)
+    {
+        create_goods_layer(layer_id);
+        $layer_id = Utils.$(layer_id);
+        $layer_id.style.top = (Utils.y(e) + 12) + 'px';
+        $layer_id.style.left = (Utils.x(e) + 12) + 'px';
+        if (typeof(goods_hash_table[order_id]) == 'object')
+        {
+            response_goods_info(goods_hash_table[order_id]);
+        }
+        else
+        {
+            $layer_id.innerHTML = loading;
+            Ajax.call('order.php?is_ajax=1&act=get_goods_info&order_id='+order_id, '', response_goods_info , 'POST', 'JSON');
+        }
+    }
+
+    /**
+     * 隐藏订单商品
+     *
+     * @return void
+     */
+    function hide_order_goods(layer_id)
+    {
+        $layer_id = Utils.$(layer_id);
+        window.timer = window.setTimeout('$layer_id.style.display = "none"', 500);
+    }
+
+    /**
+     * 处理订单商品的Callback
+     *
+     * @return void
+     */
+    function response_goods_info(result)
+    {
+        if (result.error > 0)
+        {
+            alert(result.message);
+            hide_order_goods(show_goods_layer);
+            return;
+        }
+        if (typeof(goods_hash_table[result.content[0].order_id]) == 'undefined')
+        {
+            goods_hash_table[result.content[0].order_id] = result;
+        }
+        Utils.$(show_goods_layer).innerHTML = result.content[0].str;
+    }
+</script>
+{/literal}
+
+{include file="pagefooter.htm"}
+{/if}

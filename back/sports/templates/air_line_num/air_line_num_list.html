@@ -1,0 +1,67 @@
+<!-- $Id: agency_list.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,newlisttable.js"}
+<form method="post" action="route.php?con=air_line_num&act=remove_b" name="listForm" >
+    <div class="list-div" id="listDiv">
+{/if}
+        <table cellpadding="3" cellspacing="1">
+            <tr>
+                <th width="10%"><input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" />{$lang.record_id}</th>
+                <th>日期</th>
+                <th>类型</th>
+                <th>库存</th>
+                <th>锁定库存</th>
+                <th>已售</th>
+                <th>操作</th>
+            </tr>
+            {foreach from=$air_line_num_list item=air_line_num}
+            <tr>
+                <td><input type="checkbox" name="checkboxes[]" value="{$air_line_num.id}" />{$air_line_num.id}
+                    <input name="air_id" type="hidden" value="{$air_line_num.air_id}" /></td>
+                <td align="center">{$air_line_num.date}</td>
+                <td align="center">
+                    {if $air_line_num.type == 1}
+                    <b style="color: green;">去</b>
+                    {/if}
+                    {if $air_line_num.type == 2}
+                    <b style="color: red;">返</b>
+                    {/if}
+                </td>
+                <td align="center">{$air_line_num.num}</td>
+                <td align="center">{$air_line_num.locked_num}</td>
+                <td align="center">{$air_line_num.sale_num}</td>
+                <td align="center">
+                    <a href="route.php?con=air_line_num&act=update&id={$air_line_num.id}" title="{$lang.edit}">{$lang.edit}</a> |
+                    <a href="javascript:confirm_redirect('确定要删除该条信息?', 'route.php?con=air_line_num&act=remove&id={$air_line_num.id}')" title="{$lang.remove}">{$lang.remove}</a>
+                </td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="7">{$lang.no_records}</td></tr>
+            {/foreach}
+        </table>
+        <table id="page-table" cellspacing="0">
+            <tr>
+                <td>
+                    <input name="remove" type="submit" id="btnSubmit" value="{$lang.drop}" class="button" disabled="true" />
+                    <input name="act" type="hidden" value="batch" />
+                </td>
+                <td align="right" nowrap="true">
+                    {include file="page2.htm"}
+                </td>
+            </tr>
+        </table>
+{if $full_page}
+    </div>
+</form>
+<script type="text/javascript" language="javascript">
+    listTable.recordCount = {$record_count};
+    listTable.pageCount = {$page_count};
+    listTable.new_url = 'route.php?con=air_line_num&is_ajax=1&air_line_id={$air_line_id}';
+    listTable.act = 'index_query';
+    {foreach from = $filter item = item key = key}
+    listTable.filter.{$key} = '{$item}';
+    {/foreach}
+</script>
+{include file="pagefooter.htm"}
+{/if}

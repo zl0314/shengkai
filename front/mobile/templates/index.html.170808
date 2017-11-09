@@ -1,0 +1,169 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+<title>首页</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=720 user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css" href="css/base.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+<link rel="stylesheet" type="text/css" href="css/header.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/footer.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/flexslider.css" media="all">
+   <!--<link rel="stylesheet" href="css/bootstrap.min.css " media="all">-->
+
+ 	<link rel="stylesheet"  href="css/flat-ui.css">
+        <link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+</head>
+<body>
+<!--start-->
+{include file="header.html"}
+<!--start banner-->
+<div class="flexslider debugTop">
+  		<ul class="slides">
+                    
+             <!-- {foreach from=$top_banner item=banner} 循环banner列表 -->
+             <li>
+               <a href="{$banner.mobile_link}">
+    		<img src="{$banner.img_url}" />
+                    
+				<div class="headline">
+                                            <p>{$banner.min_title}</p>
+                                            <h3>{$banner.max_title}</h3>
+<!--					<h4>SHAKAI<br/>SPORTS</h4>-->
+				</div>
+    		
+               </a>
+             </li>
+            <!--{/foreach}-->
+  		</ul>
+   </div>
+<!--end banner-->
+
+<!--start 内容部分-->
+<div class="countTitle">
+	<div class="tsloid fl"></div>
+	<div class="titleMid fl">
+		<h4>热门赛事</h4>
+		<p>不容错过的精彩比赛</p>
+	</div>
+	<div class="tsloid fr"></div>
+</div>
+<div class="countainer clearfloat">
+	<div class="taocan" style="overflow:hidden;">
+	    {foreach from=$combo item=com }
+		<div class="blacks fl clearfloat">
+			<div class="contBg clearfloat">
+				<img src="{$com.combo_img}">
+				{if $com.combo_pitchs && $com.combo_travels}
+				<a href="secial.php?act=index&combo_id={$com.combo_id}" class="opcit">
+					<h4 class="spill">{$com.combo_title}</h4>
+					<p class="spill">{$com.combo_intro}</p>
+					<div class="poyuan">
+					<img src="{$com.combo_logo}">
+					</div>
+				</a>
+				{else}
+				<a  class="opcit">
+					<h4 class="spill">{$com.combo_title}</h4>
+					<p class="spill">{$com.combo_intro}</p>
+					<div class="poyuan">
+						<img src="{$com.combo_logo}">
+					</div>
+				</a>
+				{/if}
+			</div>
+			<div class="blackFont coblue" style="background-color: #{$com.combo_color}">
+				<h4 class="spill">{$com.combo_name}</h4>
+				<p>{$com.combo_date}</p>
+			</div>
+		</div>
+		{/foreach}
+	</div>
+	{if $combo_num}
+	<div id="chakangengduo">
+		<a href="javascript:chakan();" style="height:40px;line-height:40px;background:#c31c26;color:#fff;font-size:24px;border-radius:3px;margin:0 auto;display:block;width:130px;padding:0 10px;margin-bottom:20px;margin-top: -20px;">显示更多 ∨</a>
+	</div>
+	{else}
+	{/if}
+   </div>
+   <input type="hidden" id="page" name="page" value="{$page}">
+	{if $index_video.video_link}
+	<video style="width:100%;height:auto;" loop poster="./images/default_video.png">
+		<source src="{$index_video.video_link}" type="video/mp4"/>
+	</video>
+	{/if}
+<!--end 内容部分-->
+{include file="footer.html"}
+</body>
+<input type="hidden" name="city" value="">
+<script src="../themes/sk_themes/js/headroom.js"></script>
+<script src="../themes/sk_themes/js/video.js"></script>
+<script src="js/user.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/common.js"></script>
+<script type="text/javascript" src="js/jquery.flexslider-min.js"></script>
+<script type="text/javascript" src="js/pulldown.js"></script>
+
+<script type="text/javascript">
+$(function() {
+    $(".flexslider").flexslider({
+		slideshowSpeed: 4000, //展示时间间隔ms
+		animationSpeed: 400, //滚动时间ms
+		touch: true //是否支持触屏滑动
+	});
+	var video = document.getElementById('video');
+	video.addEventListener('click',function(){
+		video.play();
+	},false);
+});
+
+</script>
+<script>
+	function get_goods(){
+		$.ajax({
+			url:"http://localhost:8080/sksports/api/goods.php?act=goods&verify=38259650e8f4937dbd7f694fcf8da271&auth=123456",
+			type:"POST",
+			dataType:"JSON",
+			success:function(data){
+				console.log(data);
+			}
+		});
+	}
+</script>
+<script>
+    function chakan(){
+        var page = $("#page").val();
+        var p = Number(page) + Number(1);
+        var num = 8;
+        $.ajax({
+            url : 'secial.php?act=chakan&page='+p+'&num='+num,
+            type : 'POST',
+            dataType : 'json',
+            success : function(data){
+                if(data.length == 8){
+                    for ( var i = 0;i < data.length;i++){
+                        var str = '<div class="blacks fl clearfloat">';
+                        str += '<div class="contBg clearfloat">'+'<img src="'+data[i].combo_img+'">'+'<a href="secial.php?act=index&combo_id='+data[i].combo_id+'" class="opcit">'+'<h4 class="spill">'+data[i].combo_title+'</h4>'+'<p class="spill">'+data[i].combo_intro+'</p>'+'<div class="poyuan">'+'<img src="'+data[i].combo_logo+'">'+'</div></a>'+'</div>'+'<div class="blackFont coblue" style="background-color: #'+data[i].combo_color+'">'+'<h4 class="spill">'+data[i].combo_name+'</h4>'+'<p></p>'+'</div></div>';
+                        $(".taocan").append(str);
+                    }
+                    $("#page").val(p);
+                }else{
+                    for ( var i = 0;i < data.length;i++){
+                     	var str = '<div class="blacks fl clearfloat">';
+                    	str += '<div class="contBg clearfloat">'+'<img src="'+data[i].combo_img+'">'+'<a href="secial.php?act=index&combo_id='+data[i].combo_id+'" class="opcit">'+'<h4 class="spill">'+data[i].combo_title+'</h4>'+'<p class="spill">'+data[i].combo_intro+'</p>'+'<div class="poyuan">'+'<img src="'+data[i].combo_logo+'">'+'</div></a>'+'</a></div>'+'<div class="blackFont coblue" style="background-color: #'+data[i].combo_color+'">'+'<h4 class="spill">'+data[i].combo_name+'</h4>'+'<p></p>'+'</div></div>';
+                        $(".taocan").append(str);
+                    }
+                    $("#page").val(p);
+                    $("#chakangengduo").remove();
+                }
+            }
+        });
+    }
+</script>
+</html>

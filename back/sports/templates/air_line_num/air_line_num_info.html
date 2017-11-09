@@ -1,0 +1,102 @@
+{include file="pageheader2.htm"}
+{insert_scripts files="validator.js,jquery.min.js,../js/region.js"}
+<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
+<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+<link href="./js/jquery.datetimepicker/jquery.datetimepicker.css" rel="stylesheet" type="text/css" />
+<div class="main-div">
+    <form method="post" action="route.php?con=air_line_num&act=edit" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td class="label">航班号：</td>
+                <td>{$air_line.title}({$air_line.from_city|address} - {$air_line.to_city|address})</td>
+            </tr>
+            <tr>
+                <td class="label">类型：</td>
+                <td>
+                    <label>
+                        <input type="radio" name="type" value="1" {if $act == 'add'}checked{else} {if $air_line_num.type == 1}checked{/if}{/if}><b>去程</b>
+                    </label>
+                    <label>
+                        <input type="radio" name="type" value="2" {if $act == 'add'}checked{else} {if $air_line_num.type == 2}checked{/if}{/if}><b>返程</b>
+                    </label>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">日期：</td>
+                <td>
+                    {if $act == 'add'}
+                    <input type="datetime" name="date" maxlength="60" value="" />
+                    {else}
+                    {$air_line_num.date}
+                    {/if}
+
+                    {if $act == 'add'}
+                    &nbsp;至&nbsp;
+                    <input type="datetime" name="end_date" maxlength="60" value="" />
+                    {/if}
+                </td>
+            </tr>
+            <tr>
+                <td class="label">库存：</td>
+                <td>
+                    <input type="text" name="num" value="{$air_line_num.num}" /><b>个</b>{$lang.require_field}
+                </td>
+            </tr>
+            <tr>
+                <td class="label">锁定库存：</td>
+                <td>
+                    {if $act == 'edit'}
+                    <input type="text" name="locked_num" value="{$air_line_num.locked_num}" /><b>个</b>
+                    {else}
+                        0
+                    {/if}
+                </td>
+            </tr>
+            <tr>
+                <td class="label">已售：</td>
+                <td>
+                    {if $act == 'edit'}
+                    {$air_line_num.sale_num}
+                    {else}
+                    0
+                    {/if}
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" class="button" value="{$lang.button_submit}" />
+                    <input type="reset" class="button" value="{$lang.button_reset}" />
+                    <input type="hidden" name="act" value="{$act}" />
+                    <input type="hidden" name="air_line_id" value="{$air_line_id}{$air_line_num.air_line_id}" />
+                    <input type="hidden" name="id" value="{$air_line_num.id}" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js,jquery.min.js,jquery.datetimepicker/jquery.datetimepicker.full.min.js"}
+{literal}
+<script language="JavaScript">
+    /**
+     * 检查表单输入的数据
+     */
+    function validate() {
+        validator = new Validator("theForm");
+        validator.required("s_id", '舱位等级不能为空！');
+        validator.required("s_price", '座位单价不能为空！');
+        validator.isNumber("s_price", '座位单价为纯数字！');
+        validator.required("s_num", '座位数不能为空！');
+        validator.isNumber("s_num", '座位数为数字！');
+        return validator.passed();
+    }
+    jQuery(document).ready(function () {
+        'use strict';
+        jQuery.datetimepicker.setLocale('ch');
+        jQuery('input[name=date],input[name=end_date]').datetimepicker({
+            timepicker:false,
+            format:'Y-m-d'
+        });
+    });
+</script>
+{/literal}
+{include file="pagefooter.htm"}

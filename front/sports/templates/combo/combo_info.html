@@ -1,0 +1,777 @@
+<!-- $Id: goods_info.htm 17126 2010-04-23 10:30:26Z liuhui $ -->
+{include file="pageheader2.htm"}
+{insert_scripts files="../js/utils.js,../js/jquery.min.js,selectzone.js,colorselector.js,../js/linkage.js"}
+<script type="text/javascript" charset="utf-8" src="js/color/jscolor.js"></script>
+<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+{if $warning}
+<ul style="padding:0; margin: 0; list-style-type:none; color: #CC0000;">
+  <li style="border: 1px solid #CC0000; background: #FFFFCC; padding: 10px; margin-bottom: 5px;" >{$warning}</li>
+</ul>
+{/if}
+
+<!-- start combo form -->
+<div class="tab-div">
+    <!-- tab bar -->
+    <div id="tabbar-div">
+      <p>
+        <span class="tab-front" id="general-tab">基础信息</span>
+        <span class="tab-back" id="goods-table">套餐门票</span>
+        <span class="tab-back" id="intro-table">介绍</span>
+        <span class="tab-back" id="pitch-table">场馆</span>
+        <span class="tab-back" id="route-tab">行程</span>
+      </p>
+    </div>
+
+    <!-- tab body -->
+    <div id="tabbody-div">
+      <form enctype="multipart/form-data" action="route.php?con=combo&act=edit" method="post" name="theForm" >
+        <input type="hidden" name="MAX_FILE_SIZE" value="2097152" />
+        <!--基础信息-->
+        <table width="90%" id="general-table" align="center">
+            <tr>
+                <td class="label">套餐名称：</td>
+                <td><input type="text" name="combo_name" maxlength="60" value="{$combo.combo_name}" /></td>
+            </tr>
+            <tr>
+                <td class="label"> 套餐标题：</td>
+                 <td><input type="text" name="combo_title" maxlength="60" value="{$combo.combo_title}" /></td>
+            </tr>
+            <tr >
+                <td class="label" >套餐副标题：</td>
+                <td><input type="text" name="combo_intro" maxlength="60" value="{$combo.combo_intro}" /></td>
+            </tr>
+            <tr>
+                <td class="label">套餐颜色：</td>
+                <td>
+                   <input class="color" name="combo_color"  value="{$combo.combo_color}">
+                </td>
+            </tr>
+            <tr>
+                <td class="label">套餐logo：</td>
+                <td>
+                    <div id="container">
+                        <a class="btn btn-default btn-lg " id="img_upload" href="#" >
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>选择文件</span>
+                        </a>
+                        <font id="upload_status"></font>
+                        <input type="hidden" name="combo_logo" id="img_id" value="{$combo.combo_logo}">
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">套餐图片：</td>
+                <td>
+                    <div id="container2">
+                        <a class="btn btn-default btn-lg " id="img_upload2" href="#" >
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>选择文件</span>
+                        </a>
+                        <font id="upload_status2"></font>
+                        <input type="hidden" name="combo_img" id="img_id2" value="{$combo.combo_img}"/>
+                    </div>
+                </td>
+            </tr>
+            <!--<tr>-->
+                <!--<td class="label">套餐时间：</td>-->
+                <!--<td><input type="checkbox" name="combo_time" id="combo_time" value="1" {if $combo.is_show==1}checked{/if}/>展示</td>-->
+            <!--</tr>-->
+            <tr>
+                <td class="label">是否展示：</td>
+                <td><input type="checkbox" name="is_show" id="is_show" value="1" {if $combo.is_show==1}checked{/if}/>展示</td>
+            </tr>
+        </table>
+        <!--套餐门票-->
+        <table width="90%" id="goods-table" style="display:none" align="center">
+            <tr>
+                <td colspan="4" class="label" style="text-align:left;display: none;">
+                  <select name="combo_class_list" id="combo_class_list" onchange="showTargetList()"></select>
+                </td>
+            </tr>
+            <tr>
+              <td colspan="3"><img src="images/icon_search.gif" width="26" height="22" border="0" alt="SEARCH" />
+                <select name="sportcat_id" id="sportcat_id" onchange="linkage.sportcatChanged(this, 'game_id');">
+                  <option value="0">运动类别</option>
+                  {foreach from=$sportcat_list item=sportcat}
+                  <option value="{$sportcat.id}">{$sportcat.name}</option>
+                  {/foreach}
+                </select>
+                <select name="game_id" id="game_id">
+                    <option value="0">选择赛事</option>
+                    {foreach from=$game_list item=game}
+                  <option value="{$game.id}">{$game.game_name}</option>
+                    {/foreach}
+                </select>
+                <input type="text" name="keyword2"/>
+                <input name="button" type="button" class="button" onclick="searchTickets('game_id', 'keyword2')" value="{$lang.button_search}" />          
+              </td>
+            </tr>
+            <!-- 门票列表 -->
+            <tr height="37">
+              <th>可选门票</th>
+              <th>操作</th>
+              <th>已选门票</th>
+            </tr>
+            <tr>
+              <td width="42%">
+                <select name="source_select" id="source_select" size="20" style="width:100%;height:300px;"  ondblclick="addItem(this)"></select>          
+              </td>
+              <td align="center">
+                <p>
+                  <input name="button" type="button" class="button" onclick="addAllItem(document.getElementById('source_select'))" value="&gt;&gt;" />
+                </p>
+                <p>
+                  <input name="button" type="button" class="button" onclick="addItem(document.getElementById('source_select'))" value="&gt;" />
+                </p>
+                <p>
+                  <input name="button" type="button" class="button" onclick="removeItem(document.getElementById('target_select'), false)" value="&lt;" />
+                </p>
+                <p>
+                  <input name="button" type="button" class="button" value="&lt;&lt;" onclick="removeItem(document.getElementById('target_select'), true)" />
+                </p>
+              </td>
+              <td width="42%">
+                <select name="target_select" id="target_select" size="20" style="width:100%;height:300px" multiple="multiple"></select>
+                  <p></p>
+                <span>套餐总价格：</span><input type="text" name="combo_price" value="{$combo_money}" placeholder="请输入您的套餐价格">
+              </td>
+            </tr>
+        </table>
+         
+        <!--介绍-->
+        <table width="90%" id="intro-table" style="display:none" align="center">
+            <tr>
+                <td class="label">标题：</td>
+                <td>
+                   <input type="text" name="combo_intro_title" maxlength="60" value="{$combo.combo_intro_title}" />
+                   <input type="checkbox" name="is_use_title" value="1"/>使用套餐名称
+                </td>
+            </tr>
+            <tr>
+                <td class="label">正文1文案：</td>
+                <td>
+                   <input type="text" name="combo_intro_big" maxlength="60" value="{$combo.combo_intro_big}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="label">正文2文案：</td>
+                <td>
+                   <input type="text" name="combo_intro_small" maxlength="60" value="{$combo.combo_intro_small}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="label">按钮文案：</td>
+                <td>
+                   <input type="text" name="combo_intro_button" maxlength="60" value="{$combo.combo_intro_button}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="label">预定需知：</td>
+                <td width="100%"> <script id="editor" name="combo_editor" type="text/plain" style="width:800px;height:250px;">{$combo.combo_editor}</script></td>
+            </tr>
+            <tr>
+                <td class="label">费用说明：</td>
+                <td width="100%"> <script id="charge" name="combo_charge" type="text/plain" style="width:800px;height:250px;">{$combo.combo_charge}</script></td>
+            </tr>
+            <tr>
+                <td class="label">签证信息：</td>
+                <td width="100%"> <script id="visa" name="combo_visa" type="text/plain" style="width:800px;height:250px;">{$combo.combo_visa}</script></td>
+            </tr>
+            <tr>
+                <td class="label">介绍头图：</td>
+                <td>
+                    <div id="container4">
+                        <a class="btn btn-default btn-lg " id="img_upload4" href="#" >
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>选择文件</span>
+                        </a>
+                        <font id="upload_status4"></font>
+                        <input type="hidden" name="combo_head" id="img_id4" value="{$combo.combo_head}"/>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">介绍底图：</td>
+                <td>
+                    <div id="container5">
+                        <a class="btn btn-default btn-lg " id="img_upload5" href="#" >
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>选择文件</span>
+                        </a>
+                        <font id="upload_status5"></font>
+                        <input type="hidden" name="combo_foot" id="img_id5" value="{$combo.combo_foot}"/>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <!-- 场馆-->
+        <table width="90%" id="pitch-table" style="display:none" align="center">
+            <!--列表部分-->
+            <tr>
+                <th>是否使用</th>
+                <th>场馆名称</th>
+                <th>可容纳人数</th>
+                <th>{$lang.handler}</th>
+            </tr>
+            {foreach from=$combo_pitch_list item=combo_pitch}
+            <tr class="pitchContent">
+                {if $combo_pitch.is_true}
+                <td align="center"><input type="checkbox" name="combo_pitchs[]" value="{$combo_pitch.combo_pitch_id}" checked notice="" /></td>
+                {else}
+                <td align="center"><input type="checkbox" name="combo_pitchs[]" value="{$combo_pitch.combo_pitch_id}" notice="" /></td>
+                {/if}
+                <td align="center">{$combo_pitch.combo_pitch_name}</td>
+                <td align="center">{$combo_pitch.combo_pitch_contain}</td>
+                <td align="center">
+                    <a href="route.php?con=combo_pitch&act=add"><img src="images/icon_add.gif" border="0" height="16" width="16" /></a>
+                    <a href="route.php?con=combo_pitch&act=update&id={$combo_pitch.combo_pitch_id}" title="{$lang.edit}"><img src="images/icon_edit.gif" border="0" height="16" width="16" /></a>
+                    <a href="javascript:removePitch('{$combo_pitch.combo_pitch_id}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16" /></a>
+                </td>
+            </tr>
+            {/foreach}
+        </table>
+        
+        <!--行程-->
+        <table width="90%" id="route-table" style="display:none" align="center">
+            <!--列表部分-->
+            <tr>
+                <th>是否使用</th>
+                <th>套餐名称</th>
+                <th>行程第*天</th>
+                <th>行程日期</th>
+                <th>行程标题</th>
+                <th>{$lang.handler}</th>
+            </tr>
+            {foreach from=$combo_travel_list item=combo_travel}
+            <tr class="travelContent">
+                {if $combo_travel.is_true}
+                    <td align="center"><input type="checkbox" name="combo_travels[]" value="{$combo_travel.combo_travel_id}" checked notice="" /></td>
+                {else}
+                    <td align="center"><input type="checkbox" name="combo_travels[]" value="{$combo_travel.combo_travel_id}" notice="" /></td>
+                {/if}
+                <td align="center">{$combo_travel.combo_name}</td>
+                <td align="center">第{$combo_travel.combo_travel_day}天</td>
+                <td align="center">{$combo_travel.combo_travel_date}</td>
+                <td align="center">{$combo_travel.combo_travel_title}</td>
+                <td align="center">
+                    <a href="route.php?con=combo_travel&act=add"><img src="images/icon_add.gif" border="0" height="16" width="16" /></a>
+                    <a href="route.php?con=combo_travel&act=update&id={$combo_travel.combo_travel_id}" title="{$lang.edit}"><img src="images/icon_edit.gif" border="0" height="16" width="16" /></a>
+                    <a href="javascript:removeTravel('{$combo_travel.combo_travel_id}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16" /></a>
+                </td>
+            </tr>
+            {/foreach}
+        </table>
+        <!--表单提交&&重置-->
+        <div class="button-div">
+          <input type="submit" value="{$lang.button_submit}" class="button" onclick="return checkForm()"/>
+          <input type="reset" value="{$lang.button_reset}" class="button" />
+          <input type="hidden" name="act" value="{$act}" />
+          <input type="hidden" name="id" value="{$combo.combo_id}" />
+          <input name="combo_tickets" type="hidden" id="combo_tickets" value='' />
+        </div>
+
+      </form>
+    </div>
+</div>
+<!-- end goods form -->
+{insert_scripts files="../js/utils.js,validator.js,tab.js"}
+<script type="text/javascript" charset="utf-8" src="js/qiniu/plupload.full.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/qiniu.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/qiniu_init.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/color/jscolor.js"></script>
+<script language="JavaScript">
+    linkage.isAdmin = true;
+    //套餐logo
+    new QiniuInit().upload({
+        browse_button:"img_upload",
+        drop_element:"container",
+        upload_status:"upload_status",
+        img_id:"img_id"
+    });
+    //套餐图片
+    new QiniuInit().upload({
+        browse_button:"img_upload2",
+        drop_element:"container2",
+        upload_status:"upload_status2",
+        img_id:"img_id2"
+    });
+    //套餐场馆图片
+    new QiniuInit().upload({
+        browse_button:"img_upload3",
+        drop_element:"container3",
+        upload_status:"upload_status3",
+        img_id:"img_id3"
+    });
+    //套餐介绍头图
+    new QiniuInit().upload({
+        browse_button:"img_upload4",
+        drop_element:"container4",
+        upload_status:"upload_status4",
+        img_id:"img_id4"
+    });
+    //套餐介绍底图
+    new QiniuInit().upload({
+        browse_button:"img_upload5",
+        drop_element:"container5",
+        upload_status:"upload_status5",
+        img_id:"img_id5"
+    });
+    //套餐行程图片
+    new QiniuInit().upload({
+        browse_button:"img_upload6",
+        drop_element:"container6",
+        upload_status:"upload_status6",
+        img_id:"img_id6"
+    });
+</script>
+<script language="JavaScript">
+
+    var ue = UE.getEditor('editor');
+    new QiniuInit().upload({
+        browse_button:"img_upload",
+        drop_element:"container",
+        upload_status:"upload_status",
+        img_id:"img_id"
+    });
+    new QiniuInit().upload({
+        browse_button:"img_upload1",
+        drop_element:"container1",
+        upload_status:"upload_status1",
+        img_id:"img_id1"
+    });
+    new QiniuInit().upload({
+        browse_button:"img_upload2",
+        drop_element:"container2",
+        upload_status:"upload_status2",
+        img_id:"img_id2"
+    });
+</script>
+<script language="JavaScript">
+
+    var ue = UE.getEditor('charge');
+    new QiniuInit().upload({
+        browse_button:"img_upload",
+        drop_element:"container",
+        upload_status:"upload_status",
+        img_id:"img_id"
+    });
+    new QiniuInit().upload({
+        browse_button:"img_upload1",
+        drop_element:"container1",
+        upload_status:"upload_status1",
+        img_id:"img_id1"
+    });
+    new QiniuInit().upload({
+        browse_button:"img_upload2",
+        drop_element:"container2",
+        upload_status:"upload_status2",
+        img_id:"img_id2"
+    });
+</script>
+<script language="JavaScript">
+
+    var ue = UE.getEditor('visa');
+    new QiniuInit().upload({
+        browse_button:"img_upload",
+        drop_element:"container",
+        upload_status:"upload_status",
+        img_id:"img_id"
+    });
+    new QiniuInit().upload({
+        browse_button:"img_upload1",
+        drop_element:"container1",
+        upload_status:"upload_status1",
+        img_id:"img_id1"
+    });
+    new QiniuInit().upload({
+        browse_button:"img_upload2",
+        drop_element:"container2",
+        upload_status:"upload_status2",
+        img_id:"img_id2"
+    });
+</script>
+<script type="Text/Javascript" language="JavaScript">
+<!--
+{literal}
+    var data = '{$combo.combo_tickets}';
+    var defaultClass = "default";
+    var myCombo = Object();
+
+    onload = function()
+    {
+      // 开始检查订单
+      startCheckOrder();
+      var classList = document.getElementById("combo_class_list");
+
+      if (data == "")
+      {
+        classList.innerHTML = "";
+        myCombo['default'] = new Array();
+        var newOpt    = document.createElement("OPTION");
+        newOpt.value  = -1;
+        newOpt.text   = defaultClass;
+        classList.options.add(newOpt);
+        return;
+      }
+      var temp    = JSON.parse(data);
+      var counter = 0;
+      for (var k in temp)
+      {
+        if(typeof(myCombo[k]) != "function")
+        {
+          myCombo[k] = temp[k];
+          var newOpt    = document.createElement("OPTION");
+          newOpt.value  = k == "default" ? -1 : counter;
+          newOpt.text   = k == "default" ? defaultClass : k;
+          classList.options.add(newOpt);
+          counter++;
+        }
+      }
+      showTargetList();
+    }
+    
+    //场馆表单提交
+    function checkPitch(){
+        $.ajax({
+             type: "POST",
+             url: "route.php?con=combo_pitch&act=ajaxEdit",
+             data: {
+                combo_pitch_name: $('#combo_pitch_name').val(),
+                combo_pitch_contain: $('#combo_pitch_contain').val(),
+                combo_pitch_desc: $('#combo_pitch_desc').val(),
+                combo_pitch_img: $('#img_id3').val()
+             },
+             dataType: "json",
+             success: function(data){
+//                 console.log(data);
+                 if(data.error == 0){
+                    var innerContent = "<tr class='pitchContent'>";
+                        innerContent +="<td align='center'><input type='checkbox' name='combo_pitchs[]' value='' notice=''/></td>";
+                        innerContent +="<td align='center'>"+data.content.combo_pitch_name+"</td>";
+                        innerContent +="<td align='center'>"+data.content.combo_pitch_contain+"</td>";
+                        innerContent +="<td align='center'>";
+                        innerContent +="<a href='route.php?con=combo_pitch&act=update&id="+data.content.combo_pitch_id+"' title='{$lang.edit}'><img src='images/icon_edit.gif' border='0' height='16' width='16' /></a>";
+                        innerContent +="<a href='javascript:removePitch("+data.content[i].combo_pitch_id+")' title='{$lang.remove}'><img src='images/icon_drop.gif' border='0' height='16' width='16' /></a>";
+                        innerContent +="</td></tr>";
+                    $('#pitchContent').before(innerContent);
+                     window.location.reload();
+                 }
+             }
+         });
+    }
+    
+    //场馆删除
+    function removePitch(combo_pitch_id){
+        if(confirm("确定要删除该场馆?") == true){
+            $.ajax({
+                type: "POST",
+                url: "route.php?con=combo_pitch&act=ajaxRemove",
+                data: {
+                   id: combo_pitch_id,
+                },
+                dataType: "json",
+                success: function(data){
+                    if(data.error == 0){
+                       var innerContent="";
+                       for (var i=0;i<data.content.length;i++){
+                           innerContent+="<tr class='pitchContent'>";
+                           innerContent+="<td align='center'><input type='checkbox' name='combo_pitchs[]' value='' notice=''/></td>";
+                           innerContent+="<td align='center'>"+data.content[i].combo_pitch_name+"</td>";
+                           innerContent+="<td align='center'>"+data.content[i].combo_pitch_contain+"</td>";
+                           innerContent+="<td align='center'>";
+                           innerContent+="<a href='route.php?con=combo_pitch&act=update&id="+data.content[i].combo_pitch_id+"' title='{$lang.edit}'><img src='images/icon_edit.gif' border='0' height='16' width='16' /></a>";
+                           innerContent+="<a href='javascript:removePitch("+data.content[i].combo_pitch_id+")' title='{$lang.remove}'><img src='images/icon_drop.gif' border='0' height='16' width='16' /></a>";
+                           innerContent+="</td></tr>";
+                       }
+                       $('.pitchContent').remove();
+                       $('#pitchContent').before(innerContent);
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+    }
+    
+    
+    //行程表单提交
+    function checkTravel(){
+        $.ajax({
+             type: "POST",
+             url: "route.php?con=combo_travel&act=ajaxEdit",
+             data: {
+                combo_travel_day: $('#combo_travel_day').val(),
+                combo_travel_date: $('#combo_travel_date').val(),
+                combo_travel_title: $('#combo_travel_title').val(),
+                combo_travel_content: $('#combo_travel_content').val(),
+                combo_travel_img: $('#img_id6').val()
+             },
+             dataType: "json",
+             success: function(data){
+                 console.log(data);
+                 if(data.error == 0){
+                    var innerContent = "<tr>";
+                        innerContent +="<td align='center'><input type='checkbox' name='combo_travels[]' value='' notice=''/></td>";
+                        innerContent +="<td align='center'>第"+data.content.combo_travel_day+"天</td>";
+                        innerContent +="<td align='center'>"+data.content.combo_travel_title+"</td>";
+                        innerContent +="<td align='center'>"+data.content.combo_travel_date+"</td>";
+                        innerContent +="<td align='center'>"+data.content.combo_travel_content+"</td>";
+                        innerContent +="<td align='center'>";
+                        innerContent +="<a href='route.php?con=combo_travel&act=update&id="+data.content.combo_travel_id+"' title='{$lang.edit}'><img src='images/icon_edit.gif' border='0' height='16' width='16' /></a>";
+                        innerContent +="<a href='javascript:removeTravel("+data.content[i].combo_travel_id+")' title='{$lang.remove}'><img src='images/icon_drop.gif' border='0' height='16' width='16' /></a>";
+                        innerContent +="</td></tr>";
+                    $('#travelContent').before(innerContent);
+                 }
+             }
+         });
+    }
+    
+    //行程删除
+    function removeTravel(combo_travel_id){
+        if(confirm("确定要删除该行程?") == true){
+            $.ajax({
+                type: "POST",
+                url: "route.php?con=combo_travel&act=ajaxRemove",
+                data: {
+                   id: combo_travel_id,
+                },
+                dataType: "json",
+                success: function(data){
+                    console.log(data);return;
+                    if(data.error == 0){
+                       var innerContent="";
+                       for (var i=0;i<data.content.length;i++){
+                           innerContent+="<tr class='travelContent'>";
+                           innerContent +="<td align='center'><input type='checkbox' name='combo_travels[]' value='' notice=''/></td>";
+                           innerContent +="<td align='center'>第"+data.content.combo_travel_day+"天</td>";
+                           innerContent +="<td align='center'>"+data.content.combo_travel_title+"</td>";
+                           innerContent +="<td align='center'>"+data.content.combo_travel_date+"</td>";
+                           innerContent +="<td align='center'>"+data.content.combo_travel_content+"</td>";
+                           innerContent +="<td align='center'>";
+                           innerContent +="<a href='route.php?con=combo_travel&act=update&id="+data.content.combo_travel_id+"' title='{$lang.edit}'><img src='images/icon_edit.gif' border='0' height='16' width='16' /></a>";
+                           innerContent +="<a href='javascript:removeTravel("+data.content[i].combo_travel_id+")' title='{$lang.remove}'><img src='images/icon_drop.gif' border='0' height='16' width='16' /></a>";
+                           innerContent +="</td></tr>";
+                       }
+                       $('.travelContent').remove();
+                       $('#travelContent').before(innerContent);
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+    }
+    
+    
+    function checkForm()
+    {
+        var validator = new Validator('theForm');
+        validator.required('combo_name', '套餐名称不可为空');
+        document.getElementById("combo_tickets").value = JSON.stringify(myCombo);
+        return validator.passed();
+    }
+
+    function searchTickets(gameId, keyword)
+    {
+        var elements = document.forms['theForm'].elements;
+        var filters = new Object;
+        filters.game_id = elements[gameId].value;
+        filters.keyword = Utils.trim(elements[keyword].value);
+        filters.is_ticket = 1;
+        $.ajax({
+          url:"route.php?con=combo&act=search",
+          data:filters,
+          type:"GET",
+          dataType:"JSON",
+          success:function(result){
+              clearOptions("source_select");
+              var obj = document.getElementById("source_select");
+              for (var i=0; i < result.content.length; i++)
+              {
+                var opt   = document.createElement("OPTION");
+                opt.value = result.content[i].value;
+                opt.text  = result.content[i].text;
+                obj.options.add(opt);
+              }
+          }
+        });
+    }
+
+    function clearOptions(id)
+    {
+        var obj = document.getElementById(id);
+        while(obj.options.length>0)
+        {
+          obj.remove(0);
+        }
+    }
+    
+    function addAllItem(sender)
+    {
+        if(sender.options.length == 0) return false;
+        for (var i = 0; i < sender.options.length; i++)
+        {
+          var opt = sender.options[i];
+          addItem(null, opt.value, opt.text);
+        }
+    }
+
+    function addItem(sender, value, text)
+    {
+        var target_select = document.getElementById("target_select");
+        var sortList = document.getElementById("combo_class_list");
+        var newOpt   = document.createElement("OPTION");
+        if (sender != null)
+        {
+          if(sender.options.length == 0) return false;
+          var option = sender.options[sender.selectedIndex];
+          if(typeof(option) == "undefined"){
+            return false;
+          }else{
+            newOpt.value = option.value;
+            newOpt.text  = option.text;   
+          }
+        }
+        else
+        {
+          newOpt.value = value;
+          newOpt.text  = text;
+        }
+        if (targetItemExist(newOpt)) return false;
+        if (target_select.length>=50)
+        {
+          alert(item_upper_limit);
+        }
+        target_select.options.add(newOpt);
+        if(sortList != null){
+           var key = sortList.options[sortList.selectedIndex].value == "-1" ? "default" : sortList.options[sortList.selectedIndex].text; 
+           if(!myCombo[key])
+           {
+              myCombo[key] = new Array();
+           }
+           myCombo[key].push(newOpt.text + "|" + newOpt.value);
+        }
+    }
+
+    // 商品是否存在
+    function targetItemExist(opt)
+    {
+        var options = document.getElementById("target_select").options;
+        for ( var i = 0; i < options.length; i++)
+        {
+          if(options[i].text == opt.text && options[i].value == opt.value) 
+          {
+            return true;
+          }
+        }
+        return false;
+    }
+
+    function addClass()
+    {
+        var obj = document.getElementById("combo_class_list");
+        var newClassName = document.getElementById("new_cat_name");
+        var regExp = /^[a-zA-Z0-9]+$/;
+        if (newClassName.value == ""){
+          alert(sort_name_empty);
+          return;
+        }
+        for(var i=0;i < obj.options.length; i++)
+        {
+          if(obj.options[i].text == newClassName.value)
+          {
+            alert(sort_name_exist);
+            newClassName.focus(); 
+            return;
+          }
+        }
+        var className = document.getElementById("new_cat_name").value;
+        document.getElementById("new_cat_name").value = "";
+        var newOpt    = document.createElement("OPTION");
+        newOpt.value  = obj.options.length;
+        newOpt.text   = className;
+        obj.options.add(newOpt);
+        newOpt.selected = true;
+        if ( obj.options[0].value == "-1")
+        {
+          if (myCombo["default"].length > 0)
+            alert(move_item_confirm.replace("className",className));
+          myCombo[className] = myCombo["default"];
+          delete myCombo["default"];
+          obj.remove(0);
+        }
+        else
+        {
+          myCombo[className] = new Array();
+          clearOptions("target_select");
+        }
+    }
+
+
+    function showTargetList()
+    {
+        clearOptions("target_select");
+        var obj = document.getElementById("combo_class_list");
+        var index = obj.options[obj.selectedIndex].text;
+        if (index == defaultClass)
+        {
+          index = "default";
+        }
+        var options = myCombo[index];
+
+        for ( var i = 0; i < options.length; i++)
+        {
+          var newOpt    = document.createElement("OPTION");
+          var arr = options[i].split('|');
+          newOpt.value  = arr[1];
+          newOpt.text   = arr[0];
+          document.getElementById("target_select").options.add(newOpt);
+        }
+    }
+
+    function removeItem(sender,isAll)
+    {
+        var classList = document.getElementById("combo_class_list");
+        if(classList != null){
+            var key = 'default';
+            if (classList.value != "-1")
+            {
+                key = classList.options[classList.selectedIndex].text;
+            }
+            var arr = myCombo[key];
+            if (!isAll)
+            {
+              var goodsName = sender.options[sender.selectedIndex].text;
+              for (var j = 0; j < arr.length; j++)
+              {
+                if (arr[j].indexOf(goodsName) >= 0)
+                {
+                    myCombo[key].splice(j,1);
+                }
+              }
+
+              for (var i = 0; i < sender.options.length;)
+              {
+                if (sender.options[i].selected) {
+                  sender.remove(i);
+                  myCombo[key].splice(i, 0);
+                }
+                else
+                {
+                  i++;
+                }
+              }
+            }
+            else
+            {
+              myCombo[key] = new Array();
+              sender.innerHTML = "";
+            }
+        }else{
+            return false;
+        }        
+    }
+    
+    
+{/literal}
+//-->
+</script>
+{include file="pagefooter.htm"}

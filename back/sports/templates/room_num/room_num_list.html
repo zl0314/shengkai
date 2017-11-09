@@ -1,0 +1,64 @@
+{if $full_page}
+    {include file="pageheader.htm"}
+    {insert_scripts files="../js/utils.js,newlisttable.js"}
+<form method="POST" action="route.php?con=room_num&act=batch_drop" name="listForm" onsubmit="return confirm_bath()">
+    <div class="list-div" id="listDiv">
+{/if}
+    <!--用户列表部分-->
+    <table cellpadding="3" cellspacing="1">
+        <tr>
+            <th>
+                <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox">
+                <a href="javascript:listTable.sort('room_id'); ">编号</a>
+            </th>
+            <th>房间类型</th>
+            <th>日期</th>
+            <th>库存数量</th>
+            <th>锁定数量</th>
+            <th>已售</th>
+            <th>单价</th>
+            <th>{$lang.handler}</th>
+        </tr>
+        {foreach from=$room_num_list item=room_num}
+        <tr>
+            <td><input type="checkbox" name="checkboxes[]" value="{$room_num.id}"/>{$room_num.id}</td>
+            <td align="center" class="first-cell">{$room_num.type_name|escape}</td>
+            <td align="center">{$room_num.date}</td>
+            <td align="center">{$room_num.num}</td>
+            <td align="center">{$room_num.locked_num}</td>
+            <td align="center">{$room_num.sale_num}</td>
+
+            <td align="center">{$room_num.room_money}</td>
+            <td align="center">
+                <a href="route.php?con=room_num&act=update&id={$room_num.id}" title="{$lang.edit}">编辑</a>
+                <a href="route.php?con=room_num&act=remove&id={$room_num.id}" title="{$lang.edit}">删除</a>
+            </td>
+        </tr>
+        {foreachelse}
+        <tr>
+            <td class="no-records" colspan="10">{$lang.no_records}</td>
+        </tr>
+        {/foreach}
+        <tr>
+            <td colspan="2">
+                <input type="hidden" name="act" value="batch_remove"/>
+                <input type="submit" id="btnSubmit" value="删除" disabled="true" class="button"/></td>
+            <td align="right" nowrap="true" colspan="5">
+                {include file="page2.htm"}
+            </td>
+        </tr>
+    </table>
+{if $full_page}
+    </div>
+</form>
+    <script type="text/javascript" language="JavaScript">
+      listTable.recordCount = {$record_count};
+      listTable.pageCount = {$page_count};
+      listTable.new_url = 'route.php?is_ajax=1&con=room_num&room_id={$room.id}';
+      listTable.act = 'index_query';
+      {foreach from = $filter item = item key = key}
+      listTable.filter.{$key} = '{$item}';
+      {/foreach}
+    </script>
+    {include file="pagefooter.htm"}
+{/if}

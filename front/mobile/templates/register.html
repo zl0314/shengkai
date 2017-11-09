@@ -1,0 +1,93 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+<title>注册</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=720 user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css"  href="css/base.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+<link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/header.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/footer.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/register.css" />
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+</head>
+<body>
+        <!--start 头部-->
+       {include file="header.html"}
+            <!--end 头部-->
+            <!-- form-01-->
+            <div class="loginBox">
+                <h1 class="logo">
+                    <img src="images/logo_01.png" alt="" />
+                </h1>
+                <div class="login-wenzi">
+                    <div class="left"></div>
+                    <div class="middle">登录</div>
+                    <div class="right"></div>
+                </div>
+                <form class="form-01" method="post" name="formUser" id="formUser">
+                    <div class="inp-01 userName-01">                      
+                          <input type="text" placeholder="用户名/手机号"
+                                   id="regist-name" name="username" onblur="check_name(this.value);"/>
+                          <label class="tubiao user" for="login-name"></label>
+                    </div>
+                    <div class="inp-01 password-01">                     
+                          <input type="password"  placeholder="密码"  id="password1"
+                                   name="password" onblur="check_password(this.value);"/>
+                            <label class="tubiao lock" for="login-pass"></label>
+                    </div>
+                    <div class="inp-01 inp-none">                       
+                         
+                          <input type="password"  value=""  placeholder="确认密码"
+                                   id="conform_password" name="confirm_password"
+                                   onblur="check_conform_password(this.value);"/>
+                            <label class="tubiao lock" for="login-pass"></label>
+                    </div>
+                    <div class="inp-01 inp-none">                        
+                        <input type="text"  value="" placeholder="验证手机号码"
+                                   oninput="check_mobile(this.value,'get_verifycode_pc')" name="extend_field5"/>
+                            <label class="tubiao fui-phone" for="login-pass"></label>
+                    </div>
+                    <div style="font-size:12px;position:relative;top:-10px;color:#C6151D;">手机号码前加国家区号（如：加 86）
+                    </div>
+                    <div class="inp-01 inp-none yanzheng">
+
+                        <input type="text"  value=""  placeholder="图形验证码" name="captcha"/>
+                        <label class="tubiao fui-yzm" for="login-pass"></label>
+                    </div>
+                    <img src="captcha.php" class="huoqu" alt="CAPTCHA" border="1" onclick= this.src="captcha.php" style="cursor: pointer;" title="{$lang.click_for_another}" />
+                    <div class="inp-01 inp-none yanzheng">                        
+                        
+                        <input type="text"  value=""  placeholder="请输入验证码" name="verifycode_pc"/>
+                                <label class="tubiao fui-yzm" for="login-pass"></label>
+                    </div>
+                    
+                    <a href="javascript:void(0)" class="huoqu" onclick="huoqu_verifycode()" name="btn1" id="get_verifycode_pc" disabled="true">获取验证码</a>
+                   
+                    <div class="ziDong">
+                        <span data-regist-msg></span>
+                        <span>
+                 <input type="checkbox" id="Iok"  style="border:none;" onclick="remember_me()" name="remember">我同意本网站 
+                     <a href="myarticle.php?act=myarticle&article_id=66" target="_blank" style="color:#23527c">《免责声明》</a>
+                        </span>
+                        <span>
+                          　&nbsp;&nbsp;下载<a  href="download.php?type=file&file_name=disclaimer.pdf" target="_blank" style="color:#23527c">《免责声明》</a>
+                        </span>
+                    </div>
+                   <a href="javascript:void(0)" onclick="return register()" class="btnLogin">
+                    <!--<button class="btnLogin">-->                        
+                         立即注册
+                    <!--</button>-->
+                       </a>
+                </form>
+            </div>
+</body>
+<script src="js/utils.js"></script>
+<script src="js/user.js"></script>
+</html>

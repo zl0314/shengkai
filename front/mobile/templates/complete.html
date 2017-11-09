@@ -1,0 +1,44 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+<title>完成订单</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=720 user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css"  href="css/base.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+<link rel="stylesheet" type="text/css"  href="css/header.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/footer.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/complete.css" media="all" />
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+</head>
+{include file="header.html"}
+<!--end 头部-->
+<div class="container">
+	<div class="content">
+        	<h1>恭喜您！您的订单提交成功。</h1>
+            	<div class="sub">
+           			<h2>感谢您对盛开国际体育的支持，请记住您的订单号： <span>{$order_detail.order_sn}</span></h2>
+        			<h3>我们会认真审核您的持票人信息，审核通过会把购票凭证发送至您的邮箱： <span>{$order_detail.email}</span></h3>
+            		<h4>您也可以在订单列表页查看和打印。</h4>
+                </div>
+            	<div class="bottom clearfloat">
+                	<div class="bottomone fl">
+                            <a href="index.php"><button type="submit">返回首页</button></a>
+                   	</div>
+                    <div class="bottomtwo fr">
+                        <a href="personal_center.php"><button class="one" type="submit">查看个人中心</button></a>
+                    </div>
+          		</div>
+       </div>    
+ </div>    
+
+    
+</body>
+<script type="text/javascript" src="js/pulldown.js"></script>
+</html>

@@ -1,0 +1,226 @@
+<!-- $Id: goods_search.htm 16790 2009-11-10 08:56:15Z wangleisvn $ -->
+{insert_scripts files="../js/utils.js,newlisttable.js,jquery.min.js,related.js"}
+<div class="form-div">
+  <form action="javascript:searchGoods()" name="searchForm">
+    <img src="images/icon_search.gif" width="26" height="22" border="0" alt="SEARCH" />
+    {if $smarty.get.act neq "trash"}
+    <!-- 分类 -->
+    <select name="cat_id"><option value="0">{$lang.goods_cat}</option>{$cat_list}</select>
+    <div style="display:none;">
+     品牌
+    <select name="brand_id"><option value="0">{$lang.goods_brand}</option>{html_options options=$brand_list}</select>
+    </div>
+      查询方式
+      <select id="change" name="change" onchange="get_change_list(this.value)">
+          <option value='0'> 请选择...</option>
+          <option value='2'> 普通查询</option>
+          <option value='3'> 联动查询.</option>
+      </select>
+      <div id="liandong" style="display:block;margin-top: 10px;margin-left: 9px;">
+          赛事筛选
+          <select id="game_id" name="game_id" onchange="get_number_list(this.value)">
+              <option value='0'>请选择...</option>
+              <!--{foreach from=$game_list item=game}-->
+              <option value="{$game.id}">{$game.game_name}</option>
+              <!--{/foreach}-->
+          </select>
+          场次名称
+          <select id="number_id" name="number_id" onchange="get_pitch_list(this.value)">
+              <option value='0'> 请选择...</option>
+          </select>
+             比赛场馆
+        <select id="pitch_id" name="pitch_id" onchange="get_rank_list(this.value)">
+            <option value='0'> 请选择...</option>
+        </select>
+          坐席等级
+          <select id="rank" name="rank">
+              <option value="0">请选择...</option>
+          </select>
+      </div>
+      <div id="putong" style="display:none;margin-top: 10px;margin-left: 9px;">
+          赛事筛选
+          <select id="game_id_1" name="game_id_1">
+              <option value='0'>请选择...</option>
+              <!--{foreach from=$game_list item=game}-->
+              <option value="{$game.id}">{$game.game_name}</option>
+              <!--{/foreach}-->
+          </select>
+          场次名称
+          <select id="number_id_1" name="number_id_1">
+              <option value='0'> 请选择...</option>
+              <!--{foreach from=$num_name item=number}-->
+              <option value="{$number.id}"> {$number.num_name}</option>
+              <!--{/foreach}-->
+          </select>
+          比赛场馆
+          <select id="pitch_id_1" name="pitch_id_1">
+              <option value='0'> 请选择...</option>
+              <!--{foreach from=$pitch_name item=pitch}-->
+              <option value="{$pitch.id}"> {$pitch.pitch_name}</option>
+              <!--{/foreach}-->
+          </select>
+          坐席等级
+          <select id="rank_1" name="rank_1">
+              <option value="0">请选择...</option>
+              <!--{foreach from=$rank item=rank}-->
+              <option value="{$rank.rank}">{$rank.rank}</option>
+              <!--{/foreach}-->
+          </select>
+      </div>
+      <div style="margin-top: 10px;margin-left: 9px;">
+        套餐/单票
+        <select name="ticket" id="ticket">
+            <option value="0">{$lang.select_please}</option>
+            <option value="1">套餐</option>
+            <option value="2">单票</option>
+        </select></br></br>
+      </div>
+    <div style="display:none;">
+     推荐
+    <select name="intro_type"><option value="0">{$lang.intro_type}</option>{html_options options=$intro_list selected=$smarty.get.intro_type}</select>
+     {if $suppliers_exists eq 1}
+       供货商
+      <select name="suppliers_id"><option value="0">{$lang.intro_type}</option>{html_options options=$suppliers_list_name selected=$smarty.get.suppliers_id}</select>
+      {/if}
+      </div>
+      <select name="is_on_sale"><option value=''>{$lang.intro_type}</option><option value="1">{$lang.on_sale}</option><option value="0">{$lang.not_on_sale}</option></select>
+    {/if}
+    <!--坐席等级-->
+
+      <!-- 关键字 -->
+    {$lang.keyword} <input type="text" name="keyword" size="15" />
+    <input type="submit" value="{$lang.button_search}" class="button" />
+  </form>
+</div>
+
+{literal}
+<script language="JavaScript">
+    function get_change_list(change_id){
+        if(change_id == '2'){
+            $("#game_id").val("");
+            $("#number_id").val("");
+            $("#pitch_id").val("");
+            $("#rank").val("");
+            $('#putong').css("display","block");
+            $('#liandong').css("display","none");
+        }else if(change_id == '3'){
+            $("#game_id_1").val("");
+            $("#number_id_1").val("");
+            $("#pitch_id_1").val("");
+            $("#rank_1").val("");
+            $('#liandong').css("display","block");
+            $('#putong').css("display","none");
+        }else{
+            $('#putong').css("display","none");
+            $('#liandong').css("display","block");
+        }
+    }
+    function get_number_list(game_id){
+        if(game_id != "0") {
+            $.ajax({
+                url: 'game.php?act=number&game_id=' + game_id,
+                type: "POST",
+                dataType: "text",
+                success: function (res) {
+                    var aa = JSON.parse(res);
+                    $("#number_id").empty();
+                    var str = '<option value="0"> 请选择...</option>';
+                    for (var i = 0; i < aa.length; i++) {
+                        str += '<option value="' + aa[i].id + '">' + aa[i].num_name + '</option>';
+                    }
+                    $('#number_id').append(str);
+                }
+            });
+        }else{
+            $("#number_id").empty();
+            var str1 = '<option value="0"> 请选择...</option>';
+            $('#number_id').append(str1);
+            $("#pitch_id").empty();
+            var str2 = '<option value="0"> 请选择...</option>';
+            $('#pitch_id').append(str2);
+            $("#rank").empty();
+            var str3 = '<option value="0"> 请选择...</option>';
+            $('#rank').append(str3);
+        }
+    }
+    function get_pitch_list(number_id){
+        if(number_id != "0"){
+            $.ajax({
+                url: 'game.php?act=pitch&number_id='+number_id,
+                type:"POST",
+                dataType:"text",
+                success:function (res){
+                    var aa = JSON.parse(res);
+                    $("#pitch_id").empty();
+                    var str = '<option value="0"> 请选择...</option>';
+                    for(var i=0;i<aa.length;i++){
+                        str +='<option value="'+aa[i].id+'">'+aa[i].pitch_name+'</option>';
+                    }
+                    $('#pitch_id').append(str);
+                }
+            });
+        }else {
+            $("#pitch_id").empty();
+            var str2 = '<option value="0"> 请选择...</option>';
+            $('#pitch_id').append(str2);
+            $("#rank").empty();
+            var str3 = '<option value="0"> 请选择...</option>';
+            $('#rank').append(str3);
+        }
+    }
+    function get_rank_list(pitch_id){
+        var game_id = $("#game_id").val();
+        var number_id = $("#number_id").val();
+        if(pitch_id != "0"){
+            $.ajax({
+                url: 'game.php?act=rank&game_id='+game_id+'&number_id='+number_id+'&pitch_id='+pitch_id,
+                type:"POST",
+                dataType:"text",
+                success:function (res){
+                    var aa = JSON.parse(res);
+                    $("#rank").empty();
+                    var str = '<option value="0"> 请选择...</option>';
+                    for(var i=0;i<aa.length;i++){
+                        str +='<option value="'+aa[i].rank+'">'+aa[i].rank+'</option>';
+                    }
+                    $('#rank').append(str);
+                }
+            });
+        }else{
+            $("#rank").empty();
+            var str3 = '<option value="0"> 请选择...</option>';
+            $('#rank').append(str3);
+        }
+    }
+    function searchGoods()
+    {
+{literal}
+        {if $smarty.get.act neq "trash"}
+        listTable.filter['cat_id'] = document.forms['searchForm'].elements['cat_id'].value;
+        listTable.filter['brand_id'] = document.forms['searchForm'].elements['brand_id'].value;
+        listTable.filter['game_id'] = document.forms['searchForm'].elements['game_id'].value;
+        listTable.filter['game_id_1'] = document.forms['searchForm'].elements['game_id_1'].value;
+        listTable.filter['intro_type'] = document.forms['searchForm'].elements['intro_type'].value;
+          {if $suppliers_exists eq 1}
+          listTable.filter['suppliers_id'] = document.forms['searchForm'].elements['suppliers_id'].value;
+          {/if}
+        listTable.filter['is_on_sale'] = document.forms['searchForm'].elements['is_on_sale'].value;
+        listTable.filter['rank'] = document.forms['searchForm'].elements['rank'].value;
+        listTable.filter['rank_1'] = document.forms['searchForm'].elements['rank_1'].value;
+        listTable.filter['number_id'] = document.forms['searchForm'].elements['number_id'].value;
+        listTable.filter['number_id_1'] = document.forms['searchForm'].elements['number_id_1'].value;
+        listTable.filter['pitch_id'] = document.forms['searchForm'].elements['pitch_id'].value;
+        listTable.filter['pitch_id_1'] = document.forms['searchForm'].elements['pitch_id_1'].value;
+        listTable.filter['ticket'] = document.forms['searchForm'].elements['ticket'].value;
+
+
+        {/if}
+{/literal}
+        listTable.filter['keyword'] = Utils.trim(document.forms['searchForm'].elements['keyword'].value);
+                 //套餐/单票
+                  
+        listTable.filter['page'] = 1;
+        listTable.loadList();
+    }
+</script>
+{/literal}

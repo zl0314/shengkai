@@ -1,0 +1,52 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader2.htm"}
+{insert_scripts files="jquery.min.js,adddate.js"}
+<!--<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>-->
+<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+<div class="main-div">
+    <form method="post" action="route.php?con=advert&act=edit" name="theForm">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td class="label">广告名称：</td>
+                <td><input type="text" name="advert_name" maxlength="60" value="{$advert_info.advert_name}" /></td>
+            </tr>
+            <tr>
+                <td class="label">模版链接：</td>
+                <td><input type="text" name="advert_template" maxlength="60" value="{$advert_info.advert_template}" /></td>
+            </tr>
+        </table>
+        <table align="center">
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" class="button" value="{$lang.button_submit}" />
+                    <input type="reset" class="button" value="{$lang.button_reset}" />
+                    <input type="hidden" name="act" value="{$act}" />
+                    <input type="hidden" name="advert_id" value="{$advert_info.advert_id}" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+
+<script type="text/javascript" charset="utf-8" src="js/qiniu/plupload.full.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/qiniu.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/qiniu_init.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/color/jscolor.js"></script>
+<script language="JavaScript">
+    new QiniuInit().upload({
+        browse_button:"img_upload",
+        drop_element:"container",
+        upload_status:"upload_status",
+        img_id:"img_id"
+    });
+     new QiniuInit().upload({
+        browse_button:"img_upload2",
+        drop_element:"container2",
+        upload_status:"upload_status2",
+        img_id:"img_id2"
+    });
+</script>
+{/literal}
+{include file="pagefooter.htm"}

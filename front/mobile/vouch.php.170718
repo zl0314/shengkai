@@ -1,0 +1,292 @@
+<?php
+
+/**
+ * ECSHOP mobile首页
+ * ============================================================================
+ * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * 网站地址: http://www.ecshop.com；
+ * ----------------------------------------------------------------------------
+ * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
+ * 使用；不允许对程序代码以任何形式任何目的的再发布。
+ * ============================================================================
+ * $Author: liuhui $
+ * $Id: index.php 15013 2010-03-25 09:31:42Z liuhui $
+*/
+
+define('IN_ECS', true);
+require(dirname(__FILE__) . '/includes/init.php');
+require(ROOT_PATH . 'includes/lib_order.php');
+require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/user.php');
+require_once(ROOT_PATH . 'languages/' . $_CFG['lang'] . '/shopping_flow.php');
+include_once('includes/cls_json.php');
+
+
+$act = empty($_REQUEST['act']) ? "index" : trim($_REQUEST['act']);
+/* 获取赛事列表 start */
+__load("GameService");
+$game_obj = new GameService();
+$game_list = $game_obj->get_list();
+if(!empty($game_id)){
+    $game = $game_obj->get_game($game_id);
+
+    $smarty->assign('game', $game);
+
+    //根据赛事自动查询城市
+    __load("RegionService");
+    $RegionService = new RegionService();
+    $schedule_id = $RegionService->get_schedule($game_id);
+
+    $smarty->assign('schedule_id', $schedule_id);
+}
+/* 获取赛事列表 end */
+$combo= $GLOBALS['db']->getALL('select * from sk_combo');
+$sportcat_list = $GLOBALS['db']->getAll('SELECT id,name FROM sk_sportcat where is_display=1');
+$smarty->assign('sportcat_list', $sportcat_list);
+/*
+ * 检查用户是否已经登录
+ * 如果用户已经登录了则检查是否有默认的收货地址
+ * 如果没有登录则跳转到登录和注册页面
+ */
+if ($_SESSION['user_id'] == 0) {
+    /* 用户没有登录且没有选定匿名购物，转向到登录页面 */
+    ecs_header("Location: login.php");
+    exit;
+}
+if ($act == "index") {
+    __load("CartService");
+    $cart_obj = new CartService();
+    $user_id = $_SESSION['user_id'];
+    $smarty->assign('lang', $_LANG);
+    $number=get_cart_num(SESS_ID);
+    $num = 0;
+    foreach ($number as $value){
+        $num += $value['goods_number'];
+    }
+    $smarty->assign('num',$num);
+    $smarty->assign('yuanquan',1);
+    //查询购物车数据
+    $cart_info = $cart_obj->get_cart_info();
+    $cart_sum = 0;
+    /* 检查购物车中是否有商品 */
+    $sql = "SELECT COUNT(*) FROM " . $ecs->table('cart') .
+        " WHERE session_id ='".SESS_ID."'";
+    if ($db->getOne($sql) == 0) {
+        $namel="<img src='images/logo.png'>";
+        $smarty->assign( 'name1',$namel);
+        mobile_show_message("购物车内没有商品", '', '', 'warning');
+    }
+    //检查库存
+    $res = check_cart_goods_number();
+    if (!empty($res)) {
+        $namel="<img src='images/logo.png'>";
+        $smarty->assign( 'name1',$namel);
+        mobile_show_message("库存不足,请重新选择商品", '', '', 'warning');
+    }
+    foreach ($cart_info as $value) {
+        $cart_sum += count($value);
+    }
+
+    if ($cart_sum == 0) {
+
+        $namel="<img src='images/logo.png'>";
+        $smarty->assign( 'name1',$namel);
+        mobile_show_message("购物车是空的", '', '', 'warning');
+    }
+    //查询当前用户属性是否为代理商
+    $user_id = $_SESSION['user_id'];
+    $type_info = get_user($user_id);
+    if($cart_info['ticket']['t']) {
+        foreach ($cart_info['ticket']['t'] as $v) {
+            $game_id = $v['game_id'];
+            $goods_id = $v['goods_id'];
+//            $number_id = $v['ticket_info']['number_id'];
+            if ($type_info == 0 && $game_id == 38) {
+//                $one_ticket_number = check_ticket_number(2,$game_id,$number_id);
+                $one_ticket_number = check_ticket_number(2,$goods_id);
+                if (!empty($one_ticket_number)) {
+                    mobile_show_message("每种球票最多预订2张", '', '', 'warning');
+                }
+                //查询当前用户所下订单中有几张球票
+                $user_id = $_SESSION['user_id'];
+                //统计订单中属于这个赛事下场次的球票
+                $number = count(get_order_info($user_id,$goods_id));
+                //查询用户购物车中购买得属于当前赛事的球票数量
+                $num = get_cart_info($goods_id, $user_id);
+                //统计订单和购物车中属于当前赛事的球票数量
+                $res = $number + $num;
+                //判断数量是否超过限制（超过限制提示信息）
+                if ($res > 2 && $user_id != 323) {
+                    mobile_show_message("单个用户最多购买两张相同球票", '', '', 'warning');
+                    exit;
+                }
+            } elseif ($type_info == 0 && $game_id != 38) {
+                $one_ticket_number = check_ticket_number_mobile(4,$goods_id);
+                if (!empty($one_ticket_number)) {
+                    mobile_show_message("每种球票最多预订4张", '', '', 'warning');
+                }
+                //查询当前用户所下订单中有几张球票
+                $user_id = $_SESSION['user_id'];
+                //统计订单中属于这个赛事的球票
+                $number = count(get_order_info($user_id,$goods_id));
+                //查询用户购物车中购买得属于当前赛事的球票数量
+                $num = get_cart_info($goods_id, $user_id);
+                //统计订单和购物车中属于当前赛事的球票数量
+                $res = $number + $num;
+                //判断数量是否超过限制（超过限制提示信息）
+                if ($res > 4) {
+//                    mobile_show_message("单个用户最多购买四张相同球票", '', '', 'warning');
+//                    exit;
+                }
+                if($res < 2){
+//                    mobile_show_message("单个用户最少购买两张相同球票", '', '', 'warning');
+//                    exit;
+                }
+                //查询当前赛事共卖了几张票
+                $game_ticket = count(get_order_ticket_number($user_id,$game_id));
+                //查询购物车中当前赛事的票的数量
+                $game_ticket_cart_num = count(get_cart_ticket_num($user_id,$game_id));
+                //统计当前赛事球票的数量
+                $number_ticket = $game_ticket + $game_ticket_cart_num;
+                //判断数量是否超过限制（超过限制提示信息）
+                if($number_ticket > 28){
+//                    mobile_show_message("单个赛事用户最多购买二十八张球票", '', '', 'warning');
+//                    exit;
+                }
+            }
+        }
+    }
+
+    //获取当前用户的默认地址
+    $default_address_id = get_default_address($user_id);
+    $smarty->assign('default_address', $default_address_id);
+    $smarty->assign("cart_money", $cart_obj->get_cart_money());
+    //收货地址
+    $user_address = get_address($user_id);
+    $card_type_text = array(0 => '身份证', 1 => '护照');
+    foreach ($user_address as $key => $value) {
+        $user_address[$key]['country_info'] = get_region_name($value['country']);
+        $user_address[$key]['province_info'] = get_region_name($value['province']);
+        $user_address[$key]['city_info'] = get_region_name($value['city']);
+        $user_address[$key]['district_info'] = get_region_name($value['district']);
+        $user_address[$key]['card_type_text'] = !empty($card_type_text[$user_address[$key]['card_type']])? $card_type_text[$user_address[$key]['card_type']]:'' ;
+    }
+    $smarty->assign('user_address_list', $user_address);
+    //获取购物车内的商品
+    $cart = $cart_obj->get_cart();
+    __load("CartService");
+    $cart_obj = new CartService();
+    $smarty->assign("cart_list", $cart_obj->get_cart_info());
+    $smarty->assign("cart_money", $cart_obj->get_cart_money());
+    //获取购物车内的套餐
+    $combo_info_cart = $cart_obj->get_cart_combo();
+    $smarty->assign('combo_info',$combo_info_cart);
+    /* 取得国家列表、商店所在国家、商店所在国家的省列表 */;
+    $smarty->assign('ticket_info', $cart['ticket']);
+    $smarty->assign('goods', $cart['goods']);
+    $smarty->assign('plane', $cart['plane']);
+    $smarty->assign('hotel', $cart['hotel']);
+    $namel="<img src='images/logo.png'>";
+    $smarty->assign( 'name1',$namel);
+    //此处判断是否是微信端
+    $user_agent = $_SERVER['HTTP_USER_AGENT'];
+    if (strpos($user_agent, 'MicroMessenger') === false) {
+        $smarty->assign('is_wx',false);
+    } else {
+        $smarty->assign('is_wx',true);
+    }
+    $smarty->display("vouch.html");
+    exit;
+}elseif ($act == "sub_goods") {
+    $json = new JSON();
+    $data = $json->decode($_POST['ambitus'], true);
+    __load("CartService");
+    $cart_obj = new CartService();
+    $cart_obj->add_goods_to_cart($data);
+    echo true;
+    die;
+}
+function get_address($user_id){
+    return $GLOBALS['db']->getAll("SELECT u.user_name,ud.* FROM " . $GLOBALS['ecs']->table("user_address") . "AS ud," . $GLOBALS['ecs']->table("users") . "AS u WHERE ud.user_id = $user_id AND u.user_id = ud.user_id");
+}
+function get_default_address($user_id)
+{
+    return $GLOBALS['db']->getOne("SELECT address_id FROM " . $GLOBALS['ecs']->table("users") . " WHERE user_id = $user_id");
+}
+/**
+ * @param $number 单场次最少可以买几张票
+ */
+function check_ticket_number($number,$goods_id)
+{
+    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('cart') . " WHERE session_id = '" . SESS_ID . "' AND goods_type='ticket' AND goods_number>$number AND goods_id=$goods_id";
+    return $GLOBALS['db']->getAll($sql);
+}
+function check_ticket_number_mobile($number,$game_id)
+{
+    $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('cart') .
+        " WHERE session_id = '" . SESS_ID . "' AND goods_type='ticket' AND goods_number>$number AND game_id=$game_id";
+    return $GLOBALS['db']->getAll($sql);
+}
+
+//获取用户购买的球票
+function get_order_info($user_id,$goods_id){
+    $sql = "SELECT ot.* FROM ".$GLOBALS['ecs']->table('order_info')."AS oi,".$GLOBALS['ecs']->table('order_ticket')."AS ot WHERE oi.user_id='".$user_id."' AND oi.order_id=ot.order_id AND oi.order_status != 2 AND ot.goods_id=$goods_id";
+    return $GLOBALS['db']->getAll($sql);
+}
+//获取用户购物车中的球票
+function get_cart_info($goods_id,$user_id){
+    $sql = "SELECT goods_number FROM ".$GLOBALS['ecs']->table('cart')." WHERE user_id='".$user_id."' AND  goods_id=$goods_id";
+    return $GLOBALS['db']->getOne($sql);
+}
+//获取用户的属性是否为代理商
+function get_user($user_id){
+    $sql = "SELECT type FROM sk_users WHERE user_id=$user_id";
+    return $GLOBALS['db']->getOne($sql);
+}
+
+//--hechengbin -- 查询赛事名称 --start
+function get_game_name($game_id){
+    $sql = "SELECT game_name FROM sk_game WHERE id=$game_id";
+    return $GLOBALS['db']->getOne($sql);
+}
+//查询当前赛事下的赛程
+function get_game_schedule($game_id){
+    $sql = "SELECT * FROM sk_schedule WHERE game_id=$game_id";
+    return $GLOBALS['db']->getAll($sql);
+}
+//查询赛程下的赛场
+function get_sched_number($schedule_id){
+    $sql = "SELECT * FROM sk_number WHERE sche_id=$schedule_id";
+    return $GLOBALS['db']->getAll($sql);
+}
+//统计赛场下的球票
+function get_goods_number($number_id){
+    $sql = "SELECT goods_id FROM sk_goods WHERE number_id=$number_id";
+    return $GLOBALS['db']->getAll($sql);
+}
+//查询购物车中球票属于哪个场次
+function get_cart_goods_number(){
+    $res = $GLOBALS['db']->getAll("SELECT * FROM sk_cart");
+    foreach($res as $k=>$v){
+        $sql = "SELECT number_id FROM " .$GLOBALS['ecs']->table('goods')." WHERE goods_id ='".$v['goods_id']."'";
+        $result[] = $GLOBALS['db']->getAll($sql);
+    }
+    echo "<pre>";
+    print_r($result);die;
+    return $result[0];
+}
+//判断购物车是否有商品
+function get_cart_num($sess){
+    $sql="SELECT c.* FROM sk_cart AS c WHERE c.session_id = '$sess' AND (c.goods_type = 'ticket' OR c.goods_type='goods' OR c.goods_type='plane' OR c.goods_type = 'combo')";
+    return $GLOBALS['db']->getAll($sql);
+}
+//查询当前赛事卖了几张票
+function get_order_ticket_number($user_id,$game_id){
+    $sql = "SELECT * FROM " .$GLOBALS['ecs']->table('order_info'). "AS oi," .$GLOBALS['ecs']->table('order_ticket')."AS ot,".$GLOBALS['ecs']->table('goods')."AS g WHERE oi.user_id=$user_id AND oi.order_id=ot.order_id AND ot.goods_id=g.goods_id AND g.game_id=$game_id";
+    return $GLOBALS['db']->getAll($sql);
+}
+//查询购物车中当前赛事有几张票
+function get_cart_ticket_num($user_id,$game_id){
+    $sql = "SELECT * FROM ".$GLOBALS['ecs']->table('cart'). " WHERE user_id=$user_id AND game_id=$game_id";
+    return $GLOBALS['db']->getAll($sql);
+}
+?>

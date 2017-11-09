@@ -1,0 +1,1279 @@
+<html>
+<head>
+    <title>{$page_title}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="X-UA-Compatible" content='IE=edge,chrome=1'/>
+    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="stylesheet" href="{$css_path}/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="{$css_path}/bootstrap/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{$css_path}/default.css">
+
+    <link rel="stylesheet" href="{$css_path}/flat-ui/flat-ui.css">
+    <link rel="stylesheet" href="{$css_path}/header2.css">
+    <link rel="stylesheet" href="{$css_path}/look-list.css">
+    <link rel="stylesheet" href="{$css_path}/base.css">
+    <link rel="stylesheet" href="{$css_path}/foot.css">
+    <link rel="stylesheet" href="{$css_path}/bootstrap-datetimepicker.min.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="{$css_path}/dialog/dialog.css"/>
+    <link rel="stylesheet" type="text/css" href="{$css_path}/dialog/dialog-sandra.css"/>
+    <link rel="stylesheet" type="text/css" href="{$css_path}/view.css"/>
+    <link rel="stylesheet" type="text/css" href="./assets/lib/bootstrap-datetimepicker-4.17.47/css/bootstrap-datetimepicker.css"/>
+
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <link rel="stylesheet" href="css/view.css" type="text/css"/>
+
+    <style type="text/css">
+    .select2-container-disabled.select-info .select2-choice, .select2-container-disabled.select-info .select2-choice:hover, .select2-container-disabled.select-info .select2-choice:focus, .select2-container-disabled.select-info .select2-choice:active {
+        background-color: #57a49f;
+    }
+    </style>
+</head>
+<body style="background:#EBEBEB;">
+    <!-- start:周边商品弹窗 -->
+    <!-- #BeginLibraryItem "/library/ambitus_info.lbi" --><!-- #EndLibraryItem -->
+    <!-- end:周边商品弹窗 -->
+    <!-- start:订机票弹窗 -->
+    <!-- #BeginLibraryItem "/library/plane_info.lbi" --><!-- #EndLibraryItem -->
+    <!-- end:订机票弹窗 -->
+    <!-- start:订酒店弹窗 -->
+    <!-- #BeginLibraryItem "/library/add_hotel.lbi" --><!-- #EndLibraryItem -->
+    <!-- end:订机票弹窗 -->
+    <!-- start:头部 -->
+    <!-- #BeginLibraryItem "/library/page_header.lbi" --><!-- #EndLibraryItem -->
+    <!-- end:头部 -->
+    <div id="container" class="">
+        <div id="main" class="search-list container-fluid">
+            <div class="row title looklist">
+                <div class="col-lg-3 col-md-3 col-sm-4 sysp">
+                    <div class="fl">
+                        <p>购物车</p>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-md-5 col-sm-4">
+                    <a href="javascript:void(0)" class="hotel" onclick="show_hotel()">订酒店</a>
+                    <a href="javascript:void(0)" class="jipiao" onclick="show_ticket()">订机票</a>
+                    <a href="javascript:void(0)" onclick="show_ambitus()" class="zbsp">官方纪念品</a>
+                </div>
+                <div class="col-lg-3 col-md-2 col-sm-2">
+                    <p class="allprice">合计<span class="prices"><i style="font-size:16px;">￥</i>{$cart_money.all}</span></p>
+                </div>
+                <div class="col-lg-1 col-md-2 col-sm-2">
+                    <a href="javascript:void(0)"  onclick="check_cart('{$user_id}', '{$game_id}', '{$cart_num}')"
+                       class="btn btn-block btn-lg btn-danger jiesuan">结算</a>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="listcont hidden-sm hidden-xs">
+                <!-- start:赛场赛事 -->
+                <div class="saishi container-fluid">
+                    {foreach from=$cart_list.combo item=combo}
+                    <div class="lable">
+                        <label class="checkbox biao">
+                            <p class="qiubiao"><img src="{$combo.combo_info.combo_logo}"/></p>
+                            &nbsp;&nbsp;{$combo.goods_name}
+                        </label>
+                    </div>
+                    <div class="ticket_list" style="margin-top:20px;">
+                        <div class="row" style="margin-left:0px;">
+                            <div class="col-md-11" style="padding:0px;">
+                                <div class="fl group" style="padding:0px; display: inline-flex;">
+                                    <div>
+                                        <div class="pic">
+                                            <img src="{$combo.combo_info.combo_logo}"/>
+                                            <!--<p class="num">{$ticket.ticket_info.numbers}</p>-->
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin-left:130px; overflow:hidden;">
+                                    <div class="col-md-12 group_cont">
+                                        <div class="group_center">
+                                            <div class="top">
+                                                <h2 class="col-lg-2 col-md-3 game-name fl" style="width:410px;">{$combo.goods_name}</h2>
+                                                <div class="col-lg-3 col-md-1 fr" style="padding-right:0px;">
+                                                    <div class="price">
+                                                        <p class="fl" style="font-size:13px;color:#343434;margin-top:2px;">
+                                                            <i style="font-szie:12px;">￥</i><strong>{$combo.goods_price}</strong>&nbsp;X&nbsp;
+                                                        </p>
+                                                        <b class="fl" style="font-size:20px;color:#002561">{$combo.goods_number}&nbsp;=</b>
+                                                        <span class="fl"
+                                                              style="font-size:20px;color:#343434;margin-left:5px;"><i
+                                                                style="font-size:14px;">￥</i>{$combo.combo_money}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clear"></div>
+                                            <!-- style="height: 100%;" -->
+                                            <div class="center" style="min-height:300px">
+                                                <ul class="fl">
+                                                    <li class="package">{$combo.combo_info.combo_title}</li>
+                                                    <li class="package">{$combo.combo_info.combo_intro}</li>
+                                                    <!--<li class="time">{$ticket.ticket_info.num_start}</li>-->
+                                                </ul>
+
+                                            </div>
+                                            <div class="clear"></div>
+                                            <!--<div class="bottom">-->
+                                            <!--<div class="fl xianshi">-->
+                                            <!--<button style="cursor:auto;" class="btn btn-default fl huangjin">-->
+                                            <!--<img src="{$ticket.ticket_info.seat_logo}"/>-->
+                                            <!--</button>-->
+                                            <!--&lt;!&ndash;{foreach from=$ticket.ticket_info.keywords item=keyword}&ndash;&gt;-->
+                                            <!--<p class="fl">{$keyword}</p>-->
+                                            <!--&lt;!&ndash;{/foreach}&ndash;&gt;-->
+                                            <!--</div>-->
+                                            <!--<div class="button fr">-->
+                                            <!--<a href="javascript:void(0)" class="detail-info" target="_self"-->
+                                            <!--onclick="show_info({$ticket.goods_id})">详细信息&nbsp;&nbsp;<img-->
+                                            <!--src="themes/sk_themes/images/bottomdot.png"-->
+                                            <!--id="img{$ticket.goods_id}"></a>-->
+                                            <!--</div>-->
+                                            <!--</div>-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1 shanchu">
+                                <dl class="red">
+                                    <dt>
+                                        <a href="view.php?act=remove_cart&type=combo&cart_id={$combo.rec_id}&combo_id={$combo.combo_info.combo_id}"><img
+                                                src="images/shanchu.png"></a>
+                                    </dt>
+                                    <dd>
+                                        <a href="view.php?act=remove_cart&type=combo&cart_id={$combo.rec_id}&combo_id={$combo.combo_info.combo_id}">删除</a>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                    {/foreach}
+                </div>
+                <div class="saishi container-fluid">
+                    <!-- start:赛事 -->
+                    <!--{foreach from=$cart_list.ticket.game_info item=game}-->
+                    <div class="lable">
+                        <label class="checkbox biao">
+                            <p class="qiubiao"><img src="{$game.game_logo}"/></p>
+                            &nbsp;&nbsp;{$game.game_name}
+                        </label>
+                    </div>
+                    <!--{foreach from=$cart_list.ticket.t item=ticket}-->
+                    <!--{if $game.id==$ticket.game_id}-->
+                    <div class="ticket_list" style="margin-top:20px;">
+                        <div class="row" style="margin-left:0px;">
+                            <div class="col-md-11" style="background:#{$ticket.ticket_info.color_value};padding:0px;">
+                                <div class="fl group" style="padding:0px; display: inline-flex;">
+                                    <div>
+                                        <div class="pic">
+                                            <img src="{$ticket.ticket_info.big_pitch_img}"/>
+                                            <p class="num">{$ticket.ticket_info.numbers}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="margin-left:130px; overflow:hidden;">
+                                    <div class="col-md-12 group_cont">
+                                        <div class="group_center">
+                                            <div class="top">
+                                                <h2 class="col-lg-2 col-md-3 game-name fl"
+                                                    style="color:#{$ticket.ticket_info.color_value};width:410px;">{$ticket.goods_name}</h2>
+
+                                                <div class="col-lg-3 col-md-1 fr" style="padding-right:0px;">
+                                                    <div class="price">
+                                                        <p class="fl" style="font-size:13px;color:#343434;margin-top:2px;">
+                                                            <i style="font-szie:12px;">￥</i><strong>{$ticket.goods_price}</strong>&nbsp;X&nbsp;
+                                                        </p>
+                                                        <b class="fl" style="font-size:20px;color:#002561">{$ticket.goods_number}&nbsp;=</b>
+                                                        <span class="fl"
+                                                              style="font-size:20px;color:#343434;margin-left:5px;"><i
+                                                                style="font-size:14px;">￥</i>{$ticket.ticket_money}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clear"></div>
+                                            <div class="center">
+                                                <ul class="fl">
+                                                    <li class="fstadium"><img src="{$ticket.ticket_info.pitch_img}"/>
+
+                                                        <p>{$ticket.ticket_info.pitch_name}</p></li>
+                                                    <li class="region">{$ticket.ticket_info.region_name}</li>
+                                                    <li class="time">{$ticket.ticket_info.num_start}</li>
+                                                </ul>
+
+                                            </div>
+                                            <div class="clear"></div>
+                                            <div class="bottom">
+                                                <div class="fl xianshi">
+                                                    <!--<button style="cursor:auto;" class="btn btn-default fl huangjin">
+                                                        <img src="{$ticket.ticket_info.seat_logo}"/>
+                                                    </button>-->
+                                                    <!--{foreach from=$ticket.ticket_info.keywords item=keyword}-->
+                                                    <p class="fl">{$keyword}</p>
+                                                    <!--{/foreach}-->
+                                                </div>
+                                                <div class="button fr">
+                                                    <a href="javascript:void(0)" class="detail-info" target="_self"
+                                                       onclick="show_info({$ticket.goods_id})">详细信息&nbsp;&nbsp;<img
+                                                            src="themes/sk_themes/images/bottomdot.png"
+                                                            id="img{$ticket.goods_id}"></a>
+                                                    <!--<a class="detail-info"
+                                                       onclick="select_hotel('add_hotel', '{$ticket.ticket_info.region_id}', '{$ticket.rec_id}')">预订酒店&nbsp;&nbsp;<img
+                                                            src="themes/sk_themes/images/bottomdot.png"
+                                                            id="img{$ticket.goods_id}"></a>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1 shanchu">
+                                <dl class="red">
+                                    <dt>
+                                    <a href="view.php?act=remove_cart&type=ticket&cart_id={$ticket.rec_id}&game_id={$game_id}"><img
+                                            src="images/shanchu.png"></a>
+                                    </dt>
+                                    <dd>
+                                        <a href="view.php?act=remove_cart&type=ticket&cart_id={$ticket.rec_id}&game_id={$game_id}">删除</a>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-11 xiangxicont" id="show_info{$ticket.goods_id}" style="display:none">
+                            <div class="col-lg-4">
+                                <img src="{$ticket.ticket_info.seat_picture}"/>
+                            </div>
+                            <div class="col-lg-4">
+                                <h4>座位信息及等级</h4>
+                                <p>{$ticket.ticket_info.seat_text}</p>
+                                <ul>
+                                    <li></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-4">
+                                <h4>票务信息</h4>
+
+                                <p>{$ticket.ticket_info.ticket_business}</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-1"></div>
+                    </div>
+                    <!--{/if}-->
+                    <!--{/foreach}-->
+                    <!--{/foreach}-->
+                </div>
+
+                <!--{if $cart_list.hotel }-->
+                <div class="list">
+                    <div class="search-result" style="">
+                        <!-- start:酒店预订 -->
+                        <div class="line">
+                            <div class="jipiaoyd container-fluid" style="display:block;">
+                                <div class="lable">
+                                    <label class="checkbox">
+                                        <p class="huiji"><img src="images/huiji.png"/></p>
+                                        &nbsp;&nbsp;酒店预订
+                                    </label>
+                                </div>
+
+                                <!--{if $cart_list.hotel }-->
+                                <!-- start:酒店预订 -->
+                                <!--{foreach from=$cart_list.hotel item=hotel}-->
+                                <div class="row" style="margin-top:15px;margin-left:0;" id="">
+                                    <!-- <div class="col-md-1 gouxuan">
+                                    </div> -->
+                                    <div class="col-md-11" style="background:#0E417D;padding:0px;">
+                                        <div class="fl ydjd" style="padding:20px 0px;">
+                                            <dl>
+                                                <dt><img src="images/ydjd.png"/></dt>
+                                                <dd>预订酒店</dd>
+                                            </dl>
+                                            <div style="display: none;">
+                                                <p style="color:#8dacd1;margin-top:10px;">即送</p>
+                                                <dl>
+                                                    <dt style="margin-top:10px;"><img src="images/cs.png"/></dt>
+                                                    <dd style="color:#8dacd1;font-size:12px;">官方接驳服务</dd>
+                                                </dl>
+                                            </div>
+                                        </div>
+                                        <div style="margin-left:130px;overflow:hidden;">
+                                            <div class="col-md-12 jiudian" style="padding-left:0px;padding-right:0px;">
+                                                <div class="row">
+
+                                                    <div class="col-md-12 fl fancheng">.
+                                                        <div class="col-sm-10 xiugai">
+                                                            <div class="xgxingji">
+                                                                <p style="width: auto;">{$hotel.hotel_info.hotel_name}</p>
+                                                            </div>
+
+                                                            <div class="fangjianxinxi">
+                                                                <p>{$hotel.room_type}<s>¥{$hotel.goods_price}/天</s></p>
+                                                            </div>
+                                                            <div class="zfriqi">
+                                                                <p class="fl">入住日期<br/><s>{$hotel.hotel_start_date}</s></p>
+
+                                                                <p class="fl" style="margin-left:30px;">退房日期<br/><s>{$hotel.hotel_end_date}</s>
+                                                                </p>
+                                                            </div>
+                                                            <div class="shuliang-blue" style="width:100%;float:left;margin-left:0;border-bottom:1px solid #ccc;">
+                                                                <p style="float:left;">数量:</p>
+
+                                                                <div class="slform">
+                                                                    <!--<div class="fl hao"><a href="">-</a></div>-->
+                                                                    <div class="fl"><input
+                                                                            style="background: #e4f0ff;padding-bottom:4px;outline:none;border:none;"
+                                                                            readonly="readonly" type="text"
+                                                                            value="{$hotel.goods_number}">
+                                                                    </div>
+                                                                    <!--<div class="fl hao"><a target="_self" href="">+</a></div>-->
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-2 fr">
+                                                            <p style="float:right;font-size:18px; color:#343434;">￥<s
+                                                                    style="font-size:24px; font-weight:bold;">{$hotel.money}</s>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 shanchu">
+                                        <dl class="red">
+                                            <dt>
+                                                <a href="view.php?act=remove_cart&type=hotel&cart_id={$hotel.rec_id}&game_id={$game_id}"><img
+                                                        src="images/shanchu.png"></a>
+                                            </dt>
+                                            <dd>
+                                                <a href="view.php?act=remove_cart&type=hotel&cart_id={$hotel.rec_id}&game_id={$game_id}">删除</a>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                                <!--{/foreach}-->
+                                <!-- end:酒店预订 -->
+                                <!--{/if}-->
+                            </div>
+                        </div>
+                        <!-- end:酒店预订 -->
+                    </div>
+                </div>
+                <!--{/if}-->
+
+
+                <!--{if $cart_list.plane }-->
+                <div class="list">
+                    <div class="search-result" style="">
+                        <!-- start:机票预订 -->
+                        <div class="line">
+                            <div class="jipiaoyd container-fluid" style="display:block;">
+                                <div class="lable">
+                                    <label class="checkbox">
+                                        <p class="huiji"><img src="images/huiji.png"/></p>
+                                        &nbsp;&nbsp;机票预订
+                                    </label>
+                                </div>
+                                <!--{foreach from=$cart_list.plane item=plane key=key}-->
+                                <div class="row" style="margin-left:0px;">
+                                    <div class="col-md-11" style="background:#0E7D76;padding:0px;">
+                                        <div class="fl group" style="padding:0px;">
+                                            <div>
+                                                <div class="pic">
+                                                    <img src="images/huiji.png"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div style="margin-left:130px;overflow:hidden; border: 3px solid #0E7D76">
+                                            <div class="col-md-12 group_cont">
+                                                <div class="group_center">
+                                                    <div class="top">
+                                                        <h2 class="col-lg-2 col-md-3 game-name fl" style="color:#0E7D76;">
+                                                            {$plane.air_line.title}
+                                                            {$plane.air_info.flight}</h2>{$plane.space_name}
+                                                        <div class="col-lg-2 col-md-1"></div>
+                                                        <div class="col-lg-3 col-md-3">
+                                                            {$plane.fly_date} 去, {$plane.return_fly_date}返
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-3 fr">
+                                                            <div class="price">
+                                                                <p class="fl" style="font-size:13px;color:#343434;margin-top:2px;">
+                                                                    <i style="font-size:12px;">￥</i><strong>{$plane.air_line.price}</strong>&nbsp;X&nbsp;
+                                                                </p>
+                                                                <b class="fl" style="font-size:20px;color:#002561">{$plane.goods_number}&nbsp;=</b>
+                                                                <span class="fl" style="font-size:20px;color:#343434;margin-left:5px;"><i style="font-size:14px;">￥</i>{$plane.money}</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clear"></div>
+                                                    <div class="bottom">
+                                                        <div class="col-lg-1 col-md-2 game-name" style="color:#0E7D76;">
+                                                            去程
+                                                        </div>
+                                                        <div class="col-lg-7 col-md-7 game-name" style="color:#0E7D76;">
+                                                        <ul class="fl">
+                                                            {foreach from=$plane.air_info[1] item=air_ticket}
+                                                            <li class="region">
+                                                                航班{$air_line_type}:{$air_ticket.flight} {$air_ticket.fly_time} {$air_ticket.from_city|address}&nbsp;-&gt;&nbsp;{$air_ticket.to_city|address}
+                                                                <br>
+                                                                &nbsp;
+                                                            </li>
+                                                            {/foreach}
+                                                        </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="clear"></div>
+                                                    <div class="bottom">
+                                                        <div class="col-lg-1 col-md-2 game-name" style="color:#0E7D76;">
+                                                            返程
+                                                        </div>
+                                                        <div class="col-lg-7 col-md-7 game-name" style="color:#0E7D76;">
+                                                        <ul class="fl">
+                                                            {foreach from=$plane.air_info[2] item=air_ticket}
+                                                            <li class="region">
+                                                                航班{$air_line_type}:{$air_ticket.flight} {$air_ticket.fly_time} {$air_ticket.from_city|address}&nbsp;-&gt;&nbsp;{$air_ticket.to_city|address}
+                                                                <br>
+                                                                &nbsp;
+                                                            </li>
+                                                            {/foreach}
+                                                        </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-1 shanchu">
+                                        <dl class="red">
+                                            <dt>
+                                            <a href="view.php?act=remove_cart&type=plane&cart_id={$plane.rec_id}&game_id={$game_id}"><img
+                                                    src="images/shanchu.png"></a></dt>
+                                            <dd>
+                                                <a href="view.php?act=remove_cart&type=plane&cart_id={$plane.rec_id}&game_id={$game_id}">删除</a>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                                <p><br/></p>
+                                <!--{/foreach}-->
+                            </div>
+                        </div>
+                        <!-- end:机票预订 -->
+
+                    </div>
+                </div>
+                <!--{/if}-->
+                <!--{if $cart_list.goods}-->
+                <!-- start:周边商品 -->
+                <div class="line">
+                    <div class="zhoubiansp container-fluid" style="display:block;">
+                        <div class="lable">
+                            <label class="checkbox">
+                                <p class="zhoubian"><img src="images/zbsp2.png"/></p>
+                                &nbsp;&nbsp;官方纪念品
+                            </label>
+                        </div>
+                        <div class="row" style="margin-left:0px;">
+                            <div class="col-md-11 zbyellow" style="padding-left:0px;padding-right:0px;">
+                                <div class="fl feiji">
+                                    <img src="images/zbsp2.png"/>
+                                </div>
+                                <div style="margin-left:130px;overflow:hidden;">
+                                    <div class="col-md-12 zbspall" style="padding-left:0px;padding-right:0px;">
+                                        <div class="row">
+                                            <div class="col-md-12 fl">
+                                                <div class="col-sm-10">
+                                                    <div class="zbsp-detail">
+                                                        <!--{foreach from=$cart_list.goods_cart item=goods}-->
+                                                        <div class="shangpin01 last">
+                                                            <h2>{$goods.goods_info.goods_name}</h2>
+
+                                                            <div class="fl left">
+                                                                <img src="{$goods.goods_info.goods_img}"/>
+                                                            </div>
+                                                            <div class="fr right" style="margin-top:0px;">
+                                                                <!--{foreach from=$goods.info item=info}-->
+                                                                <div class="xinghao">
+                                                                    <div class="fr">
+                                                                        <p class="fl">
+                                                                            {$info.attr_value}<s>￥{$info.goods_price}</s>
+                                                                        </p>
+                                                                        <div class="slform2 fl" style="background:transparent;width:auto;">
+                                                                            <div style="float:left;color:#dca00f;">数量:</div>
+                                                                            <div class="fl" style="background:transparent;">
+                                                                                <input style="background:transparent;" type="text" value="{$info.goods_number}" readonly="readonly"/></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <!--{/foreach}-->
+                                                            </div>
+                                                        </div>
+                                                        <!--{/foreach}-->
+
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2 fl">
+                                                    <p class="zongjia">￥<s>{$cart_money.goods}</s></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-1 shanchu">
+                                <dl class="red">
+                                    <dt><a href="view.php?act=remove_cart&type=goods&cart_id=0&game_id={$game_id}"><img
+                                            src="images/shanchu.png"></a></dt>
+                                    <dd><a href="view.php?act=remove_cart&type=goods&cart_id=0&game_id={$game_id}">删除</a>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end:周边商品 -->
+                <!--{/if}-->
+            </div>
+            <!-- end:赛场赛事 -->
+
+        </div>
+    </div>
+    <!-- #BeginLibraryItem "/library/page_footer.lbi" --><!-- #EndLibraryItem -->
+
+    <div id="somedialog" class="dialog">
+        <div class="dialog__overlay"></div>
+        <div class="dialog__content">
+            <div style="width: 100%;text-align: center;font-weight:bold;">
+                <p>用户购买协议及持票人须知</p>
+            </div>
+            <div class="xieyi">
+<pre align="left">
+1. 本协议为购买人在盛开国际旅行社在线票务商城(网址:webshop.shankaisports.com,以下简称为“本站”)购买相关商品（包括比赛门票、赛事接待套餐等）与北京盛开国际旅行社有限公司(以下简称为“盛开国际旅行社”)之间签订的协议。
+    2. 请购买人仔细阅读本购买协议。如果购买人按要求提供了相关信息、对所购买的产品成功提交订单并支付费用, 即表示购买人接受购票人须知的各项规定并同意本协议各项条款的约定,双方于网上签订的电子合同成立;如该购买意向得到了相关权利人的同意并由盛开国际旅行社根据购买人所提供的电子邮箱通知购买人后,该合同生效;如该购买意向得不到相关权利人同意,盛开国际旅行社将全额退还所付款项,合同撤销,盛开国际旅行社不承担包括利息在内的其他任何责任。
+3. 盛开国际旅行社根据赛事权利人的官方授权在本站自行销售或作为权利人的代理商在本站销售比赛门票、赛事接待套餐等。比赛门票、赛事接待套餐的内容因赛事不同而异,实际购买的商品详情请到“个人中心-购买信息”中查看。如赛事权利人要求直接与购买人签订赛事门票的协议,购买人同意签署该协议,盛开国际旅行社将行使赛事相关权利人代理商的相关职责。
+4. 本站销售的比赛门票、赛事接待套餐属于《消法》第二十五条规定的根据商品性质并经消费者在购买时确认不宜退货的商品,不适用七日内无理由退货。
+5. 除比赛门票、赛事接待套餐外,如有必要,本网站推荐一些与之配套的交通、住宿、旅游产品,购买人可在自愿的基础上与旅行社签署这类产品的服务合同,盛开国际旅行社给予必要的协助。
+6. 购买人义务 1) 观赛持票人所提供的证件及相关身份资料必须真实有效,且由该持票人使用该赛事门票; 2) 自行及时办理旅行证件、签证、国际机票,应保证自备证件、签证、国际机票符合旅行要求,自行承担逾期所导致的损失和责任; 3) 应确保自身身体条件能够完成观赛活动,并有义务在签订本合同时将自身健康状况告知; 4) 应告知参与人员并使之了解本合同中涉及观赛人员权利义务的相关条款。 5) 应于行程中妥善保管自己的行李物品和证件,贵重物品应随身携带,或采取存放于酒店保险箱等保护措施。由于购买人自身原因损坏、丢失或影响行程的,责任自负。 6) 应尊重目的地的各种法规、宗教信仰、民族习惯和风土人情以及国际足联观赛的所有规定,在观赛活动中应遵守观赛纪律,服从现场工作人员的指挥。 7) 在行使权利的同时,不得损害国家的、社会的、集体的利益和他人的合法权利; 8) 一旦购票成功,根据赛事组织票务销售的有关条款将不得退换; 9) 未经盛开国际旅行社批准,购买人无权向第三方转让所购得比赛门票、赛事接待套餐等, 购买人亦不得加价出售所购比赛门票、赛事接待套餐; 10) 应遵守相关权利人颁布的购买人须知。
+7. 盛开国际旅行社权利义务 1) 应当本着谨慎、周到的原则为购买人提供服务,除特别约定外盛开国际旅行社提供的服务不得低于合同约定标准; 2) 对有可能危及购买人人身、财物安全的项目,应当向购买人做出真实的说明和明确的警示,对当地可能引起购买人误解或产生冲突的法律规定、风俗习惯、宗教信仰等,应事先给购买人以明确的说明和忠告; 3) 接受购买人委托时提示购买人自愿购买观赛期间的个人保险, 包括但不限于退票险; 4) 如安排实际购买服务以外需要收费的项目,必须事先征得购买人同意; 5) 应协助购买人提供办理签证所需与比赛门票、赛事接待套餐相关的文件; 6) 保证已获得所销售的比赛门票、赛事接待套餐之合法授权并不侵犯任何人的权利,否則须即時退还购买人已支付的全部款项并赔偿购买人之所有损失及費用; 7) 在网站上公布由相关权利人提供的购买人须知信息。
+8. 购买人违约责任 购买人违反本合同的约定或相关权利人制定的购买人须知的规定,需承担相应的违约责任且盛开国际旅行社不因此退还任何已付款项。
+9. 盛开国际旅行社违约责任 盛开国际旅行社所销售的比赛门票、赛事接待套餐所包含的服务应合法、有效,并能保证购买人持票人员能享受到与购买商品相适应的服务(因购买人的原因无法享受的情况除外);否则,盛开国际旅行社应赔偿购买人因此遭受的损失。 1
+0. 第三方责任 由于出入境管理局、各国领馆、航空公司、保险公司、及其他有关机构等不可归责于盛开国际旅行社的原因导致购买人人身、财产权益受到损害的,包括但不限于,航班 延误或取消、护照延期、签证拒签或未按时出签、不得出入境等,应由购买人自行协商解决,盛开国际旅行社除在力所能及的范围内予以协助外,不再承担其他责任。 1
+1. 赛事的推迟、取消等 赛事可能会因为不可抗力、安全、权力当局的决定等原因变更比赛时间、日期和地点,也可能因为各种原因被取消、放弃、延期和重赛。在这种情况下: 1)盛开国际旅行社按赛事权利人的票务政策办理,只退还该项赛事的门票款项,不承担利息、旅行、住宿等其他费用的退款责任; 2) 在比赛推迟的情况下,赛事款待门票套餐仍然有效,故不款。 1
+2. 旅游意外、旅游保险及赔偿 如属购买人自身疾病、个人过错、及在自行活动期间内发生的人身财物损害,盛开国际旅行社不承担任何直接或连带责任;但在理赔过程中,盛开国际旅行社可给予必要协助。 1
+3. 保密条款 在履行本合同中可能被盛开国际旅行社或盛开国际旅行社人员知晓的关于购买人的业务信息、文件、资料、数据或者客户,包括但不限于本协议的存在及其条款,在本协议中都应被认为是购买人的商业秘密,未经购买人事先的书面同意,盛开国际旅行社不能使用,也不能在本协议履行期间或终止之后的任何时候对外传播或者泄漏给本协议以外的第三方。 未经购买人事先书面同意,盛开国际旅行社不得以任何形式向本协议以外的第三方告知或宣传盛开国际旅行社于本协议项下所提供的服务及其内容。如盛开国际旅行社违反本条约定,购买人有权提前终止本协议,并有权依法要求盛开国际旅行社承担赔偿责任。 1
+4. 争议解决和法律适用 任何由本协议产生的或与本协议有关的争议应通过双友好协商解决。当一方向另一方发出书面协商通知,协商应立即开始进行。如果在该通知发出后九十(90)天内争议仍无法得到解决,任何一方可向北京市朝阳区人民法院提起诉讼。本合同的订立、效力、解释、履行及争议的解决,均受中华人民共和国法律管辖。
+贵宾款待计划的持票人须知
+一、  前  言
+1.范围 以下持票人须知的规定用以管理购买和使用2018年俄罗斯世界杯官方款待计划门票的流程。 该须知适用于任何客户和持票者。 申请人在接受此持票人须知的规定之后（参见条款四）才能购买官方款待计划。持票人必须仔细阅读、自愿接受并始终遵守此条款的内容及球场的相关规定。如果本条款内容与球场规定出现冲突，应当优先遵守本条款的各项内容。 2．定义 协议书：根据条款四的相关规定，客户同意受本须知的约束为购买官方款待计划而签订的协议。 申请人：任何申请购买官方款待计划的个人，无论是以自身名义还是代表当事人。 客户：根据本持票人须知的规定，签订购票协议的个人或其他法人实体。如果涉及商业实体，“客户”应包含订单申请人正式授权的该实体的代表。 禁止人员包括： （1）俄罗斯法律规定下受足球行政或司法禁令禁止的个体； （2）国际足联已知的或有充分理由认定的受国际足联成员组织、国际足联等管理机构禁令禁止观看和参加足球比赛，或去场馆观看比赛的个体； （3）被球迷俱乐部或国家足球队的官方球迷俱乐部取消成员资格（或在世界上任何一个国家的司法规定下，被足球管理机构取消同等官方球迷俱乐部成员资格）的个体。 （4）国际足联成员组织已知的或有充分理由认定的参与(或直接间接促进)播出未授权广告、提供、销售或转让球赛或其他体育赛事的门票或票务套餐的个体及法人实体。  最后的销售期限：始于FIFA 2018首场比赛的前一个月。 嘉宾：陪同客户的亲属、朋友、员工、同事、商业客户或其他观赛的人员，他们的比赛门票和通行证可以由客户依照本条款移交。 款待设施：在整个球场的经营场所或球场的附近进行官方款待活动的场所，需要比赛门票或通行证才准入。款待设施根据当事人购买的款待套餐的种类有所不同。 比赛：FIFA 2018的任何一场比赛。 比赛门票：为客户提供的（依照本须知规定），使持票人并获得授权可以占用球场的规定坐席观看比赛的票证。 官方销售机构：由Match Hospitality或国际足联指定的可以在申请人所在地进行款待套餐营销、推广的销售代理。 订单：由想购票的申请人提交给Match Hospitality的订单，格式需符合Match Hospitality的要求。该订单应具体标明当事人需要的套餐数量、种类、价格及当事人的具体信息（详见条款四）。依照条款
+4.7的规定，只有当Match Hospitality确认后，该订单才具有法律效力。 套餐：由Match Hospitality为2018世界洲杯提供的款待套餐，包含比赛门票和通行证。详情请登录国际足联官网查询，Match Hospitality对相关信息也会实时更新。 通行证：准许持票人进入相应等级接待设施的证件。 产品：由Match Hospitality为比赛提供的套餐。参考本条款时，在本须知中“套餐”和“产品”可互指。 退款政策：比赛出现延期、弃权或取消情况下，适用于客户的退款政策。退款政策请参见国际足联官网。 销售：根据须知的规定签署协议后对款待套餐的销售。 球场：比赛进行的场所或相关场所以及由国际足联管理的其他持比赛门票或通行证方可进入的区域。 球场管理规则：有效力的2018世界杯的球场规则任何时候都具有法律效力。登陆国际足联官方网站可查询最新版本。 持票人须知：规范套餐购买及使用流程的全部持票人须知。 持票人：任何依照规定的条款，实际和合法拥有比赛门票及通行证的个体（包括客户和嘉宾）。2018世界杯官方款待计划网上商城: FIFA向公众开放官方网上商城，以便直接通过FIFA 购买套餐。 国际足联网站: 官网是www.fifa.com（包括2018世界杯杯官方款待计划的相关网页）。 二、  款待套餐的销售
+3.套餐选项及权益
+3.1 根销售情况，国际足联官网提供不同的套餐选项。
+3.2 Match Hospitality具有单方面更改套餐的范围、内容及形式的权利，也有权在任何时间以任何理由（包括但不仅限于保护公众安全的理由）提供额外的套餐选择。如果更改发生在当事人已购买套餐的情况下，Match Hospitality将会通过当事人在订单中提供的联系方式，尽快告知对方。
+3.3 国际足联官网上所有套餐的价格均以美元结算。关于增值税的具体信息将公布在国际足联官方网站上或通知到客户（例如，标注在发票上）。增值税由客户负担。
+3.4 客户在购买套餐时必须遵守以下购买条件： A．关于贵宾包厢套餐，不同贵宾包厢的容客量会有所差异，我们只整体销售； B．在提供桌餐的情况下，如果您购买少于10人的套餐（或者大于10，但不成倍数or a number greater than 10 but not a multiple thereof）则可能需在相同款待区与其他顾客或嘉宾共享一张桌子。 C. 关于不含贵宾包厢的套餐，您必须购买至少两款产品。 Match Hospitality保留在任何时候单方面增加、修改或放弃上述购买条件的权利。此外，Match Hospitality会及时通知顾客适用于某一产品的新增加的购买条件。 关于贵宾包厢套餐，Match Hospitality也将保留在同一球场变更既定包厢位置的权利。Match Hospitality会尽最大的努力提前告知顾客相关变更信息。
+3.5. 关于订单，Match Hospitality不承担以下责任： A．申请人在订单中提供的信息不正确或不完整； B．互联网的技术故障、计算机软硬件的故障或其他任何用于提交订单的通讯手段技术故障（不包括由Match Hospitality的严重疏忽或故意不当行为导致的）导致Match Hospitality没有收到订单或收到的订单不完整。 （4、5、6部分只适用在欧足联网上商城购买款待门票的情况，故省略。） 三、  款待套餐的使用说明 7．比赛门票及通行证的使用说明
+7.1.如需将比赛门票转让给其他宾客，需要做以下保证： A．门票仅被当事人用于个人或公司目的； B．此转让不产生任何对价。
+7.2.转让人应当全权负责把比赛门票交给客户并确保其知晓、同意遵守相关持票人须知。尤其注意，转让人应为他们的客户提供一份纸质条款并保证客户会遵守该条款。
+7.3.除条款中明确允许的以外，严禁未经Match Hospitality或国际足联的事先书面批准转售或转让比赛票、通行证或套餐的其他任何部分。违反本须知取得的比赛票或通行证均无效，并且与之相关的所有权利将被撤销。任何违反本须知规定取得比赛门票或通行证的人，且企图借此非法入场的人将不准入、被驱逐并接受法律制裁。 每一位持票人，当知晓所购款待套餐（比赛门票或通行证）没有经过授权销售时，应当上报Match Hospitality或者国际足联等相关主管机构。
+7.4.款待套餐，比赛门票或通行证不应用于： A.任何推销、广告、募集资金、拍卖或类似目的； B．作为任何比赛，抽奖活动、彩票的奖品（或奖品的一部分）； C.作为商品或服务组合的一部分捆绑销售； D．作为旅行或款待套餐的一部分捆绑销售（例如，与航班，酒店，比赛门票，通行证捆绑）。 为避免歧义，任何持票人不得场馆内或款待设施内展示任何商业品牌。如果有理由相信会出现隐性营销行为，Match Hospitality或国际足联有权利分散持票人群体。
+7.5. 持票人不应当： A．从事任何与Match Hospitality,国际足联,2018世界洲杯或任何与比赛相联系的广告或宣传推广活动； B．在体育场或接待设施的任何地方，销售或供应、宣传、分发、提供产品或服务，以及通过穿着带有明显商业信息的衣服或带进有明显商业信息的物品进体育场或其他接待场所。 C．通过门票或通行证进行营销或宣传活动，包括但不局限于展示任何客户的公司名称，标志等。
+7.6.所有比赛的门票或通行证属于Match Hospitality或国际足联所有。仅在客户完全遵守本须知的情况下为其使用。
+8.入场 8.
+1.允许进入体育场的时间将通知到客户或在国际足联网站上公布。 8.2．进入体育场和相关接待设施应:     A.遵守:       I．持票人须知；       Ⅱ.体育场规定；       Ⅲ.所有当前和未来的有关体育场馆管理、赛事参与、门票使用、体育场馆一般安全的法律(包含健康和安全需要)、地方法则、条例、命令、指示。还包括警察、消防大队、主办方及其他对赛事场馆有管辖权的机构的规定。       Ⅳ. Match Hospitality的和国际足联的指示、准则和政策(包括适用于接待场所的禁烟政策);     B.每一个人(不论年龄)都必须出示有效的比赛门票和通行证才允许进入赛场。根据需要，可能还要提供包含照片和签名的有效身份证件(如护照、 身份证)。比赛期间若自行离开球场将不被允许再次进入。
+8.3.仅持有通行证（没有比赛门票)的人不可以进入球场。根据要求，每一个持票人必须同时出具门票和通行证才可入场。
+9.在球场的行为
+9.1.出于安全目的，所有观看比赛的持票者在服务人员、安保人员或其他有法律授权的人员的要求下应： A.提供有效的比赛门票、通行证及含有照片和签名的有效证件(如护照、 身份证等)； B.接受安检和测试(含利用科学仪器的测试)以确保没有携带武器或其他违禁、未经批准的物品。安保人员、服务人员或警方有权检查入场人员的衣物和其他随身物品； C.遵守上述人员的指示和引导。
+9.2.体育场规定中含有禁带物品的详细清单和禁止行为，每个持票人应完全遵守法规。比赛门票中标明了须知的缩写版本和体育场规定或受管制的物品和行为的简单图标，持票人必须充分遵守。
+9.3.严禁在体育馆内从事以下活动，不限于: A.进入不对外开放的区域(例如功能室、贵宾和媒体区等)或者门票和通行证未被授权进入的区域； B．在通往人行道、车行道、入口、出口（包括紧急出口）的区域游荡； C．未经授权的其他行为。
+9.4.贵宾款待区、普通观赛区不会根据不同球迷所支持的参赛团队而做区隔，因此每一位观赛者都需要对自己的言行负责。
+10.损害赔偿
+10.1.客户应明确所有由观赛者造成的球场内设施的损坏需由其本人独自承担相应的责任并照价赔偿给球场带来的损失。
+11.声音和图像录制 11.1．在现场观看比赛时，持票人同意被国际足联或受国际足联委派的第三方机构进行现场拍照、摄影或录像，且国际足联（包括由国际足联授权的第三方机构）有权在全球范围内免费使用、播出和出版这些影像资料。
+11.2. 持票人不得出于个人或家庭观赏以外的商业目的，记录、传播与比赛或场馆有关的声音、图像、文字资料(包含比赛的结果、相关统计数据)。严禁在任何媒体(包括互联网、电台和电视台)传播或协助他人传播部分或全部关于比赛的声音、图像、数据、文字描述或结果。 四、  其他条款
+12.违反本条款的规定
+12.1. 任何没有依照本须知的规定取得比赛门票或通行证的人将被禁止进入球场或者利用款待服务设施，已进入球场但行为违反本须知及球场规定的人将被驱逐且不退还任何费用。在此情况下，持票人的比赛门票和通行证将作废，所有相关的权利也将一并注销。非法进入的人员应为自身的违法行为承担相应法律责任。此外，根据有关部门的调查需要，持票人需要提供所购门票的卖方及交易地点；
+12.2.客户须保证Match Hospitality、国际足联及其分支机构、官员、职工、代理人、立约人免受任何责任、损失、索赔等，包括但不限于以下法律和其他专业性费用： A．由客户和嘉宾自身行为疏忽引起的人身伤害或财产损失； B．由免责方在实施须知时所引起的责任，无论诉讼是否已经开始； C
+.为修复客户和嘉宾的疏忽行为对场馆及接待设施造成的破坏（除常规损耗）而由免责方引起的责任；
+13.免责声明
+13.1. 按照本条下述内容，Match Hospitality和国际足联不对其以外的任何人的行为或疏忽或违约产生的责任负责，持票人也不会就这类责任对Match Hospitality 和国际足联提出任何性质的主张。
+13.2. 在相关法律允许的范围内，Match Hospitality、 国际足联和其附属公司、官员、 雇员、 代理人和承包商不对持票人的任何损失、伤害负责，包括持票人的财产损失 (例如丢失门票或通行证)。
+13.3.根据
+13.2 条的规定，Match Hospitality和国际足联对持票人与本须知有关的累计责任，无论是违约责任还是侵权责任（包括疏忽）、或其他责任，不得超过在此之前Match Hospitality在实际客户收取的相关款待门票费用的数额。
+13.4.尽管 13.2 和 13.3条款做了相应规定，但本须知不排除或限制个人(包括官员、 雇员和代理人)的过失、欺诈或故意不当行为造成的死亡或人身伤害责任。
+13.5.在服从13.4条规定的前提下，Match Hospitality和国际足联不承担持票人的任何非直接的、附带的、特殊的、间接的损失或损害，或任何利润或收入损失、使用损失、业务或合同损失及机会的损失，无论是基于合同、侵权或其他责任。
+13.6.本须知条款不会明示或暗示地影响任客户或持票人根据相关法律所持有的法定权利。
+14.违约
+14.1.如果Match Hospitality有合理理由认为持票人: A.   在体育场或任何接待设施内引起扰乱或噪音； B.   威胁体育场或接待设施内其他人的安全； C.   在比赛前或比赛中违反本须知或体育场规定及其他相关法律； D.   进行任何未经授权的广告、销售、供应或转让(或捐赠给愿意支付其他商品或服务的人) 任何套餐、 比赛门票或通行证或以其他方式便利 (直接或间接) 任何此类未经批准的活动， 那么他将承担以下后果： 1)   通过购买款待计划、比赛门票、通行证所获得的所有权利将被取消且没有任何退款; 2)   未遵守须知而获得门票或通行证的人不准进入体育场，已进入的人会被赶出球场，并承担相应法律责任; 3)   Match Hospitality 或国际足联有权拒绝持票人进入体育场或接待设施，且不提供任何退款; 4)   Match Hospitality 或国际足联有权要求这些人离开体育场和接待设施，且不提供任何退款。        本条款下的Match Hospitality 和国际足联的权利和补救措施可以由其他条款或根据法律实施。
+15.未经授权的观众 若比赛门票、通行证是遵照须知7.1条获得且观赛人员不在禁入球场名单内才允许入场观赛。
+16.数据
+16.1．作为数据控制方，Match Hospitality将按1978 年1月6日修订后的俄罗斯律法N°78-17收集、处理客户的个人信息，这些信息都会被保存在欧足联的数据库中。客户同意其个人及嘉宾信息将被用于比赛的组织和运营（特别是款待销售和其它相关的安全措施）；
+16.2． Match Hospitality和国际足联因上述原因可以将客户的个人数据和嘉宾的名字提供给第三方，包括主办机构和体育场所有人(或其代理人)。 此外，如果客户已同意订单中的事项，其个人数据可用于向他们(或嘉宾)提供关于产品、 服务、商业活动和国际足联活动的信息。客户认可这些数据可能被传播到欧洲经济区 (EEA) 以外的国家，而这些国家可能无法提供等效或相应级别的信息保护。
+16.3．客户和嘉宾有权依照法国律法N°78-17（修订于1978年1月6日），查阅及更改由Match Hospitality处理的个人信息数据。
+17.不可预知的情况
+17.1. 由于不可预知的特殊情况: 不可抗力、安全因素或其他主管当局作出的影响比赛进行的决定，国际足联有权更改比赛时间、日期和场地。
+17.2．出现取消、推迟或重新比赛的情形时，条款13仍有法律效力，购买者受退款政策的约束，其条件包括： A.仅就款待套餐的面值退款给顾客，而不是嘉宾；（退款不包括顾客或嘉宾用于交通和住宿的费用） B.如果比赛推迟，款待套餐(包括比赛门票和通行证)对重新安排的比赛同样有效； C.依照上述规定和条款13.2、13.4，Match Hospitality和国际足联对此类比赛取消、推迟或重赛以及其他比赛中出现的状况不承担任何责任。
+18.信息
+18.1.有任何资讯需求请写信给Match Hospitality。
+19. 可分割、 修订和放弃的条款
+19.1．Match Hospitality及国际足联有权在必要时更改条款。包括为保证比赛的顺利安全进行而更改体育场规定。如果这些变动会影响顾客的实际权利，Match Hospitality会告知这些变化； 19.2.在不影响条款19.1的情况下，如果Match Hospitality和国际洲足联决定比赛门票或通行证将以电子形式发行，会及时通知顾客。该情况下，附加条款和条件仍适用； 19.3．若有主管法院、 监管机构或机关声明部分条款作废、无效、非法或不可强制执行，其余部分仍视为具有法律效力； 19.4. 任何一方对违约责任进行追究的弃权只有专门通过书面弃权书的方式表达才有效力， 对一种违约行为的弃权不能被理解为对其他违约行为的弃权。一方延迟或不行使某一权利或救济或部分行使某一权利或救济，只表明对不行使部分产生影响，而不应阻止对其他部分的权利和救济产生影响。须知条款中的权利和救济是可累积的（明示不可积累的除外）并不排斥任何一方根据相关法律可获得其他的权利和救济。 19.5. Match Hospitality无需得到客户的同意，有权转让、分派、再授权或转包其权利和义务给国际足联。 20. 作准文本 20.1.英文版须知已起草完成，在国际足联官方网站上即可获取。俄语翻译版也可获得，若两个版本存在差异，皆以英文版为准。 21.通则 21.1.客户同意本须知并代表嘉宾接受本须知（客户应告知嘉宾本须知的内容）如果客户是一个业务实体，合同中的商业实体代表应及时获得正式授权。被授权人在某些情况下要为嘉宾的行为承担个人责任。 21.2.本须知构成双方之间的完整协议，任何一方没有与本须知有关的其他任何声明、陈述、保证及承诺。 21.3.如果持票人未遵守条款的规定，Match Hospitality和国际足联有权在不影响其他补救措施的情况下: A．将持票人带至球场内的其他区域； B．将持票人驱逐出球场； C． Match Hospitality不再向顾客提供比赛门票及通行证，且无任何退款。 21.4.该条款适用于俄罗斯法律。双方同意俄罗斯莫斯科法院拥有排他的管辖权来解决有关本条款的所有争议。Match Hospitality和国际足联也有权在客户的户籍所在地法院寻求临时的禁令措施。
+</pre>
+            </div>
+            <center>下载<a href="download.php?type=file&file_name=shopContract.pdf" target="_blank"
+                          style="color:#23527c">《用户购买协议》</a>及<a
+                    href="download.php?type=file&file_name=chipiaorenxuzhi.pdf" target="_blank"
+                    style="color:#23527c">《贵宾款待计划的持票人须知》</a></center>
+            <div style="width: 100%;text-align: center;padding-top:20px;">
+                <button id="agree_button" class="action anniu_disable" disabled="disabled" onclick="javascrtpt:window.location.href = 'check_balance.php?act=check_order&game_id={$game_id}'">同意</button>
+                <button id="disagree_button" class="action anniu_disable" disabled="disabled" data-dialog-close>不同意</button>
+            </div>
+
+        </div>
+    </div>
+<!--    <script src="{$js_path}/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>-->
+<script src="./assets/lib/moment-with-locales.min.js" charset="UTF-8"></script>
+<script src="./assets/lib/bootstrap-datetimepicker-4.17.47/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
+<!--    <script src="{$js_path}/locales/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>-->
+<!--    <script src="{$js_path}/date-config.js" charset="UTF-8"></script>-->
+<!--    <script src="{$js_path}/picker.js"></script>-->
+<!--    <script src="{$js_path}/picker.date.js"></script>-->
+<script src="{$js_path}/legacy.js"></script>
+<script src="{$js_path}/jquery.form.js"></script>
+<script src="{$js_path}/jquery.json.min.js"></script>
+<script src="../js/user.js"></script>
+<script src="{$js_path}/ticket.js"></script>
+<script src="{$js_path}/dialog/modernizr.custom.js"></script>
+<script src="{$js_path}/dialog/classie.js"></script>
+<script src="{$js_path}/dialog/dialogFx.js"></script>
+
+<script>
+    //机票
+    var from_allow_date_list = [], return_allow_date_list = [];
+    var datepicker_from, datepicker_return;
+    $(function (){
+
+    });
+
+    //购物车页js
+    $(function () {
+        $('[data-toggle=tooltip]').tooltip();
+    });
+    function hotel(rec_id) {
+        document.getElementById(rec_id).style.display = "block";
+    }
+    function room_type(type) {
+        if (document.getElementById(type.id).checked) {
+            new_id = type.id + "_type";
+            document.getElementById(new_id).style.display = "block";
+        } else {
+            new_id = type.id + "_type";
+            document.getElementById(new_id).style.display = "none";
+        }
+    }
+    function hotel_subtract(num) {
+        new_id = num + "_num";
+        if (document.getElementById(new_id).value > 0) {
+            document.getElementById(new_id).value--;
+        } else {
+            document.getElementById(new_id).value = 0;
+        }
+    }
+    function hotel_plus(num) {
+        new_id = num + "num";
+        document.getElementById(new_id).value++;
+    }
+    function xingji(num, id, arr) {
+        new_id = num + '' + id;
+        document.getElementById(new_id).style.background = "#0E417D";
+        document.getElementById(new_id).style.color = "#fff";
+        $.ajax({
+            url: 'new_cart.php?step=get_room_type',
+            type: 'POST',
+            dataType: 'json',
+            data: 'id=' + id + '&rec_id=' + num,
+            success: room_type_callback
+        })
+    }
+    function room_type_callback(result) {
+        for (i in result) {
+            type_name = result[i]['type_name'];
+            hotel_id = result[i]['rec_id'] + '_hotel_id';
+            console.log(hotel_id);
+            room_money = result[i]['room_money'];
+            rec_id = result[i]['rec_id'];
+            new_div = result[i]['rec_id'] + '_div';
+            room_type = result[i]['room_type'];
+            room_id = result[i]['id'];
+            document.getElementById(hotel_id).value = result[i]['hotel_id'];
+            document.getElementById(new_div).insertAdjacentHTML("afterBegin", '<div id="' + rec_id + '' + room_type + '"><div class="daxiao" ><label class="checkbox" for="checkbox1"><input name="type_name" id="' + type_name + '" type="radio" value="' + room_type + '"    data-toggle="checkbox" onclick="room_info(' + rec_id + ',' + room_type + ',' + room_id + ',' + type_name + ')">' +
+                '' + type_name + '<s>￥' + room_money + '/天</s></label></div></div>');
+
+        }
+    }
+    function hotel(rec_id) {
+        document.getElementById(rec_id).style.display = "block";
+    }
+    function room_info(rec_id, type_id, room_id, type_name) {
+        id = rec_id + '_div';
+        if (document.getElementById(type_name).checked) {
+            document.getElementById(id).insertAdjacentHTML("beforeEnd", '<div class="ruzhuriqi" ><div class="fl cfrq city2" >' +
+                '<p>入住日期</p><div class="dropdown"><section class="section"><fieldset><input style="padding:8px 0;"class="datepicker" name="' + room_id + '_start_date" type="text" autofocuss value="14 August, 2014" data-valuee="2014-08-08"/></fieldset>' +
+                ' </section></div></div><div class="fl cfrq dida city2"><p>退房日期</p><div class="dropdown"><section class="section"><fieldset>' +
+                '<input id="end_date"class="datepicker" name="' + room_id + '_end_date" type="text" autofocuss value="14 August, 2014" data-valuee="2014-08-08"/></fieldset></section>' +
+                '</div></div></div><div class="clear"></div><div style="float:left"class="shuliang-blue"><p>数量</p><div class="slform">' +
+                '<div class="fl hao"><a href="javascript:void(0)" onclick="hotel_subtract(this.name)"   name="' + type_name + '">-</a></div> <div class="fl"><input type="text" value="0"  id="' + type_name + '_num"  name="' + room_id + '_num"/></div>' +
+                '<div class="fl hao"><a href="javascript:void(0)" onclick="hotel_plus(this.name)"  name="' + type_name + '_' + '">+</a></div></div></div></div><div class="clear"></div');
+            document.getElementById(id).style.display = "block";
+        }
+    }
+    function room_type(type) {
+        var arr = document.getElementsByName("room_id");
+        for (i in arr) {
+            if (arr[i].checked) {
+                new_id = type + "_type";
+
+                document.getElementById(new_id).style.display = "block";
+            }
+        }
+
+    }
+    function hotel_subtract(num) {
+        new_id = num + "_num";
+        if (document.getElementById(new_id).value > 0) {
+            document.getElementById(new_id).value--;
+        } else {
+            document.getElementById(new_id).value = 0;
+        }
+    }
+    function hotel_plus(num) {
+        new_id = num + "num";
+        document.getElementById(new_id).value++;
+    }
+    function add_hotel() {
+        $("#hotel_info").ajaxSubmit({
+            type: "POST",  //提交方式
+            dataType: "json", //数据类型
+            url: "new_cart.php?step=add_to_cart_hotel", //请求url
+            success: function (data) { //提交成功的回调函数
+                console.log(data);
+                id = data['tick_id'];
+                hotel_id = data['tick_id'] + '_hotel';
+                hotel_name = data['tick_id'] + '_hotel_name';
+                room_money = data['tick_id'] + '_hotel_money';
+                room_money = data['tick_id'] + '_hotel_money';
+                hotel_start_date = data['tick_id'] + '_start_date';
+                hotel_end_date = data['tick_id'] + '_end_date';
+                hotel_type_name = data['tick_id'] + '_type_name';
+                room_num = data['tick_id'] + '_room_num';
+                document.getElementById(hotel_name).innerHTML = data['hotel_name'];
+                document.getElementById(room_money).innerHTML = data['room_money'] + "?/天";
+                document.getElementById(hotel_start_date).innerHTML = data['hotel_start_date'];
+                document.getElementById(hotel_end_date).innerHTML = data['hotel_end_date'];
+                document.getElementById(room_num).value = data['room_num'];
+                document.getElementById(hotel_type_name).innerHTML = data['type_name'];
+                document.getElementById(id).style.display = "none";
+            }
+        });
+    }
+    var set_plane_number = function (obj, flag) {
+        if (flag == "+") {
+            $("#fn" + obj).val(parseInt($("#fn" + obj).val()) + 1);
+            $("#tn" + obj).val(parseInt($("#tn" + obj).val()) + 1);
+        } else {
+            if (parseInt($("#fn" + obj).val()) >= 1) {
+                $("#fn" + obj).val(parseInt($("#fn" + obj).val()) - 1);
+                $("#tn" + obj).val(parseInt($("#tn" + obj).val()) - 1);
+            }
+        }
+
+    };
+
+    //去程获取目的城市
+    var get_to_region_plane = function (from_city, to_city){
+        var from_city_id = Number($("#" + from_city).val());
+        if (isNaN(from_city_id) || from_city_id == 0) {
+            $("#from_to_city").select2('val', 0);
+            $("#to_from_city").select2('val', 0);
+            $("#to_to_city").select2('val', 0);
+            $("input[name=from_form_time]").val('');
+            $("input[name=to_form_time]").val('');
+            $("#from_air").select2('val', 0);
+            $("#to_air").select2('val', 0);
+            return false;
+        }
+
+        $.ajax({
+            url: 'view.php?act=ajax_get_air_line_list_from_city',
+            type: 'POST',
+            dataType: 'json',
+            data: {from_city: from_city_id, type: 1},
+            success: function (data) {
+                $("#" + to_city).html("<option value='0'>请选择</option>").select2('val', 0);
+                if (from_city == "from_from_city" || from_city == "from_to_city") {
+                    $("#from_to_city").select2('val', 0);
+                    $("#to_from_city").select2('val', 0);
+                    $("#to_to_city").select2('val', 0);
+                    $("input[name=from_form_time]").val('');
+                    $("input[name=to_form_time]").val('');
+                    $("#from_air").select2('val', 0);
+                    $("#to_air").select2('val', 0);
+                } else if (from_city == "to_from_city" || from_city == "to_to_city") {
+                    $("#to_air").select2('val', 0);
+                    $("#to_form_time").val('');
+                }
+                $.each(data, function (index, item){
+                    $("#" + to_city).append("<option value=" + item.region_id + ">" + item.region_name + "</option>");
+                });
+            }
+        });
+    };
+
+    //返程出发城市获取目标城市列表
+    var get_to_region_plane_2 = function (from_city, to_city){
+        var from_city_id = Number($("#" + from_city).val());
+        if (isNaN(from_city_id) || from_city_id == 0) {
+            return false;
+        }
+
+        $.ajax({
+            url: 'view.php?act=ajax_get_air_line_list_from_city',
+            type: 'POST',
+            dataType: 'json',
+            data: {from_city: from_city_id, type: 2},
+            success: function (data) {
+                $("#" + to_city).html("<option value='0'>请选择</option>").select2('val', 0);
+                if (from_city == "from_from_city" || from_city == "from_to_city") {
+                    $("#from_air").select2('val', 0);
+                } else if (from_city == "to_from_city" || from_city == "to_to_city") {
+                    $("#to_air").select2('val', 0);
+                }
+                $.each(data, function (index, item){
+                    $("#" + to_city).append("<option value=" + item.region_id + ">" + item.region_name + "</option>");
+                });
+            }
+        });
+    };
+
+    /*
+     * 获取航班机票
+     */
+    var get_plane = function (from, to, change) {
+        var from_obj = document.getElementById(from);
+        var to_obj = document.getElementById(to);
+        var from_index = from_obj.selectedIndex;
+        var to_index = to_obj.selectedIndex;
+        var from_city = from_obj.options[from_index].value;
+        var to_city = to_obj.options[to_index].value;
+        $("#" + change).empty();
+        if ((from_city == 0) || (to_city == 0)) {
+            return false;
+        }
+        $.ajax({
+            url: 'view.php?act=ajax_get_air_line_list',
+            type: 'POST',
+            dataType: 'json',
+            data: {from_city: from_city, to_city: to_city},
+            success: function (data) {
+                $("#" + change).append("<option value='0'>请选择</option>");
+                $("#" + change).select2('val', 0);
+                for (var air in data) {
+                    $("#" + change).append("<option value=" + data[air].id + " data-description='" + encodeURIComponent(data[air].description)+ "'>" + data[air].title + " 时间：" + data[air].fly_time + "</option>");
+                }
+
+                //设置返程
+                var val = $("#from_from_city").val();
+                var text = $("#from_from_city").find(":selected").text();
+                $("#to_to_city").html("<option value='0'>请选择</option><option value='" + val + "'>" + text + "</option>")
+                    .select2('val', val);
+
+                //设置返程
+                var val2 = $("#from_to_city").val();
+                var text2 = $("#from_to_city").find(":selected").text();
+                $("#to_from_city").html("<option value='0'>请选择</option><option value='" + val2 + "'>" + text2 + "</option>")
+                    .select2('val', val2);
+
+                $("#to_air").html("<option value='0'>请选择</option>");
+                $("#to_air").select2('val', 0);
+                for (var air in data) {
+                    $("#to_air").append("<option value=" + data[air].id + ">" + data[air].title + " 时间：" + data[air].return_fly_time + "</option>");
+                }
+
+                $("input[name=from_form_time]").val('');
+                $("input[name=to_form_time]").val('');
+            }
+        });
+    };
+
+    var set_plane = function (select_id, div_id) {
+        var air_line_id = $("#" + select_id).val();
+        if (air_line_id == 0 || air_line_id == "") {
+            $("input[name=from_form_time]").val('');
+            $("input[name=to_form_time]").val('');
+        }
+        var options = {
+            locale:  'zh-cn',
+            format: 'YYYY-MM-DD',
+            viewMode: 'days',
+            useCurrent: false,
+            defaultDate: false,
+//                keepOpen: true,
+//                showClose: true,
+            allowInputToggle: true,
+            collapse: true,
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'auto'
+            }
+        };
+        //机票
+
+        if (typeof datepicker_from == "object" && typeof datepicker_from.data("DateTimePicker") == "object") {
+            datepicker_from.data("DateTimePicker").destroy();
+            $("input[name=from_form_time]").val('');
+        }
+
+        if (typeof datepicker_return == "object" && typeof datepicker_return.data("DateTimePicker") == "object") {
+            datepicker_return.data("DateTimePicker").destroy();
+            $("input[name=to_form_time]").val('');
+        }
+
+        $("#to_air").select2('val', air_line_id);
+        var description = $("#from_air").find("option:selected").attr("data-description");
+        $("#air_line_description").html(description ? decodeURIComponent(description) : '');
+
+        from_allow_date_list = ['1970-01-01'];
+        return_allow_date_list = ['1970-01-01'];
+        $.ajax({url: 'view.php?act=ajax_air_line_num', type: 'POST', dataType: 'json', data: {air: air_line_id}, success: function (data) {
+            if (typeof data == 'object') {
+                for (var i = 0; i < data.length; i ++) {
+                    if (data[i].num < 1) {
+                        continue;
+                    }
+                    if (data[i].type == 1) {
+                        from_allow_date_list.push(data[i].date);
+                    } else if (data[i].type == 2) {
+                        return_allow_date_list.push(data[i].date);
+                    }
+                }
+
+                options.defaultDate = false;
+                if (from_allow_date_list.length > 1) {
+                    options.defaultDate = new Date(from_allow_date_list[1]);
+                }
+                datepicker_from = $("input[name=from_form_time]").datetimepicker(options);
+                datepicker_from.data("DateTimePicker").enabledDates(from_allow_date_list);
+
+                options.defaultDate = false;
+                if (return_allow_date_list.length > 1) {
+                    options.defaultDate = new Date(return_allow_date_list[1]);
+                }
+                datepicker_return = $("input[name=to_form_time]").datetimepicker(options);
+                datepicker_return.data("DateTimePicker").enabledDates(return_allow_date_list);
+            }
+        }});
+    };
+
+    var check_zuoxi = function (obj, num) {
+        if (obj.checked) {
+            $("#fd" + num).attr("class", "shuliang");
+            $("#td" + num).attr("class", "shuliang");
+            obj.parentNode.nextSibling.nextSibling.setAttribute("class", "shuliang");
+        } else {
+            $("#fd" + num).attr("class", "shuliang hidden");
+            $("#td" + num).attr("class", "shuliang hidden");
+            $("#tn" + num).val(0);
+            $("#fn" + num).val(0);
+            obj.parentNode.nextSibling.nextSibling.setAttribute("class", "shuliang hidden");
+        }
+    };
+
+    //酒店
+    var from_allow_date_list_hotel = [], return_allow_date_list_hotel = [];
+    var check_room = function (obj, room_id, room_type, min_num) {
+        if (obj.checked) {
+            obj.parentNode.parentNode.nextSibling.nextSibling.setAttribute("class", "");
+        } else {
+            obj.parentNode.parentNode.nextSibling.nextSibling.setAttribute("class", "hidden");
+            return false;
+        }
+
+        if (min_num < 1) {
+            alert("最小预定天数不能小于1");
+            return false;
+        }
+        var options = {
+            locale:  'zh-cn',
+            format: 'YYYY-MM-DD',
+            viewMode: 'days',
+            useCurrent: false,
+            defaultDate: false,
+//                keepOpen: true,
+            showClose: true,
+            allowInputToggle: true,
+            collapse: true,
+            minDate: new Date(),
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'auto'
+            }
+        };
+        from_allow_date_list_hotel = ['1971-01-01'];
+        return_allow_date_list_hotel = ['1971-01-01'];
+        var tmp = ['1971-01-01'];
+
+        var date = new Date();
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+        var currDateTs = new Date(year + "-" + (month > 9 ? "" : "0") + month + "-" + (day > 9 ? "" : "0") + day).valueOf() + 24 * 60 * 60 * 1000 - 1000;;
+        $.ajax({url:"view.php?act=ajax_room_num", dataType:"json", data:{room_id:room_id, room_type:room_type}, success: function (result){
+            for (var i = 0; i < result.length; i ++) {
+                if (result[i].num < 1) {
+                    //console.log("库存日期" + result[i].date + "小于当前日期" + year + "-" + month + "-" + day);
+                    continue;
+                }
+                if ((new Date(result[i].date)).valueOf() < currDateTs) {
+                    //console.log("库存日期" + result[i].date + "小于当前日期" + year + "-" + month + "-" + day);
+                    continue;
+                }
+                from_allow_date_list_hotel.push(result[i].date);
+                //return_allow_date_list_hotel.push(result[i].date);
+                tmp.push(result[i].date);
+            }
+
+            options.defaultDate = false;
+            if (from_allow_date_list_hotel.length > 1) {
+                options.defaultDate = new Date(from_allow_date_list_hotel[1]);
+            }
+
+            if (!options.defaultDate) {
+                alert("该酒店房间类型库存不足");
+                return false;
+            }
+
+            //检查是否有最小天数限制
+            if (min_num > 0) {
+                var ty = options.defaultDate.getFullYear(), tm = options.defaultDate.getMonth() + 1, td = options.defaultDate.getDate();
+                tm = tm > 9 ? tm : "0" + tm;
+                td = td > 9 ? td : "0" + td;
+                var d1 = addDate(ty + "-" + tm + "-" + td, Number(min_num));
+                var year2 = d1.getFullYear();
+                var month2 = d1.getMonth() + 1;
+                var day2 = d1.getDate();
+                return_allow_date_list_hotel.push(year2 + "-" + (month2 > 9 ? month2 : "0" + month2) + "-" + (day2 > 9 ? day2 : "0" + day2));
+            } else {
+                return_allow_date_list_hotel = tmp;
+            }
+
+            if (return_allow_date_list_hotel.length == 0) {
+                return_allow_date_list_hotel.push("1971-01-01");
+            }
+            //酒店
+            $("#start_date_" + room_id + "_" + room_type).datetimepicker(options).data("DateTimePicker").enabledDates(from_allow_date_list_hotel);
+
+            options.defaultDate = false;
+            if (return_allow_date_list_hotel.length > 1) {
+                options.defaultDate = new Date(return_allow_date_list_hotel[1]);
+            }
+
+            if (!options.defaultDate) {
+                alert("该酒店房间类型库存不足");
+                return false;
+            }
+
+            $("#start_date_" + room_id + "_" + room_type).on("dp.change", function (e){
+                if (min_num < 1) {
+                    return true;
+                }
+
+                var tdate = (new Date(e.date));
+                var ty = tdate.getFullYear(), tm = tdate.getMonth() + 1, td = tdate.getDate();
+                tm = tm > 9 ? tm : "0" + tm;
+                td = td > 9 ? td : "0" + td;
+
+                var d1 = addDate(ty + "-" + tm + "-" + td, Number(min_num));
+
+                $("#end_date_" + room_id + "_" + room_type).val(d1.getFullYear() + "-" + (d1.getMonth() + 1 > 9 ? "" : "0") + (d1.getMonth() + 1)  + "-" + (d1.getDate() > 9 ? "" : "0") + d1.getDate());
+            });
+            if (min_num > 0) {
+                $("#end_date_" + room_id + "_" + room_type).val(return_allow_date_list_hotel[1]).attr("readonly", "readonly");
+                $("#end_date_" + room_id + "_" + room_type).parent().parent().next().html("单次必须预定" + min_num + "天");
+            } else {
+                $("#end_date_" + room_id + "_" + room_type).datetimepicker(options).data("DateTimePicker").enabledDates(return_allow_date_list_hotel);
+            }
+        }});
+
+    };
+
+    function addDate(dd,dadd){
+        var a = new Date(dd);
+        a = a.valueOf();
+        a = a + dadd * 24 * 60 * 60 * 1000;
+        a = new Date(a);
+        return a;
+    }
+
+    function cencel_hotel(hotel_id) {
+        document.getElementById(hotel_id).style.display = "none";
+        document.getElementById(hotel_id).checked = false;
+    }
+
+    var set_number = function (obj, flag) {
+        if (flag == "+") {
+            $("#" + obj).val(parseInt($("#" + obj)[0].value) + 1);
+        } else {
+            if (parseInt($("#" + obj)[0].value) >= 1) {
+                $("#" + obj).val(parseInt($("#" + obj)[0].value) - 1);
+            }
+        }
+    };
+
+    var set_space_number = function (obj, flag) {
+        if (flag == "+") {
+            $("#" + obj).val(parseInt($("#" + obj)[0].value) + 1);
+            $("#" + obj).val(parseInt($("#" + obj)[0].value) + 1);
+        } else {
+            if (parseInt($("#" + obj)[0].value) >= 1) {
+                $("#" + obj).val(parseInt($("#" + obj)[0].value) - 1);
+            }
+        }
+    };
+    var submit_form = function () {
+        var i = 0;
+        $('[name="from_number[]"]').each(function () {
+            if ($(this).val() != 0) {
+                i++;
+            }
+        });
+        var res = "";
+        if ($('#from_from_city').val() == 0) {
+            res = "false";
+        } else if ($('#from_to_city').val() == 0) {
+            res = "false";
+        } else if ($('[name="form_form_time"]').val() == '') {
+            res = "false";
+        } else if ($('[name="form_to_time"]').val() == '') {
+            res = "false";
+        } else if ($('#from_air').val() == 0) {
+            res = "false";
+        } else if (i == 0) {
+            res = "false";
+        } else if ($('#to_from_city').val() == 0) {
+            res = "false";
+        } else if ($('#to_to_city').val() == 0) {
+            res = "false";
+        } else if ($('[name="to_form_time"]').val() == '') {
+            res = "false";
+        } else if ($('[name="to_to_time"]').val() == '') {
+            res = "false";
+        } else if ($('#to_air').val() == 0) {
+            res = "false";
+        } else {
+            document.getElementById("air_form").submit();
+            return true;
+        }
+
+        if (res == "false") {
+            $('#cuowu').css("display", "block");
+        }
+    };
+    function cencel_hotel(hotel_id) {
+        document.getElementById(hotel_id).style.display = "none";
+        document.getElementById(hotel_id).checked = false;
+    }
+    function check_cart(user_id, game_id, cart_num) {
+        if ($(".ticket_list").length == 0) {
+            alert("没有球票不能结算，请先购买球票~");
+            return false;
+
+        }
+        if (user_id == 0) {
+            show_login();
+        } else {
+            var somedialog = document.getElementById("somedialog");
+            var dlg = new DialogFx(somedialog);
+            $("div.xieyi").scroll(function () {
+                //按钮enable
+                var _this = $(this);
+                var viewH = _this.height();
+                var contentH = _this.get(0).scrollHeight;
+                var scrollTop = _this.scrollTop();
+                var rate = scrollTop / (contentH - viewH);
+
+
+                if (rate < 0.9) {
+                    $("#agree_button").attr("disabled", true);
+                    $("#agree_button").removeClass("anniu");
+                    $("#agree_button").addClass("anniu_disable");
+                    $("#disagree_button").attr("disabled", true);
+                    $("#disagree_button").removeClass("anniu");
+                    $("#disagree_button").addClass("anniu_disable");
+                } else {
+                    $("#agree_button").attr("disabled", false);
+                    $("#agree_button").removeClass("anniu_disable");
+                    $("#agree_button").addClass("anniu");
+                    $("#disagree_button").attr("disabled", false);
+                    $("#disagree_button").removeClass("anniu_disable");
+                    $("#disagree_button").addClass("anniu");
+                }
+            });
+
+            dlg.toggle();
+
+        }
+    }
+
+    $("#air_form").click(function (e) {
+        var login_top = $("#display_plane").offset().top;
+        var login_left = $("#display_plane").offset().left;
+        var login_bottom = $("#display_plane").offset().top + $("#display_plane").height();
+        var login_right = $("#display_plane").offset().left + $("#display_plane").width();
+        var is_close = 1;
+        if (e.pageX > login_left && e.pageX < login_right && e.pageY > login_top && e.pageY < login_bottom) {
+            is_close = 0;
+        }
+        if (is_close) {
+            $("#ticket_info").css("display", "none");
+        }
+    });
+
+    $("#ambitu_goods").click(function (e) {
+        var login_top = $("#display_ambitu").offset().top;
+        var login_left = $("#display_ambitu").offset().left;
+        var login_bottom = $("#display_ambitu").offset().top + $("#display_ambitu").height();
+        var login_right = $("#display_ambitu").offset().left + $("#display_ambitu").width();
+        var is_close = 1;
+        if (e.pageX > login_left && e.pageX < login_right && e.pageY > login_top && e.pageY < login_bottom) {
+            is_close = 0;
+        }
+        if (is_close) {
+            $("#ambitu_goods").css("display", "none");
+        }
+    });
+    function show_info(goods_id) {
+        id = "show_info" + goods_id;
+        img_id = "img" + goods_id;
+        var show_info = document.getElementById(id);
+        var img = document.getElementById(img_id);
+        if ($(show_info).css("display") == 'none') {
+            $(img).attr("src", "themes/sk_themes/images/topdot.png");
+            $(show_info).css("display", "block");
+        } else if ($(show_info).css("display") == 'block') {
+            $(img).attr("src", "themes/sk_themes/images/bottomdot.png");
+            $(show_info).css("display", "none");
+        }
+    }
+
+</script>
+
+<script type="text/javascript">
+    $(function (){
+        $("#to_from_city, #to_to_city, #to_air").select2("readonly", true);
+    });
+</script>
+</body>
+</html>

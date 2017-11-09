@@ -1,0 +1,71 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader2.htm"}
+<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
+<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+<div class="main-div">
+    <form method="post" action="route.php?con=room&act=edit" name="theForm">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td class="label">酒店名称：</td>
+                <td>{$hotel_name}</td>
+            </tr>
+            <tr>
+                <td class="label">房间类型：</td>
+                <td>
+                    <select name="room_type">
+                        <!--{foreach from=$type_list item=type}-->
+                            <option value="{$type.id}" {if $room.room_type==$type.id }selected{/if}>{$type.type_name}</option>
+                        <!--{/foreach}-->
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">房间单价：</td>
+                <td>
+                    <input type="number" name="room_money" maxlength="60" value="{$room.room_money}" />
+                </td>
+            </tr>
+             <tr>
+                <td class="label">房间描述：</td>
+                <td width="100%"><script id="editor" name="room_text" type="text/plain" style="width:800px;height:250px;">{$room.room_text}</script></td>
+            </tr>
+            <tr>
+                <td class="label">房间图片：</td>
+                <td width="100%">
+                    <div id="container">
+                        <a class="btn btn-default btn-lg " id="img_upload" href="#" >
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <sapn>选择文件</sapn>
+                        </a>
+                        <font id="upload_status"></font>
+                        <input type="hidden" name="room_img" id="img_id" value="{$room.room_img}">
+
+                    </div>
+                    
+                </td>
+            </tr>
+          
+        </table>
+        <table align="center">
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" class="button" value="{$lang.button_submit}" />
+                    <input type="reset" class="button" value="{$lang.button_reset}" />
+                    <input type="hidden" name="act" value="{$act}" />
+                    <input type="hidden" name="hotel_id" value="{$hotel_id}" />
+                    <input type="hidden" name="id" value="{$room.id}" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js,jquery.min.js"}
+{literal}
+<script type="text/javascript" charset="utf-8" src="js/qiniu/plupload.full.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/qiniu.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/main.js"></script>
+<script language="JavaScript">
+var ue = UE.getEditor('editor');
+</script>
+{/literal}
+{include file="pagefooter.htm"}

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>购票凭证</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=720 user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css"  href="css/base.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+    <link rel="stylesheet" type="text/css"  href="css/header.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/footer.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/vouch.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="css/liucheng.css" media="all" />
+    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+
+    <style>
+        body{
+            margin:0;
+            padding:0;
+            font-size: 12px;
+            font-family: "微软雅黑";
+            margin-top:85px;
+        }
+        .logo{
+            width:150px;
+            margin:30px auto;
+        }
+        .logo img{
+            width: 100%;
+        }
+        table{
+            table-layout: fixed;
+            margin:0 auto;
+            border:1px solid #000000;
+            border-collapse:none;
+            border-spacing: 0;
+            border-bottom:0;
+        }
+        tr{
+            border-bottom: 1px solid #000000;
+        }
+        th,td{
+            border-right:1px solid #000000;
+            text-align: center;
+            border-bottom:1px solid #000000;
+            border-spacing: 0;
+            height:30px;
+            vertical-align: middle;
+            word-wrap:break-word;
+            word-break:break-all;
+        }
+        th:last-child,td:last-child{
+            border-right: none;
+        }
+    </style>
+</head>
+<body>
+{include file=header.html}
+<div class="logo">
+    <img src="images/logo22.png">
+</div>
+<h3 style="text-align: center;font-size: 22px;color: #000;font-weight: bold;margin: 80px 0 40px;">购票凭证</h3>
+<table style="border-collapse:separate;width:100%;">
+    <tr>
+        <th width="20%;">订单号</th>
+        <th width="30%;">订单来源（代理商名字/个人）</th>
+        <th width="10%;">金额</th>
+        <th width="15%;">订单状态</th>
+        <th width="25%;" colspan="2">订单时间</th>
+    </tr>
+    <tr>
+        <td>{$order_info.order_sn}</td>
+        <td>个人</td>
+        <td>￥{$order_info.goods_amount}</td>
+        <!--<td>{$order_info.order_status}</td>-->
+        <td>{if $order_info.order_status eq 1}已审核通过{/if}</td>
+        <td colspan="3">{$order_info.add_time}</td>
+    </tr>
+    <tr>
+        <th colspan="6">票务信息</th>
+    </tr>
+    <tr>
+        <th>场次名称</th>
+        <th>时间</th>
+        <th colspan="2">地点</th>
+        <th colspan="2">数量</th>
+    </tr>
+    <!-- {foreach from=$info_list item=info } -->
+    <tr>
+        <td>{$info.game_name}&nbsp;{$info.num_name}</td>
+        <td>{$info.num_start}</td>
+        <td colspan="2">{$info.region_name}&nbsp;{$info.pitch_name}</td>
+        <td colspan="2">{$info.order_goods_number}张</td>
+    </tr>
+    <!-- {/foreach } -->
+    <tr>
+        <th colspan="6">持票人信息</th>
+    </tr>
+    <tr>
+        <th>姓名</th>
+        <th>护照号码</th>
+        <th>街道门牌号</th>
+        <th>电话</th>
+        <th colspan="2">邮箱</th>
+        <!--<th  colspan="2">票号</th>-->
+
+    </tr>
+    <!-- {foreach from=$order_bearer item=bearer } -->
+    <tr>
+        <td>{$bearer.cn_customer_name}</td>
+        <td>{$bearer.passport_number}</td>
+        <td>{$bearer.cn_name_street}</td>
+        <td>{$bearer.mobile}</td>
+        <td colspan="2">{$bearer.mail}</td>
+        <!--<td colspan="2">{$bearer.ticket_code}</td>-->
+    </tr>
+    <!-- {/foreach} -->
+    <tr>
+        <th colspan="6">联系人信息</th>
+    </tr>
+    <tr>
+        <th>姓名</th>
+        <th>电话</th>
+        <th colspan="4">邮箱</th>
+    </tr>
+    <tr>
+        <td>{$lianxiren.consignee}</td>
+        <td>{$lianxiren.mobile}</td>
+        <td colspan="4" >{$lianxiren.email}</td>
+    </tr>
+
+</table>
+<div>
+    <!--<a href="javascript:void(0);" onclick="voucher();" style="display: block;width: 600px;height: 60px;text-align: center;line-height: 60px;background: #C6151D;color: #fff;font-size: 18px;margin: 40px auto;-webkit-border-radius: ;-moz-border-radius: ;border-radius: 3px;";>点击下载购票凭证</a>-->
+</div>
+</body>
+<script type="text/javascript" src="js/pulldown.js"></script>
+<script>
+    function voucher(){
+        var page = require('webpage').create();
+        page.open('http://www.baidu.com', function () {
+            page.render('jietu.jpg');
+            phantom.exit();
+        });
+    }
+</script>
+</html>

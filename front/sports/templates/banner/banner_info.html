@@ -1,0 +1,95 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader2.htm"}
+
+<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
+<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+<div class="main-div">
+    <form method="post" action="route.php?con=banner&act=banner_edit&place_id={$place_id}" name="theForm">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td class="label">上传图片：</td>
+                <td><div id="container">
+                        <a class="btn btn-default btn-lg " id="img_upload" href="#" >
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <sapn>选择文件</sapn>
+                        </a>
+                        <font id="upload_status"></font>
+                        <input type="hidden" name="img_url" id="img_id" value="{$banner.img_url}">
+
+                    </div></td>
+            </tr>
+            <tr>
+                <td class="label">排序编号：</td>
+                <td>
+                    <input type="text" name="sequence" value="{$banner.sequence}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="label">电脑连接地址：</td>
+                <td>
+                    <input type="text" name="link" value="{$banner.link}"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">手机连接地址：</td>
+                <td>
+                    <input type="text" name="mobile_link" value="{$banner.mobile_link}"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">视频连接地址：</td>
+                <td>
+                    <input type="text" name="video_link" value="{$banner.video_link}"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">状态：</td>
+                <td>
+
+                    <input type="radio" name="status" value="0" {if $banner.status == 0 } checked {/if}>开启 
+                           <input type="radio" name="status" value="1" {if $banner.status == 1 } checked {/if} >关闭 
+                </td>
+            </tr>
+            <tr>
+                <td class="label">备注：</td>
+                <td>
+                    <input type="text" name="notes" value="{$banner.notes}" style="width: 300px;">
+                </td>
+            </tr>
+            <tr>
+                <td class="label">英文标题：</td>
+                <td>
+                    <!-- script id="max_title_editor" name="max_title" type="text/plain" style="width:500px;height:250px;">{$banner.max_title}</script -->
+                    <textarea name="max_title" type="text/plain" style="width:500px;height:250px;">{$banner.max_title|escape:"html"}</textarea>
+                </td>
+            </tr>
+           <tr>
+                <td class="label">中文标题：</td>
+                <td>
+                    <!-- script id="min_title_editor" name="min_title" type="text/plain" style="width:500px;height:250px;">{$banner.min_title}</script-->
+                    <textarea name="min_title" type="text/plain" style="width:500px;height:250px;">{$banner.min_title|escape:"html"}</textarea>
+                </td>
+            </tr>
+
+        </table>
+        <table align="center">
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" class="button" value="{$lang.button_submit}" />
+                    <input type="reset" class="button" value="{$lang.button_reset}" />
+                    <input type="hidden" name="act" value="{$act}" />
+                    <input type="hidden" name="id" value="{$banner.id}" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js,jquery.min.js"}
+<script type="text/javascript" charset="utf-8" src="js/qiniu/plupload.full.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/qiniu.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/main.js"></script>
+<script type="text/javascript">
+     UE.getEditor('max_title_editor');
+     UE.getEditor('min_title_editor');
+</script>
+{include file="pagefooter.htm"}

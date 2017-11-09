@@ -1,0 +1,42 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader.htm"}
+
+<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
+<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+<div class="main-div">
+    <form method="post" action="route.php?con=roomtype&act=edit" name="theForm">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td class="label">类型名称：</td>
+                <td><input type="text" name="type_name" maxlength="60" value="{$type.type_name}" /></td>
+            </tr>
+<!--             <tr>
+                <td class="label">类型描述：</td>
+                <td width="100%"><textarea name="type_text" cols="40" rows="3">{$type.type_text}</textarea></td>
+            </tr>-->
+            <tr>
+                <td class="label">人数限制：</td>
+                <td><input type="text" name="people_num" style="width:60px;" maxlength="3" value="{$type.people_num}" /></td>
+            </tr>
+          
+        </table>
+        <table align="center">
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" class="button" value="{$lang.button_submit}" />
+                    <input type="reset" class="button" value="{$lang.button_reset}" />
+                    <input type="hidden" name="act" value="{$act}" />
+                    <input type="hidden" name="id" value="{$type.id}" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script language="JavaScript">
+
+
+</script>
+{/literal}
+{include file="pagefooter.htm"}

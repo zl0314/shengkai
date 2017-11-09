@@ -1,0 +1,61 @@
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,listtable.js"}
+
+
+<!-- 订单列表 -->
+<form method="post" action="order.php?act=operate" name="listForm" onsubmit="return check()">
+  <div class="list-div" id="listDiv">
+{/if}
+
+<table cellpadding="3" cellspacing="1">
+  <tr>
+    <th>
+      <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" />编号{$sort_order_sn}
+    </th>
+    <th>球票id</th>
+    <th>客户姓名{$sort_order_time}</th>
+    <th>护照号码{$sort_consignee}</th>
+    <th>街道门牌号{$sort_order_amount}</th>
+    <th>手机电话</th>
+    <th>球票票号</th>
+    <th>{$lang.handler}</th>
+  <tr>
+  {foreach from=$bearer_info item=bearer}
+  <tr>
+    <td  valign="top"><input type="checkbox" name="checkboxes[]" value="{$bearer.id}"/>{$bearer.id}</td>
+    <td align="center" valign="top">{$bearer.goods_id}</td>
+    <td align="center" valign="top">{$bearer.cn_customer_name}</td>
+    <td align="center" valign="top">{$bearer.passport_number}</td>
+    <td align="center" valign="top" nowrap="nowrap">{$bearer.cn_name_street}</td>
+    <td align="center" valign="top" nowrap="nowrap">{$bearer.mobile}</td>
+    <td align="center" valign="top" nowrap="nowrap">{$bearer.ticket_code}</td>
+    <td align="center" valign="top"  nowrap="nowrap">
+     <a href="order.php?act=bearer_info&order_id={$order_id}&bearer_id={$bearer.id}&goods_id={$bearer.goods_id}">查看详细</a>
+     {if $order.can_remove}
+     <br /><a href="javascript:;" onclick="listTable.remove({$order.order_id}, remove_confirm, 'remove_order')">{$lang.remove}</a>
+     {/if}
+    </td>
+  </tr>
+  {/foreach}
+</table>
+
+<!-- 分页 -->
+<table id="page-table" cellspacing="0">
+  <tr>
+    <td align="right" nowrap="true">
+    {include file="page.htm"}
+    </td>
+  </tr>
+</table>
+
+{if $full_page}
+  </div>
+
+</form>
+<script language="JavaScript">
+</script>
+{/literal}
+
+{include file="pagefooter.htm"}
+{/if}

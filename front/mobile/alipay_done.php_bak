@@ -1,0 +1,23 @@
+<?php
+define('IN_ECS', true);
+require(dirname(__FILE__) . '/includes/init.php');
+require_once("alipay.config.php");
+require_once("lib/alipay_notify.class.php");
+
+$alipayNotify = new AlipayNotify($alipay_config);
+$verify_result = $alipayNotify->verifyReturn();
+if($verify_result) {
+    $order_sn=$_GET['out_trade_no'];
+    $order=$GLOBALS['db']->getRow('SELECT * FROM sk_order_info where order_sn='."'$order_sn'");
+    $smarty->assign('order', $order);
+    $namel="<img src='images/logo.png'>";
+    $smarty->assign( 'name1',$namel);
+    $smarty->display("alipay_done.html");
+}else{
+    $order_sn=$_GET['order_sn'];
+    $order=$GLOBALS['db']->getRow('SELECT * FROM sk_order_info where order_sn='."'$order_sn'");
+    $smarty->assign('order', $order);
+    $namel="<img src='images/logo.png'>";
+    $smarty->assign( 'name1',$namel);
+    $smarty->display("alipay_done.html");
+}

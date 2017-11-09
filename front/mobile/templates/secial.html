@@ -1,0 +1,193 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+<title>首页</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=720 user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css"  href="css/base.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+<link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/header.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/footer.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/secial.css" media="all" />
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="js/tools.js"></script>
+</head>
+<body>
+<!--start-->
+<!--end-->
+{include file="header.html"}
+<!--end 头部-->
+<!-- start 专题banner -->
+<div class="fulld" id="present"></div>
+<div class="naviga">
+	<ul class="titleNav fl">
+		<li><a class="jieshao" href="#present">介绍</a></li>
+		<li><a class="changguan" href="#tube">场馆</a></li>
+		<li><a class="xingcheng" href="#stroke">行程</a></li>
+        <li><a class="yuding" href="#yuding">预订</a></li>
+		<li><a class="fy" href="#feiyong">费用</a></li>
+        <li><a class="qianzheng" href="#qianzheng">签证</a></li>
+	</ul>
+	<a onclick="reserve('{$combo_info.combo_id}')" class="fr prompBtn">立即预订</a>
+</div>
+<div class="banerBg">
+	<img src="{$combo_info.combo_head}">
+	<div class="bannerWord">
+		<h2 class="title1">{$combo_info.combo_intro_title}</h2>
+		<p class="title2">{$combo_info.combo_intro_big}</p>
+		<p class="title3">{$combo_info.combo_intro_small}</p>
+		<a href="#" class="banerBtn" id="tube">{$combo_info.combo_intro_button}</a>
+	</div>
+</div>
+<!--{foreach from=$combo_info.combo_pitchs item=pitchs}-->
+<div class="adverBg">
+	<img src="{$pitchs.combo_pitch_img}">
+</div>
+<div class="adverFont">
+	<h3 class="lieu">{$pitchs.combo_pitch_name} </h3>
+	<p id="1day">可容纳观众{$pitchs.combo_pitch_name}名</p>
+	<p>{$pitchs.combo_pitch_desc}</p>
+</div>
+<!--{/foreach}-->
+<div class="dataBg" id="stroke">
+	<ul class="dataList">
+		<!--{foreach from=$combo_info.combo_travels item=travels key=key}-->
+		<li  ><a class="djt" id="{$key}"><h3 class="cobut">第{$travels.combo_travel_day}天</h3><p>{$travels.combo_travel_date}</p></a></li>
+		<!--{/foreach}-->
+	</ul>
+</div>
+
+<!-- end 专题banner -->
+<!-- start 新闻展示 -->
+<div class="vesselBg">
+    <!--{foreach from=$combo_info.combo_travels item=travels key=key}-->
+	<div class="dataBlock" id="day_{$key}">
+		<div class="captions">
+			<div class="cubus noirs"></div>
+			<span  >第{$travels.combo_travel_day}天</span><s>{$travels.combo_travel_date}</s><i>{$travels.combo_travel_title}</i>
+		</div>
+		<p>{$travels.combo_travel_content}</p>
+		<!--{if $travels.combo_travel_img}-->
+		<div class="inset">
+			<div class="fl blockA">
+				<img src="{$travels.combo_travel_img}">
+			</div>
+		</div>
+		<!--{/if}-->
+	</div>
+    <!--{/foreach}-->
+	<!--费用、预订、签证start-->
+	<div class="visa" id="yuding">
+		<ul class="visaTitle">
+			<li><a href="#" class="current">预订须知</a></li>
+			<!-- <li><a href="#xuzhi">预订</a></li>
+            <li><a href="#qianzheng">签证/签注</a></li> -->
+		</ul>
+		<div class="visaCont">
+			<div class="feiyong" id="yuding">
+				<div class="detail_date">
+					<!--<h3>预订须知</h3>-->
+					<ul class="num_list">
+						<li>{$combo_info.combo_editor}</li>
+					</ul>
+					<!--<img src="http://7xjtzw.com2.z0.glb.qiniucdn.com/o_1ariloq2e1cfu1lgd1nh481g18tu17.png" class="visaImg">-->
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="visa" id="feiyong">
+		<ul class="visaTitle">
+			<li><a href="#" class="current">费用说明</a></li>
+			<!-- <li><a href="#xuzhi">预订</a></li>
+            <li><a href="#qianzheng">签证/签注</a></li> -->
+		</ul>
+		<div class="visaCont">
+			<div class="feiyong" id="feiyong">
+				<div class="detail_date">
+					<!--<h3>费用说明</h3>-->
+					<ul class="num_list">
+						<li>{$combo_info.combo_charge}</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="visa" id="qianzheng">
+		<ul class="visaTitle">
+			<li><a href="#" class="current">签证信息</a></li>
+			<!-- <li><a href="#xuzhi">预订</a></li>
+            <li><a href="#qianzheng">签证/签注</a></li> -->
+		</ul>
+		<div class="visaCont">
+			<div class="feiyong" id="qianzheng">
+				<div class="detail_date">
+					<!--<h3>签证信息</h3>-->
+					<ul class="num_list">
+						<li>{$combo_info.combo_visa}</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--费用、预订、签证end-->
+    <div class="broadcast">
+        <img src="{$combo_info.combo_foot}">
+    </div>
+</div>
+<!-- end 新闻展示 -->
+<!--start footer-->
+
+{include file="footer.html"}
+<!--end footer-->
+
+
+</body>
+<script type="text/javascript" src="js/pulldown.js"></script>
+<script>
+	function reserve(combo_id){
+		$.ajax({
+			url: 'secial.php?act=reserve',
+			type: 'POST',
+			dataType: 'json',
+			data: { goods_number: 1,handle:'reload',combo_id:combo_id},
+			success: function(data){
+				if(data == false){
+					alert('球票库存不足，请购买其余套餐！');
+				}else{
+					window.location.href = "cart.php?act=index";
+				}
+			}
+		})
+	}
+</script>
+<script>
+	$('.djt').click(function(){
+		var num=$(this).attr("id");
+		$('html,body').animate({scrollTop:$('#day_'+num).offset().top-186}, 600);
+	});
+	$('.jieshao').click(function(){
+		$('html,body').animate({scrollTop:$('#persent').offset().top-145}, 600);
+	});
+	$('.changguan').click(function(){
+		$('html,body').animate({scrollTop:$('#changguan').offset().top-145}, 600);
+	});
+	$('.xingcheng').click(function(){
+		$('html,body').animate({scrollTop:$('#stroke').offset().top-145}, 600);
+	});
+	$('.yuding').click(function(){
+		$('html,body').animate({scrollTop:$('#yuding').offset().top-186}, 600);
+	});
+	$('.fy').click(function(){
+		$('html,body').animate({scrollTop:$('#feiyong').offset().top-186}, 600);
+	});
+	$('.qianzheng').click(function(){
+		$('html,body').animate({scrollTop:$('#qianzheng').offset().top-186}, 600);
+	});
+</script>
+</html>

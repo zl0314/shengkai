@@ -1,0 +1,54 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader2.htm"}
+{insert_scripts files="validator.js,jquery.min.js,../js/region.js"}
+<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
+<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+<div class="main-div">
+    <form method="post" action="route.php?con=team&act=edit" name="theForm">
+        <table cellspacing="1" cellpadding="3" width="100%" >
+            <tr>
+                <td class="label">参赛方名称：</td>
+                <td><input type="text" name="team_name" maxlength="60" value="{$team.team_name}" /></td>
+            </tr>
+<!--            <tr>
+                <td class="label">参赛方介绍：</td>
+                <td><script id="editor" name="team_intro" type="text/plain" style="width:800px;height:250px;">{$team.team_intro}</script></td>
+            </tr>
+            <tr>
+                <td class="label">参赛方宣传图：</td>
+                <td>
+                    
+                     <div id="container">
+                        <a class="btn btn-default btn-lg " id="img_upload" href="#" >
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <sapn>选择文件</sapn>
+                        </a>
+                        <font id="upload_status"></font>
+                        <input type="hidden" name="team_img" id="img_id" value="{$team.team_img}">
+
+                    </div>
+                </td>
+            </tr>-->
+        </table>
+        <table align="center">
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" class="button" value="{$lang.button_submit}" />
+                    <input type="reset" class="button" value="{$lang.button_reset}" />
+                    <input type="hidden" name="act" value="{$act}" />
+                    <input type="hidden" name="id" value="{$team.id}" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/plupload.full.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/qiniu.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/main.js"></script>
+<script language="JavaScript">
+    
+    var ue = UE.getEditor('editor');
+    
+</script>
+{insert_scripts files="../js/utils.js,validator.js"}
+{include file="pagefooter.htm"}

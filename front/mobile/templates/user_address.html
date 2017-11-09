@@ -1,0 +1,103 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+<title>联系地址管理</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=720 user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css"  href="css/base.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/pulldown.css" media="all">
+<link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/header.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/footer.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/vouch.css" media="all">
+<link rel="stylesheet" type="text/css"  href="css/flexslider.css" media="all">
+<link rel="stylesheet" type="text/css"  href="css/user-info.css" />
+
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+</head>
+<body>
+        <!--start 头部-->  
+        <div class="boxBg debugTop">
+        
+     {include file="header.html"}
+        
+            <!--end 头部-->
+            <!-- 联系地址管理 -->
+        <form action="user.php?act=act_edit_address" method="post" name="user_info">
+             {foreach from=$consignee_list item=consignee key=sn}
+            <div class="topBox-bg">
+               <div class="topBox-bg">
+                <div class="topBox">
+                   <div class="strip3">
+                        <div class="region difePad">
+                            <div class="fl regionLeft">
+                                <label class="fr hintd">联系人姓名：</label>
+                            </div>
+                            <div class="fl regionRight">{$consignee.consignee}</div>
+                           <div class="alterBg fr">
+                                <a href="#" class="compiled fl" onclick="editAddress('{$consignee.address_id}')">编辑</a>
+                                <a href="#" class="removen fr"  onclick="removeAddress('{$consignee.address_id}')">删除</a>
+                            </div>
+                        </div>
+                        <div class="region">
+                            <div class="fl regionLeft">
+                                <label class="fr hintd">电子邮件：</label>
+                            </div>
+                            <div class="fl regionRight">{$consignee.email}</div>
+                        </div>
+                       
+                        <div class="region">
+                            <div class="fl regionLeft">
+                                <label class="fr hintd">手机：</label>
+                            </div>
+                            <div class="fl regionRight">{$consignee.mobile}</div>
+                        </div>
+                        <div class="region">
+                            <div class="fl regionLeft">
+                                <label class="fr hintd">证件类型：</label>
+                            </div>
+                            <div class="fl regionRight">{$consignee.card_type_text}</div>
+                        </div>
+                        <div class="region">
+                            <div class="fl regionLeft">
+                                <label class="fr hintd">证件号码：</label>
+                            </div>
+                            <div class="fl regionRight">{$consignee.card_num}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div> 
+           {/foreach} 
+        </form>
+        </div> 
+       <a href="user.php?act=actl_edit_address">
+        <div class="btn01">
+             +&nbsp;添加联系人信息
+       
+        </div>
+        </a>
+
+    </body>
+    <script type="text/javascript" src="js/pulldown.js"></script>
+    <!--{insert_scripts files='common.js,user.js'}-->
+    <script>
+        $(function() {
+                                                $('[data-toggle=tooltip]').tooltip();
+                                            });
+                                            function editAddress(id) {
+                                                window.location.href = "user.php?act=edit_address&address_id=" + id;
+                                            }
+
+                                            function removeAddress(id) {
+                                                if (confirm('你确认要删除该收货地址吗？')) {
+                                                    location.href = 'user.php?act=drop_consignee&id=' + id;
+                                                }
+                                            }
+    </script>
+</html>

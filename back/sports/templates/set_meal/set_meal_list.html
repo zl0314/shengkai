@@ -1,0 +1,63 @@
+<!-- $Id: games_list.htm 17053 2010-03-15 06:50:26Z sxc_shop $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,newlisttable.js"}
+<form method="POST" action="route.php?con=set_meal&act=batch_drop" name="listForm" onsubmit="return confirm_bath()">
+    <!-- start set_meal list -->
+    <div class="list-div" id="listDiv">
+{/if}
+        <!--用户列表部分-->
+        <table cellpadding="3" cellspacing="1">
+            <tr>
+                <th>
+                    <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox">
+                    <a href="javascript:listTable.sort('set_meal_id'); ">编号</a>{$sort_set_meal_id}
+                </th>
+                <th>套餐名称</th>
+                <th>套餐标题</th>
+                <th>套餐副标题</th>
+                <th>套餐日期</th>
+                <th>{$lang.handler}</th>
+            <tr>
+                {foreach from=$set_meal_list item=set_meal}
+            <tr>
+                <td><input type="checkbox" name="checkboxes[]" value="{$set_meal.set_meal_id}" notice="{if $set_meal.set_meal_money ne 0}1{else}0{/if}"/>{$set_meal.set_meal_id}</td>
+                <td class="first-cell">{$set_meal.set_meal_name|escape}</td>
+                <td  align="center">{$set_meal.set_meal_title}</td>
+                <td  align="center">{$set_meal.set_meal_intro}</td>
+                <td  align="center">{$set_meal.set_meal_date}</td>
+                <td align="center">
+                    <a href="route.php?con=set_meal&act=update&id={$set_meal.set_meal_id}" title="{$lang.edit}"><img src="images/icon_edit.gif" border="0" height="16" width="16" /></a>
+                    <a href="javascript:confirm_redirect('确定要删除套餐?', 'route.php?con=set_meal&act=remove&id={$set_meal.set_meal_id}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16" /></a>
+                </td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="5">{$lang.no_records}</td></tr>
+            {/foreach}
+            <tr>
+                <td colspan="2">
+                    <input type="hidden" name="act" value="batch_remove" />
+                    <input type="submit" id="btnSubmit" value="删除" disabled="true" class="button" /></td>
+                <td align="right" nowrap="true" colspan="8">
+                    {include file="page2.htm"}
+                </td>
+            </tr>
+        </table>
+        {if $full_page}
+    </div>
+</form>
+<script type="text/javascript" language="JavaScript">
+    listTable.recordCount = {$record_count};
+    listTable.pageCount = {$page_count};
+    listTable.new_url = 'route.php?is_ajax=1&con=set_meal';
+    listTable.act = 'index_query';
+    {foreach from = $filter item = item key = key}
+    listTable.filter.{$key} = '{$item}';
+    {/foreach}
+    function confirm_bath()
+  {
+    return confirm("确定要批量删除吗");
+  }
+</script>
+{include file="pagefooter.htm"}
+{/if}

@@ -1,0 +1,63 @@
+<!-- $Id: games_list.htm 17053 2010-03-15 06:50:26Z sxc_shop $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,newlisttable.js"}
+<form method="POST" action="route.php?con=color&act=batch_drop" name="listForm" onsubmit="return confirm_bath()">
+    <!-- start number list -->
+    <div class="list-div" id="listDiv">
+{/if}
+        <table cellpadding="3" cellspacing="1">
+            <tr>
+                <th>
+                    <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox">
+                    <a href="javascript:listTable.sort('color_id'); ">编号</a>{$sort_color_id}
+                </th>
+                <th>赛事名称</th>   
+                <th>名称</th>
+                <th>是否为小组赛</th>
+<!--                <th>颜色</th>    -->
+                <th>{$lang.handler}</th>
+            </tr>
+                {foreach from=$color_list item=color}
+            <tr>
+                <td><input type="checkbox" name="checkboxes[]" value="{$color.color_id}" notice="" />{$color.color_id}</td>
+                <td class="first-cell" align="center">{$color.game_name}</td>
+                <td  align="center" >{$color.color_name}</td>   
+                <td width="10%" align="center"><img src="images/{if $color.is_color eq '1'}yes{else}no{/if}.gif" /></td>
+                <!--<td  align="center" style="color:#{$color.color_value}" >{$color.game_name}</td>-->
+                <td align="center">
+                    <a href="route.php?con=color&act=update&id={$color.color_id}" title="{$lang.edit}"><img src="images/icon_edit.gif" border="0" height="16" width="16" /></a>
+                    <a href="javascript:confirm_redirect('确定要删除该小组?', 'route.php?con=color&act=remove&id={$color.color_id}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16" /></a>
+                </td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="9">{$lang.no_records}</td></tr>
+            {/foreach}
+            <tr>
+                <td colspan="2">
+                    <input type="hidden" name="act" value="batch_remove" />
+                    <input type="submit" id="btnSubmit" value="删除" disabled="true" class="button" /></td>
+                    <td align="right" nowrap="true" colspan="8">
+                    {include file="page2.htm"}
+                </td>
+            </tr>
+            
+        </table>
+{if $full_page}
+    </div>
+</form>
+<script type="text/javascript" language="JavaScript">
+    listTable.recordCount = {$record_count};
+    listTable.pageCount = {$page_count};
+    listTable.new_url = 'route.php?is_ajax=1&con=color';
+    listTable.act = 'index_query';
+    {foreach from = $filter item = item key = key}
+    listTable.filter.{$key} = '{$item}';
+    {/foreach}
+    function confirm_bath()
+  {
+    return confirm("确定要批量删除所选颜色吗");
+  }
+</script>
+{include file="pagefooter.htm"}
+{/if}

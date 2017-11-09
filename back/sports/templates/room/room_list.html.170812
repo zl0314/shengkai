@@ -1,0 +1,58 @@
+<!-- $Id: games_list.htm 17053 2010-03-15 06:50:26Z sxc_shop $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,newlisttable.js"}
+<form method="POST" action="route.php?con=roomtype&act=batch_drop" name="listForm" onsubmit="return confirm_bath()">
+    <!-- start games list -->
+    <div class="list-div" id="listDiv">
+{/if}
+        <!--用户列表部分-->
+        <table cellpadding="3" cellspacing="1">
+            <tr>
+                <th>
+                    <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox">
+                    <a href="javascript:listTable.sort('id'); ">编号</a>
+                </th>
+                <th>房间类型</th>
+                <th>酒店</th>
+                <th>单价</th>
+                <th>{$lang.handler}</th>
+            <tr>
+                {foreach from=$room_list item=room}
+            <tr>
+                <td><input type="checkbox" name="checkboxes[]" value="{$room.id}" notice="{if $room.game_money ne 0}1{else}0{/if}"/>{$room.id}</td>
+                <td class="first-cell">{$room.type_name|escape}</td>
+                <td  align="center">{$room.hotel_name}</td>
+                
+                 <td  align="center">{$room.room_money}</td>
+                <td align="center">
+                    <a href="route.php?con=room&act=update&id={$room.id}" title="{$lang.edit}"><img src="images/icon_edit.gif" border="0" height="16" width="16" /></a>
+                    <a href="javascript:confirm_redirect('确定要删除房间?', 'route.php?con=room&act=remove&id={$room.id}&hotel_id={$room.hotel_id}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16" /></a>
+                </td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+            {/foreach}
+            <tr>
+                <td colspan="2">
+                    <input type="hidden" name="act" value="batch_remove" />
+                    <input type="submit" id="btnSubmit" value="删除" disabled="true" class="button" /></td>
+                <td align="right" nowrap="true" colspan="5">
+                    {include file="page2.htm"}
+                </td>
+            </tr>
+        </table>
+{if $full_page}
+    </div>
+</form>
+<script type="text/javascript" language="JavaScript">
+    listTable.recordCount = {$record_count};
+    listTable.pageCount = {$page_count};
+    listTable.new_url = 'route.php?is_ajax=1&con=room';
+    listTable.act = 'index_query';
+    {foreach from = $filter item = item key = key}
+    listTable.filter.{$key} = '{$item}';
+    {/foreach}
+</script>
+{include file="pagefooter.htm"}
+{/if}

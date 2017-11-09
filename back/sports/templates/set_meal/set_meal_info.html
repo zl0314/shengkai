@@ -1,0 +1,104 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader2.htm"}
+{insert_scripts files="jquery.min.js,adddate.js"}
+<!--<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>-->
+<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+<div class="main-div">
+    <form method="post" action="route.php?con=set_meal&act=edit" name="theForm">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td class="label">套餐名称：</td>
+                <td><input type="text" name="set_meal_name" maxlength="60" value="{$set_meal_info.set_meal_name}" /></td>
+            </tr>
+            <tr>
+                <td class="label">套餐logo：</td>
+                <td>
+                    <div id="container">
+                        <a class="btn btn-default btn-lg " id="img_upload" href="#" >
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>选择文件</span>
+                        </a>
+                        <font id="upload_status"></font>
+                        <input type="hidden" name="set_meal_logo" id="img_id" value="{$set_meal_info.set_meal_logo}">
+
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="label"> 套餐标题：</td>
+                 <td><input type="text" name="set_meal_title" maxlength="60" value="{$set_meal_info.set_meal_title}" /></td>
+            </tr>
+          
+             <tr>
+                <td class="label">套餐颜色：</td>
+                <td>
+                   <input class="color" name="set_meal_color"  value="{$set_meal_info.set_meal_color}">
+                </td>
+            </tr>
+            <tr>
+                <td class="label">套餐图片：</td>
+                <td>
+                    <div id="container2">
+                        <a class="btn btn-default btn-lg " id="img_upload2" href="#" >
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>选择文件</span>
+                        </a>
+                        <font id="upload_status2"></font>
+                        <input type="hidden" name="set_meal_img" id="img_id2" value="{$set_meal_info.set_meal_img}"/>
+
+                    </div>
+                </td>
+            </tr>
+              <tr>
+                <td class="label">套餐日期：</td>
+                <td><input type="text" name="set_meal_date" id="set_meal_date" value="{$set_meal_info.set_meal_date}"/></td>
+            </tr>
+            <tr>
+                <td class="label">套餐连接：</td>
+                <td><input type="text" name="set_meal_url" id="set_meal_url" value="{$set_meal_info.set_meal_url}"/></td>
+            </tr>
+            <tr>
+                <td class="label">是否展示：</td>
+                <td><input type="checkbox" name="is_show" id="is_show" value="1"{if $set_meal_info.is_show==1}checked{/if}/>展示</td>
+            </tr>
+              <tr >
+                <td class="label" >套餐副标题：</td>
+                <td><textarea name="set_meal_intro">{$set_meal_info.set_meal_intro}</textarea></td>
+            </tr>
+
+        </table>
+        <table align="center">
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" class="button" value="{$lang.button_submit}" />
+                    <input type="reset" class="button" value="{$lang.button_reset}" />
+                    <input type="hidden" name="act" value="{$act}" />
+                    <input type="hidden" name="set_meal_id" value="{$set_meal_info.set_meal_id}" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+
+<script type="text/javascript" charset="utf-8" src="js/qiniu/plupload.full.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/qiniu.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/qiniu_init.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/color/jscolor.js"></script>
+<script language="JavaScript">
+    new QiniuInit().upload({
+        browse_button:"img_upload",
+        drop_element:"container",
+        upload_status:"upload_status",
+        img_id:"img_id"
+    });
+     new QiniuInit().upload({
+        browse_button:"img_upload2",
+        drop_element:"container2",
+        upload_status:"upload_status2",
+        img_id:"img_id2"
+    });
+</script>
+{/literal}
+{include file="pagefooter.htm"}

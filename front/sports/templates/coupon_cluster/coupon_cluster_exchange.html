@@ -1,0 +1,52 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader2.htm"}
+{insert_scripts files="validator.js,jquery.min.js,../js/region.js"}
+<div class="main-div">
+  <form method="post" action="route.php?con=user_coupon&act=exchange" name="theForm" enctype="multipart/form-data">
+    <table cellspacing="1" cellpadding="3" width="100%">
+      <tr>
+        <td class="label">优惠券兑换码：</td>
+        <td><input type="text" name="coupon_key" maxlength="100" value="{$coupon_cluster.coupon_key}" />{$lang.require_field}</td>
+      </tr>
+      <tr>
+        <td class="label">手机号：</td>
+        <td>
+        <input type="text" name="mobile_phone" maxlength="100" value="" />
+          <input type="button" class="button" value="查找" id="search_user_by_phone"/>
+        </td>
+      </tr>
+      <tr>
+        <td class="label">搜索结果：</td>
+        <td id="search_result"></td>
+      </tr>
+    </table>
+    <hr>
+    <table align="center">
+      <tr>
+        <td colspan="2" align="center">
+          <input type="submit" class="button" value="{$lang.button_submit}" />
+          <input type="reset" class="button" value="{$lang.button_reset}" />
+          <input type="hidden" name="act" value="{$act}" />
+          <input type="hidden" name="coupon_cluster_id" value="{$coupon_cluster.coupon_cluster_id}" />
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+<script type="text/javascript">
+  $("#search_user_by_phone").click(function (){
+    var mobile_phone = $("input[name=mobile_phone]").val();
+    $.ajax({url: "route.php?con=user&act=search_by_mobile_phone", data:{mobile_phone: mobile_phone}, dataType: "json", success: function (result){
+      if (result.data != 'undefined') {
+        var html = '';
+        for (var i = 0; i < result.data.length; i++) {
+          console.log(result.data[i]);
+          html  += '<div><label><input type="radio" name="user_id" value="' + result.data[i].user_id + '">' + result.data[i].user_name + '[' + result.data[i].mobile_phone + ']' + '</label></div>';
+        }
+        $("#search_result").html(html);
+      }
+    }});
+  });
+</script>
+{include file="pagefooter.htm"}

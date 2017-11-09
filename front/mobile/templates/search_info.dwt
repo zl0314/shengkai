@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{$page_title}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv=”X-UA-Compatible” content=”IE=edge,chrome=1″/>
+    <link rel="shortcut icon" href="favicon.ico" />
+    <link rel="stylesheet" href="{$css_path}/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="{$css_path}/bootstrap/bootstrap-theme.min.css">
+    <!-- Loading Flat UI -->
+    <link href="{$css_path}/flat-ui/flat-ui.css" rel="stylesheet">
+    <link rel="stylesheet" href="{$css_path}/header2.css">
+    <link rel="stylesheet" href="{$css_path}/search-list.css">
+    <link rel="stylesheet" href="{$css_path}/base.css">
+    <link rel="stylesheet" href="{$css_path}/foot.css">
+    <script src="{$js_path}/jquery.min.js"></script>
+    <script src="../js/user.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <!-- <script src="{$js_path}js/flat-ui.min.js"></script> -->
+    <script src="{$js_path}/bootstrap.min.js"></script>
+    <script src="{$js_path}/video.js"></script>
+</head>
+<body style="background:#ebebeb;">
+    <div id="container" class="">
+  <!-- start:头部 -->
+    <!-- #BeginLibraryItem "/library/page_header.lbi" --><!-- #EndLibraryItem -->
+  <!-- end:头部 -->
+        <div id="main" class="search-list container-fluid" style="margin-bottom:20px;">
+            <div class="container-fluid sousuotitle">
+              <div class="col-md-6 zuomian">        
+                    <p> 盛开体育找到&nbsp;<s>
+                {$game_count}</s>&nbsp;个与&nbsp;<i>{$like}</i>&nbsp;相关的赛事</p>
+              </div>
+            </div>
+            <div class="clear"></div>
+            {foreach from=$game_info item=game}
+            <div class="p_sousuo hidden-sm hidden-xs">
+              <div class="container-fluid sousuo01">
+                <div class="col-md-2 logo01">
+                  <img src="{$game.game_sealogo}" />
+                </div>
+                <div class="col-md-7 jianjies">
+                  <h2>{$game.game_name}</h2>
+                  <p>{$game.game_intro}</p>
+                </div>
+                <div style="left:2.3%" class="col-md-2 chakanjieshao">
+                  <a href="more_info.php?act=tpl&game_id={$game.id}" class="fr">查看介绍</a>
+                </div>
+                <div class="col-md-1 chakansaicheng" style="padding:0px;">
+                  <a href="game_search.php?game_id={$game.id}" class="fr">查看赛程</a>
+                </div>
+              </div>
+            </div>
+            {/foreach}
+        </div>
+    <!-- #BeginLibraryItem "/library/page_footer.lbi" --><!-- #EndLibraryItem -->
+    </div>
+</body>
+</html>

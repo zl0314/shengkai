@@ -1,0 +1,88 @@
+{include file="pageheader2.htm"}
+<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
+<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+<link href="./js/jquery.datetimepicker/jquery.datetimepicker.css" rel="stylesheet" type="text/css" />
+<div class="main-div">
+  <form method="post" action="route.php?con=room_num&act=edit" name="theForm">
+    <table cellspacing="1" cellpadding="3" width="100%">
+      <tr>
+        <td class="label">酒店名称：</td>
+        <td>{$hotel.hotel_name}</td>
+      </tr>
+      <tr>
+        <td class="label">房间类型：</td>
+        <td>
+          {$room.type_name}
+        </td>
+      </tr>
+      <tr>
+        <td class="label">房间单价：</td>
+        <td>
+          {$room.room_money}
+        </td>
+      </tr>
+      <tr>
+        <td class="label">日期：</td>
+        <td>
+            {if $act == 'add'}
+            <input type="datetime" name="date" maxlength="60" value="" />
+            {else}
+            {$room_num.date}
+            {/if}
+
+            {if $act == 'add'}
+            &nbsp;至&nbsp;
+            <input type="datetime" name="end_date" maxlength="60" value="" />
+            {/if}
+        </td>
+      </tr>
+      <tr>
+        <td class="label">房间库存：</td>
+        <td>
+            <input type="number" name="num" maxlength="60" value="{$room_num.num}" />
+        </td>
+      </tr>
+        <tr>
+            <td class="label">锁定库存：</td>
+            <td>
+                {if $act == 'add'}
+                0
+                {else}
+                <input type="number" name="locked_num" maxlength="60" value="{$room_num.locked_num}" />
+                {/if}
+            </td>
+        </tr>
+        <tr>
+            <td class="label">已售：</td>
+            <td>
+                {$room_num.sale_num}
+            </td>
+        </tr>
+    </table>
+    <table align="center">
+      <tr>
+        <td colspan="2" align="center">
+          <input type="submit" class="button" value="{$lang.button_submit}" />
+          <input type="reset" class="button" value="{$lang.button_reset}" />
+          <input type="hidden" name="act" value="{$act}" />
+          <input type="hidden" name="room_id" value="{$room_id}" />
+          <input type="hidden" name="id" value="{$room_num_id}" />
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js,jquery.min.js,jquery.datetimepicker/jquery.datetimepicker.full.min.js"}
+{literal}
+<script language="JavaScript">
+    jQuery(document).ready(function () {
+        'use strict';
+        jQuery.datetimepicker.setLocale('ch');
+        jQuery('input[name=date],input[name=end_date]').datetimepicker({
+            timepicker:false,
+            format:'Y-m-d'
+        });
+    });
+</script>
+{/literal}
+{include file="pagefooter.htm"}

@@ -1,0 +1,188 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+    <title>购物车-订机票</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=720 user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css" href="assets/lib/flatui/css/vendor/bootstrap/css/bootstrap.min.css"
+          media="all"/>
+    <link rel="stylesheet" type="text/css" href="css/base.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="css/index.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="css/header.css" media="all"/>
+    <link rel="stylesheet" href="assets/lib/flatui/css/flat-ui.min.css">
+    <link rel="stylesheet" type="text/css" href="css/look-list.css" media="all"/>
+    <link rel="stylesheet" type="text/css" href="assets/lib/bootstrap-datetimepicker-4.17.47/css/bootstrap-datetimepicker.css"/>
+    <script type="text/javascript" src="assets/lib/flatui/js/vendor/jquery.min.js"></script>
+    <script type="text/javascript" src="assets/lib/flatui/js/flat-ui.min.js"></script>
+    <script src="assets/lib/moment-with-locales.min.js" charset="UTF-8"></script>
+    <script src="assets/lib/bootstrap-datetimepicker-4.17.47/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
+</head>
+<body>
+<!--start 头部-->
+{include file="header.html"}
+<!--container starts here-->
+<div class="container">
+    <div class="wrapper">
+        <form action="hotel.php?act=save_hotel&game_id={$game_id}" method="post">
+            <div class="" id="add_hotel">
+                <div class="transparent-table">
+                    <div class="transparent-cell">
+                        <div class="ydjdcont" style="width: 100%; max-width: 100%; overflow: visible;">
+                            <div class="ydjd-body">
+                                <div class="row">
+                                    <div class="title" style="background: none;">
+                                        <h2>预订酒店</h2>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="ydjd-detail">
+                                        <div class="jiudianxinxi">
+                                            <div class="xingji">
+                                                <div class="fl xuanzexj">
+                                                    <p>选择酒店</p>
+                                                </div>
+                                                <div class="xingjis fl" id="xingji">
+                                                    <!--{foreach from=$hotel_list item=hotel}-->
+                                                    <a href="####" class="fl five" onclick="select_room({$hotel.id})">{$hotel.hotel_name}</a>
+                                                    <!--{/foreach}-->
+                                                    <i class="fl">{$utf8_str.Explain}</i>
+                                                </div>
+                                            </div>
+                                            <div class="clear"></div>
+                                            <div class="fangjian">
+                                                <div class="fl xuanzefj">
+                                                    <p>选择房间</p>
+                                                </div>
+                                                <div class="fangjiandaxiao fl" id="room_list">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clear"></div>
+                                    <div class="anniu"
+                                         style="padding: 20px 28px 20px 98px; width: 100%; height: auto; background: none;">
+                                        <input type="hidden" name="rec_id" id="rec_id" value="0">
+                                        <input type="hidden" name="hotel_id" id="hotel_id" value="0">
+                                        <input type="submit" value="确定" class="hover"/>
+                                        <input type="button" value="取消" id="div_hide" onclick="window.location.href='cart.php'"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            if ($('[data-toggle="select"]').length) {
+                $('[data-toggle="select"]').select2();
+            }
+        });
+    </script>
+</div>
+<!--container ends here-->
+<!--end 头部-->
+<script type="text/javascript">
+
+    var check_room = function (obj, room_id, room_type) {
+        if (obj.checked) {
+            obj.parentNode.parentNode.nextSibling.nextSibling.setAttribute("class", "");
+        } else {
+            obj.parentNode.parentNode.nextSibling.nextSibling.setAttribute("class", "hidden");
+        }
+
+
+        var options = {
+            locale:  'zh-cn',
+            format: 'YYYY-MM-DD',
+            viewMode: 'days',
+            useCurrent: false,
+            defaultDate: false,
+//                keepOpen: true,
+            showClose: true,
+            allowInputToggle: true,
+            collapse: true,
+            minDate: new Date(),
+            widgetPositioning: {
+                horizontal: 'left',
+                vertical: 'auto'
+            }
+        };
+        from_allow_date_list_hotel = ['1970-01-01'];
+        return_allow_date_list_hotel = ['1970-01-01'];
+        $.ajax({url:"hotel.php?act=ajax_room_num", dataType:"json", data:{room_id:room_id, room_type:room_type}, success: function (result){
+            for (var i = 0; i < result.length; i ++) {
+                from_allow_date_list_hotel.push(result[i].date);
+                return_allow_date_list_hotel.push(result[i].date);
+            }
+
+            options.defaultDate = false;
+            if (from_allow_date_list_hotel.length > 1) {
+                options.defaultDate = new Date(from_allow_date_list_hotel[1]);
+            }
+            //酒店
+            $("#start_date_" + room_id + "_" + room_type).datetimepicker(options).data("DateTimePicker").enabledDates(from_allow_date_list_hotel);
+
+            options.defaultDate = false;
+            if (return_allow_date_list_hotel.length > 1) {
+                options.defaultDate = new Date(return_allow_date_list_hotel[1]);
+            }
+            $("#end_date_" + room_id + "_" + room_type).datetimepicker(options).data("DateTimePicker").enabledDates(return_allow_date_list_hotel);
+        }});
+    };
+    function cencel_hotel(hotel_id) {
+        document.getElementById(hotel_id).style.display = "none";
+        document.getElementById(hotel_id).checked = false;
+    }
+
+    var add_totel_show = function (checkbox_id) {
+        if ($("#add_hotel").is(":hidden")) {
+            $("#add_hotel").show();
+            $("#div_hide").on('click', function () {
+                window.location.href = 'cart.php';
+            });
+        } else {
+            $("#add_hotel").hide();
+            $("#" + checkbox_id).removeAttr("checked");
+        }
+    };
+    var select_hotel = function (obj, region_id, rec_id) {
+        add_totel_show(obj);
+        $("#rec_id").val(rec_id);
+        $("#xingji").html("正在加载酒店，请稍候。。。");
+        $.ajax({
+            url: 'hotel.php?act=ajax_hotel_html',
+            type: 'POST',
+            dataType: 'html',
+            data: {region_id: region_id, rec_id: rec_id},
+            success: function (data) {
+                $("#xingji").html("");
+                $("#xingji").html(data);
+            }
+        });
+    };
+    var select_room = function (hotel_id) {
+        $("#hotel_id").val(hotel_id);
+        $("#room_list").html("<div class=\"daxiao\"> <label class=\"checkbox\">正在加载，请稍候。。。</label> </div>");
+        $.ajax({
+            url: 'hotel.php?act=ajax_room_html',
+            type: 'POST',
+            dataType: 'html',
+            data: {hotel_id: hotel_id},
+            success: function (data) {
+                $("#room_list").html("");
+                $("#room_list").html(data);
+            }
+        });
+    };
+</script>
+</body>
+</html>

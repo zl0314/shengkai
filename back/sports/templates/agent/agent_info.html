@@ -1,0 +1,109 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader2.htm"}
+{insert_scripts files="validator.js,jquery.min.js,../js/region.js"}
+<div class="main-div">
+    <form method="post" action="route.php?con=agent&act=edit" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td class="label">账户：</td>
+                <td><input type="text" name="user_name" maxlength="60" value="{$agent.user_name}" />{$lang.require_field}</td>
+            </tr>
+            <tr>
+                <td class="label">密码：</td>
+                <td><input type="text" name="user_pwd" maxlength="60" />{$lang.require_field}</td>
+            </tr>
+            <tr>
+                <td class="label">代理商名称：</td>
+                <td><input type="text" name="agent" maxlength="60" value="{$agent.agent}" />{$lang.require_field}</td>
+            </tr>
+            <tr>
+                <td class="label">主管人：</td>
+                <td><input type="text" name="satrap" maxlength="60" value="{$agent.satrap}" />{$lang.require_field}</td>
+            </tr>
+            <tr>
+                <td class="label">联系电话：</td>
+                <td><input type="text" name="phone" maxlength="60" value="{$agent.phone}" />{$lang.require_field}</td>
+            </tr>
+            <tr>
+                <td class="label">邮件：</td>
+                <td><input type="text" name="email" maxlength="60" value="{$agent.email}" />{$lang.require_field}</td>
+            </tr>
+            <tr>
+                <td class="label">QQ：</td>
+                <td><input type="text" name="qq" maxlength="60" value="{$agent.qq}" />{$lang.require_field}</td>
+            </tr> 
+            <tr>
+                <td class="label">详细地址：</td>
+                <td><input type="text" name="address" maxlength="60" value="{$agent.address}" />{$lang.require_field}</td>
+            </tr>
+            <tr>
+                <td class="label">汇款路径：（SwiftCode/IBANCode）：</td>
+                <td><input type="text" name="swiftcode" maxlength="60" value="{$agent.swiftcode}" />{$lang.require_field}</td>
+            </tr>
+            <tr>
+                <td class="label">开户行：</td>
+                <td><input type="text" name="bank" maxlength="60" value="{$agent.bank}" />{$lang.require_field}</td>
+            </tr>
+            <tr>
+                <td class="label">开户行地址：</td>
+                <td><input type="text" name="bank_address" maxlength="60" value="{$agent.bank_address}" />{$lang.require_field}</td>
+            </tr> 
+            <tr>
+                <td class="label">账户名称：</td>
+                <td><input type="text" name="account" maxlength="60" value="{$agent.account}" />{$lang.require_field}</td>
+            </tr>
+            <tr>
+                <td class="label">银行卡号：</td>
+                <td><input type="text" name="bank_card" maxlength="60" value="{$agent.bank_card}" />{$lang.require_field}</td>
+            </tr>
+        </table>
+        <table align="center">
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" class="button" value="{$lang.button_submit}" />
+                    <input type="reset" class="button" value="{$lang.button_reset}" />
+                    <input type="hidden" name="act" id="act" value="{$act}" />
+                    <input type="hidden" name="id" value="{$agent.id}" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script language="JavaScript">
+   // 这里把JS用到的所有语言都赋值到这里
+    {foreach from=$lang.js_languages key=key item=item}
+    var {$key} = "{$item}";
+    {/foreach}
+    /**
+     * 检查表单输入的数据
+     */
+    function validate()
+    {  
+        validator = new Validator("theForm");
+        validator.required("user_name", no_user_name);
+        var act = document.getElementById('act').value;
+        if(act != 'update'){
+            validator.required("user_pwd", no_user_pwd);
+        }     
+        validator.required("agent", no_agent);
+        validator.required("satrap", no_satrap);
+        validator.required("phone", no_phone);
+        validator.isNumber('phone',phone);
+        validator.required("email", no_email);
+        validator.isEmail("email",email);
+        validator.required("qq", no_qq);
+        validator.isNumber('qq',qq);
+        validator.required("address", no_address);
+        validator.required("swiftcode",no_swiftcode);
+        validator.required("bank",no_bank);
+        validator.required("bank_address",no_bank_address);
+        validator.required("account",no_account);
+        validator.required("bank_card",no_bank_card);
+        validator.isNumber('bank_card',bank_card);
+        return validator.passed();
+    }
+</script>
+{/literal}
+{include file="pagefooter.htm"}

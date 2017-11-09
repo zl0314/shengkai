@@ -1,0 +1,69 @@
+<!-- $Id: games_list.htm 17053 2010-03-15 06:50:26Z sxc_shop $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,newlisttable.js"}
+<form method="POST" action="route.php?con=number&act=batch_drop&sche_id={$schedule_id}&p_id={$p_id}" name="listForm" onsubmit="return confirm_bath()">
+    <!-- start number list -->
+    <div class="list-div" id="listDiv">
+{/if}
+        <table cellpadding="3" cellspacing="1">
+            <tr>
+                <th>
+                    <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox">
+                    <a href="javascript:listTable.sort('game_id'); ">编号</a>{$sort_game_id}
+                </th>
+                <th>场次名称</th>
+                <!--<th>场次介绍</th>-->
+                <!--<th>场次宣传图</th>-->
+                <th>所属赛程</th>
+                <th>所属赛场</th>
+                <th>场次开始时间</th>
+                <!--<th>场次结束时间</th>-->
+                <th>{$lang.handler}</th>
+            </tr>
+                {foreach from=$number_list item=num}
+            <tr>
+                <td><input type="checkbox" name="checkboxes[]" value="{$num.id}" notice="{if $game.game_money ne 0}1{else}0{/if}"/>{$num.id}</td>
+                <td class="first-cell">{$num.num_name}</td>
+                <!--<td  align="center">{$num.num_text}</td>-->
+                <!--<td  align="center">{$num.num_img}</td>          -->
+                <td  align="center">{$num.sche_name}</td>
+                <td  align="center">{$num.pitch_name}</td>
+                <td  align="center">{$num.num_start}</td>
+                <!--<td  align="center">{$num.num_end}</td>-->
+                <td align="center">
+                    <a href="route.php?con=number&act=update&id={$num.id}&sche_id={$schedule_id}&p_id={$p_id}" title="{$lang.edit}"><img src="images/icon_edit.gif" border="0" height="16" width="16" /></a>
+                    <a href="javascript:confirm_redirect('确定要删除场次?', 'route.php?con=number&act=remove&id={$num.id}&sche_id={$schedule_id}&p_id={$p_id}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16" /></a>
+                </td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="9">{$lang.no_records}</td></tr>
+            {/foreach}
+            <tr>
+                <td colspan="2">
+                    <input type="hidden" name="act" value="batch_remove" />
+                    <input type="submit" id="btnSubmit" value="删除" disabled="true" class="button" /></td>
+                    <td align="right" nowrap="true" colspan="8">
+                    {include file="page2.htm"}
+                </td>
+            </tr>
+             <input type="hidden" name="schedule_id"  id="schedule_id" value="{$schedule_id}" />
+        </table>
+{if $full_page}
+    </div>
+</form>
+<script type="text/javascript" language="JavaScript">
+    listTable.recordCount = {$record_count};
+    listTable.pageCount = {$page_count};
+    listTable.new_url = 'route.php?is_ajax=1&con=number';
+    listTable.act = 'index_query';
+    {foreach from = $filter item = item key = key}
+    listTable.filter.{$key} = '{$item}';
+    {/foreach}
+    function confirm_bath()
+  {
+    return confirm("确定要批量删除所选场次吗");
+  }
+</script>
+{include file="pagefooter.htm"}
+{/if}

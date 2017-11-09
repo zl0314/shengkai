@@ -1,0 +1,70 @@
+<!-- $Id: agency_list.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,newlisttable.js"}
+<form method="post" action="route.php?con=hotel&act=batch_drop" name="listForm" onsubmit="return confirm_bath();">
+<div class="list-div" id="listDiv">
+{/if}
+  <table cellpadding="3" cellspacing="1">
+    <tr>
+      <th width="10%"> <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" />
+          <a href="javascript:listTable.sort('agency_id'); ">{$lang.record_id}</a>{$sort_agency_id} </th>
+      <th>酒店名称</th>
+      <th>所在城市</th>
+      <th>操作</th>
+    </tr>
+    {foreach from=$hotels item=hotel}
+    <tr>
+      <td><input type="checkbox" name="checkboxes[]" value="{$hotel.id}" />
+        {$hotel.id}</td>
+      <td class="first-cell">
+       {$hotel.hotel_name}</td>
+      <td>{$hotel.region_id|address}</td>
+      <td align="center">
+           <a href="route.php?con=room&hotel_id={$hotel.id}" title="查看房间"><img src="images/icon_view.gif" width="16" height="16" border="0"></a> 
+        <a href="route.php?con=hotel&act=update&id={$hotel.id}" title="{$lang.edit}"><img src="images/icon_edit.gif" border="0" height="16" width="16"></a> 
+        <a href="javascript:confirm_redirect('确定要删除酒店?', 'route.php?con=hotel&act=remove&id={$hotel.id}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16"></a>      </td>
+    </tr>
+    {foreachelse}
+    <tr><td class="no-records" colspan="4">{$lang.no_records}</td></tr>
+    {/foreach}
+  </table>
+<table id="page-table" cellspacing="0">
+  <tr>
+    <td>
+      <input name="remove" type="submit" id="btnSubmit" value="{$lang.drop}" class="button" disabled="true" />
+      <input name="act" type="hidden" value="batch" />
+    </td>
+    <td align="right" nowrap="true">
+    {include file="page2.htm"}
+    </td>
+  </tr>
+</table>
+{if $full_page}
+</div>
+</form>
+<script type="text/javascript" language="javascript">
+  <!--
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+  listTable.new_url = 'route.php?is_ajax=1&con=hotel';
+  listTable.act = 'index_query';
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+
+  {literal}
+  onload = function()
+  {
+      // 开始检查订单
+      startCheckOrder();
+  }
+  {/literal}
+  //-->
+    function confirm_bath()
+  {
+    return confirm("确定要批量删除所选酒店吗");
+  }
+</script>
+{include file="pagefooter.htm"}
+{/if}

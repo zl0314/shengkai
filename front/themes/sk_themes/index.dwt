@@ -1,0 +1,895 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{$page_title}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="Keywords" content="{$keywords}"/>
+    <meta name="Description" content="{$description}"/>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+    <meta name="format-detection" content="telephone=no"/>
+    <meta http-equiv=”X-UA-Compatible” content=”IE=edge,chrome=1″/>
+ 	<link rel="stylesheet" href="{$css_path}/bootstrap.min.css">
+    <link rel="stylesheet" href="{$css_path}/bootstrap-theme.min.css">
+ 	<link rel="stylesheet" href="{$css_path}/flat-ui.css">
+    <link rel="stylesheet" href="{$css_path}/header.css">
+    <link rel="stylesheet" href="{$css_path}/foot.css">
+    <link rel="stylesheet" href="{$css_path}/base.css">
+    <link rel="stylesheet" href="{$css_path}/index.css">
+    <link rel="stylesheet" href="{$css_path}/login.css">
+
+    <style>
+        .navbar-toggle:before {
+            color: #ffffff;
+            content: "";
+        }
+      .input.zidong{
+			border:1px solid #0e417d;
+			border-radius: 2px;
+		}
+
+    </style>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<div id="container" class="">
+    <div class="sk_top" id="booNavigation">
+        <div class="sk_navgation_logo">
+            <a href="/">
+                <img src="/themes/sk_themes/images/logo_v2.png"/>
+            </a>
+        </div>
+        <div class="sk_gap">|</div>
+        <div class="sk_navgation_list">
+            <nav class="booNavigation">
+                <ul>
+                    {foreach from=$sports_cate_list item=scat name=cate}
+                    <li class="navItem">
+                        <a href="#">{$scat.name}<i class="fa fa-caret-down smallCaret"></i></a>
+                        <ul class="navContent" style="display: none;">
+                            <!-- {foreach from=$scat.scat item=game} 循环赛事列表 -->
+                            <li>
+                                <ul>
+                                    <!-- {foreach from=$game item=game2} 分组 -->
+                                    <li>
+                                        <!--{if $game2.id == 60}-->
+                                        <a href="more_info.php?act=index&game_id={$game2.id}" title="{$game.game_name}">{$game2.game_name}</a>
+                                        <!--{else}-->
+                                        <a href="game_search.php?game_id={$game2.id}" data-old-url="more_info.php?act=index&game_id={$game2.id}" title="{$game.game_name}">{$game2.game_name}</a>
+                                        <!--{/if}-->
+                                    </li>
+                                    <!--{/foreach}-->
+                                </ul>
+                            </li>
+                            <!--{/foreach}-->
+                        </ul>
+                    </li>
+                    {/foreach}
+                </ul>
+            </nav>
+        </div>
+        <div class="nav-right-block">
+            <div style="float: left; display: inline-block; margin-right: 10px;">
+                <a href="./r201860.php">
+                    <img src="./assets/images/qa_vip_201860.png"/>
+                </a>
+            </div>
+            <div class="sk_navgation_search">
+                <form action="game_search.php?act=search" role="search" name="ss_sou" id="ss_sou" method="post">
+                <input type="text" name="search" placeholder="球队/赛事名/城市" class="skSearch" onfocus="change_color_v2()" id="search" >
+                <div class="sk_gotoSearch"><img src="../../assets/images/search.png" onclick="doSearch();"/></div>
+                </form>
+            </div>
+            <script type="text/javascript">
+                function doSearch()
+                {
+                    var search = $("#search").val();
+                    if (search == 'undefined' || search == '球队/赛事名/城市') {
+                        return false;
+                    }
+                    $("#ss_sou").submit();
+                }
+            </script>
+
+            <!--{if  $smarty.session.user_id == 0}-->
+            <div class="sk_ueser">
+                <div class="sk_ueser_cont" style="widows:;">
+                {if $login==1}
+                <a href="javascript:void(0)" id="login" style="display:block; color: white; font-size: 16px;">登录</a>
+                {else}
+                <a href="javascript:void(0)" id="login" onclick="show_login()" style="color: white; font-size: 16px;">登录</a>
+                {/if}
+                <a href="javascript:void(0)" class="sign-up-link btn light btn-pill" style="color: white; font-size: 16px;" id="regist"
+                   onclick="show_regist()">注册</a>
+                </div>
+            </div>
+            <!--{else}-->
+            <div class="sk_ueser">
+                <a href="#" class="vip fl" style="width: 26px; margin-top: 18px;"><img src="images/vip.png" width="100%"/></a>
+                <div class="dropdown fl">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
+                            data-toggle="dropdown" aria-expanded="true" style="background: none; text-shadow: none; line-height: 41px;">
+                        {$smarty.session.user_name}
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1" style="margin-top: -10px">
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="user.php">个人中心</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);"
+                                                   onclick="callback_page()">退出</a></li>
+                    </ul>
+                </div>
+                <div class="sk_sale">
+                    <em>|</em>
+                    <a href="view.php?game_id=0" class="gwc">
+                    <span><img src="../../assets/images/sale.png"></span>
+                    {if $num > 0}
+                    <span class="yuanquan" style="color: #fff;position: absolute;top: 15px;right: 10px;width: 15px;height: 15px;line-height: 15px;border-radius: 15px;background: #C6151D;text-align: center;">{$num}</span>
+                    {/if}
+                    </a>
+                </div>
+            </div>
+            <!--{/if}-->
+            <div class="clear"></div>
+        </div>
+    </div>
+    <div id="main" role="main" class="flush">
+        <!-- start:banner图 -->
+        <div id="hero" style="width: 100%;">
+            <div id="myCarousel" class="banner carousel slide" style="width: 100%;">
+                <div class="slideshow">
+                    <a class=" left" href="#myCarousel" data-slide="prev"><img class="xljiantou"
+                                                                               src="images/left.png"/></a>
+                    <a class=" right" href="#myCarousel" data-slide="next"><img class="xljiantou"
+                                                                                src="images/right.png"/></a>
+                </div>
+                <div class="carousel-inner">
+                    <!-- {foreach from=$top_banner item=banner  key = myId} 循环banner列表 -->
+                    <!--{if $myId == 0}-->
+                    <div class="item active">
+                        <!--{else}-->
+                        <div class="item">
+                            <!--{/if}-->
+                            <div class="china-p1-header-slide">
+                                <a href="{$banner.link}" class="link-reset">
+                                    <div class="hero-text container animated fadeIn">
+                                        <header style="width:88%;margin:0 auto;" class="hidden-lg hidden-md ">
+                                            <h1 class="billboard xh1">{$banner.min_title}</h1>
+                                            <span style=" font-size:20px;line-height:23px;" class="tagline">{$banner.max_title}</span>
+                                            <p style="font-size:24px;">点击进入</p>
+                                        </header>
+                                        <header class="hidden-xs hidden-sm">
+                                            <h1 class="billboard">{$banner.min_title}</h1>
+                                            <span class="tagline">{$banner.max_title}</span>
+                                            <p>点击进入</p>
+                                        </header>
+
+                                    </div>
+
+                                    <img src="{$banner.img_url}"/>
+                                </a>
+                            </div>
+                        </div>
+                        <!-- {/foreach} 循环banner列表 -->
+
+                    </div>
+                    <div class="search container">
+                        <form id="select_form" action="game_search.php" style="width:100%;height:72px;">
+                            <input type="hidden" name="csrf" id="csrf">
+                            <input type="hidden" name="scat_id" id="select_scat_id">
+                            <input type="hidden" name="game_id" id="select_game_id">
+                            <input type="hidden" name="region_id" id="select_region_id">
+
+                            <div class="searchall hidden-xs hidden-sm">
+                                <div class="search01" style="margin-left:0px;">
+                                    <div class="cs">
+                                        <div class="dropup">
+                                            <button class="btn btn-default dropdown-toggle" type="button"
+                                                    data-toggle="dropdown" aria-expanded="true" id="select_cat">
+                                                运动类别
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+                                                <!-- {foreach from=$sportcat_list item=sportcat} 循环运动类别列表 -->
+                                                <li style="border-radius:4px;" role="presentation">
+                                                    <a style="border-radius:4px;" role="menuitem" tabindex="1"
+                                                       href="javascript:select_cat('{$sportcat.name}',{$sportcat.id})">{$sportcat.name}</a>
+                                                </li>
+                                                <!-- {/foreach}  -->
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="search01">
+                                    <div class="ss">
+                                        <div class="dropup">
+                                            <button class="btn btn-default dropdown-toggle" type="button"
+                                                    id="select_game"
+                                                    data-toggle="dropdown" aria-expanded="true">
+                                                选择赛事
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul style="border-radius:4px;" class="dropdown-menu" role="menu"
+                                                aria-labelledby="dropdownMenu3" id="game_ul">
+                                            </ul>
+                                            <input type="hidden" value="-1" id="game_id"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="search01">
+                                    <div class="cs">
+                                        <div class="dropup">
+                                            <button class="btn btn-default dropdown-toggle" type="button"
+                                                    data-toggle="dropdown" aria-expanded="true" id="select_city">
+                                                选择城市
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2"
+                                                id="city_ul">
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="search02">
+                                    <input class="btn btn-default" type="submit" value="搜索" id="search2">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- end:banner图 -->
+            <div class="clear"></div>
+            <!-- start:热门赛事 -->
+            <div id="tour" class="section">
+                <div class="hotss">
+                    <div class="hotss_title">
+                        <!--  <img src="images/title.png"/> -->
+                        <div class="biaoti">
+                            <h2>精彩瞬间</h2>
+
+                            <p>不容错过的时刻</p>
+                        </div>
+                        <i></i>
+                    </div>
+                </div>
+                <section class="tour-section" id="container-waterfall">
+                    <div class="row">
+                        <!--套餐 列表   ：start-->
+                        {foreach from=$combo_list item=combo}
+                        <div class="col-md-3">
+                            <div class="hotimg">
+                                <div class="yuan">
+                                    <img src="{$combo.combo_logo}"/>
+                                </div>
+                                <div class="icon" >
+                                    {if $combo.combo_pitchs && ($combo.combo_travels || $combo.combo_travel_type_id)}
+                                    <div style="position:absolute;width:100%;height:100%;background:rgba(0,0,0,0.5);cursor:pointer;" onclick="window.location.href='combo.php?id={$combo.combo_id}'">
+                                        <div class="wenzi">
+                                            <h4 ><a href="combo.php?id={$combo.combo_id}" >{$combo.combo_title}</a></h4>
+                                            <p><a href="combo.php?id={$combo.combo_id}">{$combo.combo_intro}</a></p>
+                                        </div>
+                                    </div>
+                                    {else}
+                                    <div style="position:absolute;width:100%;height:100%;background:rgba(0,0,0,0.5);cursor:pointer;">
+                                        <div class="wenzi">
+                                            <h4 ><a>{$combo.combo_title}</a></h4>
+                                            <p><a>{$combo.combo_intro}</a></p>
+                                        </div>
+                                    </div>
+                                    {/if}
+                                    <a href="{$combo.combo_url}"  ><img  src="{$combo.combo_img}" alt="Icon" /></a>
+                                </div>
+                            </div>
+                            <div class="hotcont" style="background-color: #{$combo.combo_color}">
+                                <h3 >{$combo.combo_name}</h3>
+                                <!--<p>{$combo.combo_date}</p>-->
+                            </div>
+                        </div>
+                        {/foreach}
+                        <!--  套餐 列表   ：end-->
+                    </div>
+                </section>
+                {if $combo_num}
+                <div style="clear: both;"></div>
+                <div class="row">
+                    <div style="text-align: center; margin-top: 20px;margin-bottom: 20px;" id="chakangengduo">
+                        <a href="javascript:chakan_more();" style="width:300px;height:40px;line-height:40px;background:#c31c26;color:#fff;font-size:18px;border-radius:3px;">显示更多 ∨</a>
+                    </div>
+                    </div>
+                {/if}
+            </div>
+            <input type="hidden" id="page" name="page" value="{$page}">
+            <!-- end:热门赛事 -->
+            <div class="clear"></div>
+            <!--start:比赛按钮-->
+            <div class="tour-section compButton">
+
+            <!--end:比赛按钮-->
+            <!-- start:视频 -->
+            <div id="hero2">
+                <div class="carousel-inner">
+                    <div class="item active">
+                        <div class="china-p1-header-slide">
+                            <a /*href="#hero2"*/ class="link-reset">
+                                <div class="hero-text container animated fadeIn" style="top:50%;">
+                                    <header style="text-align:left;" class="hidden-sm hidden-xs">
+                                        <h1 class="billboard">{$index_video.min_title}</h1>
+                                        <span class="tagline">{$index_video.max_title}</span>
+                                    </header>
+                                    <header style="text-align:left;width:50%;margin:0 auto;"
+                                            class=" hidden-lg hidden-md">
+
+                                        <h1 style="font-size:20px; line-height:24px;" class="billboard">盛开国际旅行社</h1>
+                                        <span style="font-size:30px; line-height:34px;"
+                                              class="tagline">Shankai Sports</span>
+                                    </header>
+                                </div>
+
+                                <video style="width:100%;height:auto;" autoplay loop>
+                                    <!-- <source src="http://7xjtzw.com2.z0.glb.qiniucdn.com/4K.mov"  type="video/mp4" /> -->
+                                    <source src="{$index_video.video_link}" type="video/mp4"/>
+                                </video>
+
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end:视频 -->
+    </div>
+<!-- TemplateBeginEditable name="底部" -->
+<!-- TemplateEndEditable -->
+
+    <!-- start:广告 -->
+    {foreach from=$ads_list item=ads}
+        {if $ads.media_type eq 0}
+        <div class="carousel-inner" style="width:100%;margin-top:-20px;margin-bottom:5px;" onclick="window.location.href='{$ads.bill_link}'">
+            <img  style="width:100%" src="{$ads.bill_source}"/>
+        </div>
+        {elseif $ads.media_type eq 1}
+        <object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0" width="100%" height="800" title="myFlash">
+            <param name="movie" value="{$ads.bill_source}" />
+            <param name="quality" value="high" />
+            <param name=scale value=noscale />
+            <param name="LOOP" value="false" />
+            <param name="menu" value="false" />
+            <param name="wmode" value="transparent" />
+            <embed src="{$ads.bill_source}" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="100%" height="800" loop="false" salign="T" name="scriptmain" menu="false" wmode="transparent"></embed>
+        </object>
+        {elseif $ads.media_type eq 2}
+        <iframe frameborder="0" width="100%" height="800" src="{$ads.bill_source}" allowfullscreen></iframe>
+        {/if}
+    {/foreach}
+    <!-- end:广告 -->
+    <!-- <footer class="footer">
+    </div>
+    </footer> -->
+    <div class="footers">
+        <footer class="footersmall hidden-lg hidden-md">
+            <ul>
+                <li>关于我们</li>
+                <li>赛事</li>
+                <li>个人中心</li>
+                <li>帮助</li>
+            </ul>
+            <div class="clear"></div>
+            <div class="text-center">
+                <p class="fl">© 2012 Shankai Sports International</p>
+                <p class="fl"> 京ICP备14000536号-2 </p>
+            </div>
+        </footer>
+
+        <footer class="footer page-container-responsive hidden-xs hidden-sm">
+            <div class="row row-condensed">
+                <div class="col-md-2 col-md-offset-1 hide-sm">
+                    <h2 class="h5">关于我们</h2>
+                    <ul class="list-layout">
+                        <li><a href="article.php?id=45" class="link-contrast">公司介绍</a></li>
+                        <li><a href="article.php?id=54" class="link-contrast">联系我们</a></li>
+                        <li><a href="article.php?id=63" class="link-contrast">产品和服务</a></li>
+
+                    </ul>
+                </div>
+
+                <div class="col-md-2 hide-sm">
+                    <h2 class="h5">赛事</h2>
+                    <ul class="list-layout">
+                        <li><a href="advert.php?id=4" class="link-contrast">2015-2016阿森纳</a></li>
+                        <li><a href="advert.php?id=5" class="link-contrast">2015-2016巴塞罗那</a></li>
+
+                    </ul>
+                </div>
+                <div class="col-md-2 hide-sm">
+                    <h2 class="h5">帮助</h2>
+                    <ul class="list-layout">
+                        <li><a href="article.php?id=66" class="link-contrast">免责声明</a></li>
+
+                    </ul>
+                </div>
+
+                <div class="col-md-2 hide-sm">
+                    <h2 class="h5">购票相关</h2>
+                    <ul class="list-layout">
+                        <li><a href="article.php?id=38" class="link-contrast">购票须知</a></li>
+                        <li><a href="article.php?id=69" class="link-contrast">购票流程</a></li>
+                        <li><a href="article.php?id=72" class="link-contrast">合同下载</a></li>
+                        <li><s style="font-size: 20px">400-885-0132</s></li>
+                    </ul>
+                </div>
+
+                <div style="width:24%;" class="col-md-2 hide-sm">
+                    <h2 class="h5">关注我们</h2>
+                    <ul class="list-layout2">
+                        <li style="width:100px;height:170px;"><a  class="wx"></a></li>
+                        <li style="width:100px;height:170px;"><a href="http://weibo.com/shankaisports" class="wb"></a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+
+            <div class="text-center">
+                <p class="fl">© 2012 Shankai Sports International</p>
+                <p class="fr" style="text-align:right;"> 京ICP备14000536号-2<br/> 北京盛开国际旅行社有限公司 经营许可证编号：L-BJ-CJ00721 </p>
+                <p></p>
+            </div>
+        </footer>
+    </div>
+</div>
+<div class="error_msg" style="display:none">
+    <img style="margin-left:60px;" src="images/logo_01.png">
+    <div style="display:inline-block;height:1px;width:150px;background:#8d8d8d;"></div>
+    <h6 style="display:inline-block;vertical-align:-4px;margin-top:20px;">提示</h6>
+    <div style="display:inline-block;height:1px;width:150px;background:#8d8d8d;"></div>
+    <p>您没有选择赛事,请选择</p>
+    <div class="close_window">确定</div>
+</div>
+
+<!--登录弹出层:start-->
+<div class="logins" id="logins" display="none">
+    <div class="modal-table">
+        <div class="modal-cell">
+            <div class="modal-content signup" style="index:99;">
+                <div class="clear"></div>
+                <div class="panel-padding panel-body" id="1">
+                    <div style="height:82px;margin-bottom:10px;padding-top:5px;border-radius:5px;">
+                        <img style="display:block;width:170px; margin:0 auto;" src="images/logo_01.png">
+                    </div>
+                    <div class="signup-or-separator">
+                        <span class="h6 signup-or-separator--text">登录</span>
+                        <hr>
+                    </div>
+                    <form class="signin-form login-form" method="post" name="formLogin" id="formLogin"
+                          onsubmit="return userLogin()">
+                        <div class="form-group">
+                            <input type="text" class="form-control login-field yonghuming" placeholder="用户名/手机号"
+                                   onblur="login_username()" id="login-name" name="username"/>
+                            <label class="tubiao user" for="login-name"></label>
+                        </div>
+                        <div style="font-size:12px;position:relative;top:-10px;color:#C6151D;">手机号码前加国家区号（如：加 86）</div>
+                        <div class="form-group">
+                            <input type="password" class="form-control login-field yonghuming" value=""
+                                   placeholder="密码"
+                                   onblur="login_password()" id="login-pass" name="password"/>
+                            <label class="tubiao lock" for="login-pass"></label>
+                        </div>
+                        <div class="lhint dpn" data-login>
+                            <a><img src="images/warning.png"></a><span data-login-msg></span>
+                         </div>
+                        <div class="clearfix row-space-2">
+                            <label for="remember_me2" class="checkbox bian">
+                                <input class="zidong remember_me" type="checkbox" name="remember" id="remember_me2"
+                                       onclick="getCookie()">&nbsp;&nbsp;&nbsp;自动登录
+                            </label>
+                            <a href="javascript:void(0)" onclick="to_zhaohui()"
+                               class="forgot-password pull-right">忘记密码？</a>
+                        </div>
+                        <input type="submit" value="登录" class="btn btn-block btn-lg btn-info denglu">
+                        <div class="text-left">
+                            还没有帐号？
+                            <a href="javascript:void(0)" class="modal-link" onclick="to_regist()">注册</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--登录弹出层:end-->
+<!--注册弹出层:start-->
+    <div class="logins" id="regists">
+        <div class="modal-table">
+            <div class="modal-cell">
+                <div class="modal-content signup" id="reg">
+                    <div class="clear"></div>
+                    <div class="panel-padding panel-body">
+                        <div style="height:82px;margin-bottom:10px;padding-top:5px;border-radius:5px;">
+                            <img style="display:block;width:170px; margin:0 auto;" src="images/logo_01.png">
+                        </div>
+                        <div class="zhuce">
+                            <h2>注册新用户</h2>
+                        </div>
+                        <form class="signin-form login-form" method="post" name="formUser" id="formUser">
+                            <div class="form-group">
+                                <input type="text" class="form-control login-field yonghuming" placeholder="用户名/手机号"
+                                       id="regist-name" name="username" onblur="check_name(this.value);"/>
+                                <label class="tubiao user" for="login-name"></label>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control login-field yonghuming" placeholder="密码"
+                                       id="password1"
+                                       name="password" onblur="check_password(this.value);"/>
+                                <label class="tubiao lock" for="login-pass"></label>
+                            </div>
+                            <div class="form-group">
+                                <input type="password" class="form-control login-field yonghuming" value=""
+                                       placeholder="确认密码"
+                                       id="conform_password" name="confirm_password"
+                                       onblur="check_conform_password(this.value);"/>
+                                <label class="tubiao lock" for="login-pass"></label>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control login-field yonghuming" value="" placeholder="验证手机号码"
+                                       oninput="check_mobile(this.value,'get_verifycode_pc','get_verifycode_pe')" name="extend_field5"/>
+                                <label class="tubiao fui-phone" for="login-pass"></label>
+                            </div>
+                            <div style="font-size:12px;position:relative;top:-10px;color:#C6151D;">手机号码前加国家区号（如：加 86）</div>
+                            <div class="form-group hidden-xs hidden-md"style="overflow:hidden;">
+                            <div class="fl">
+                                <input type="text" class="form-control login-field yonghuming" value=""  placeholder="图片验证码" name="captcha"/>
+                                <label class="tubiao fui-yzm" for="login-pass"></label>
+                            </div>
+                            <div class="fr denglu yanzhengma"> <img src="captcha.php" width="120" height="40" alt="CAPTCHA" border="1" onclick= this.src="captcha.php" style="cursor: pointer;" title="{$lang.click_for_another}" />
+                           </div>
+                           </div>
+                            <div class="form-group hidden-xs hidden-md"style="overflow:hidden;">
+                                <div class="fl">
+                                    <input type="text" class="form-control login-field yonghuming" value=""  placeholder="短信验证码" name="verifycode_pc"/>
+                                    <label class="tubiao fui-yzm" for="login-pass"></label>
+                                </div>
+                                <div class="fr denglu yanzhengma">
+                                    <input type="button" onclick="huoqu_verifycode()" name="btn1"
+                                           id="get_verifycode_pc"
+                                           class="btn btn-block btn-lg btn-info" disabled="true" value="获取验证码">
+                                </div>
+                            </div>
+
+
+                            <div class="hidden-lg hidden-md form-group" style="overflow:hidden;">
+                                <div class="fl">
+                                    <input style="height:auto;width:117px;" type="text"
+                                           class="form-control login-field yonghuming" value="" placeholder="短信验证码"
+                                           oninput="check_mobile(this.value,'get_verifycode_pe')"
+                                           name="verifycode_mobile"/>
+                                    <label style="left:96px;" class="tubiao fui-yzm" for="login-pass"></label>
+                                </div>
+                                <div style="float:left;margin-left:8px;" class="fr denglu yanzhengma">
+                                    <input style="float:left;width:86px;height:43px;font-size:12px;padding:13px;"
+                                           type="button" onclick="huoqu_verifycode()" name="btn1"
+                                           id="get_verifycode_pe"
+                                           class="btn btn-block btn-lg btn-info" disabled="true" value="获取验证码">
+                                </div>
+                            </div>
+                            <div>
+
+                                <div class="lhint dpn" data-regist>
+                                    <a><img src="images/warning.png"></a><span data-regist-msg></span>
+                                </div>
+
+                                <label class="lbianju lbian">
+                                    <input type="checkbox" id="Iok" class="wty tongyi" style="border:none;" onclick="remember_me()" name="remember">我同意本网站
+                                    <a href="article.php?id=66" target="_blank" style="color:#23527c">《免责声明》</a>
+                                    <br/><br/>
+                                    　&nbsp;&nbsp;下载<a
+                                        href="download.php?type=file&file_name=disclaimer.pdf" target="_blank"
+                                        style="color:#23527c">《免责声明》</a>
+                                </label>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="register">
+                                <a href="javascript:void(0)" onclick="register()"
+                                   class="btn btn-block btn-lg btn-info denglu">立即注册</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--登录弹出层:end-->
+<!--找回密码:start-->
+<div class="logins" id="zhaohui" display="none">
+    <div class="modal-table">
+        <div class="modal-cell">
+            <div class="modal-content signup" id="zh">
+                <div class="clear"></div>
+                <div class="panel-padding panel-body">
+                    <div class="zhuce">
+                        <h2>找回密码</h2>
+                    </div>
+
+                    <form class="signin-form login-form" method="post" name="formzhaohui" id="formzhaohui">
+                        <div class="form-group">
+                            <input type="text" class="form-control login-field yonghuming" placeholder="输入手机号"
+                                   id="zh_mima" name="zh_mobile" oninput="check_mobile(this.value,'get_verifycode_pc_zh','get_verifycode_pe_zh');"/>
+                            <label class="tubiao user" for="login-name"></label>
+                        </div>
+                        <div style="font-size:12px;position:relative;top:-10px;color:#C6151D;">手机号码前加国家区号（如：加 86）</div>
+                        <div class="form-group hidden-xs hidden-sm">
+                            <div class="fl">
+                                <input type="text" class="form-control login-field yonghuming" value=""
+                                       placeholder="短信验证码" name="zh_verifycode"/>
+                                <label class="tubiao fui-yzm" for="login-pass"></label>
+                            </div>
+                            <div class="fr denglu yanzhengma hidden-xs hidden-sm">
+                                <input type="button" onclick="huoqu_zh_verifycode()" name="zh_bt"
+                                       class="btn btn-block btn-lg btn-info" disabled="true" id="get_verifycode_pc_zh" value="获取验证码">
+                            </div>
+                        </div>
+                        <div class="form-group hidden-lg hidden-md ">
+                            <div style="width:58%;" class="fl">
+                                <input style="height:42px;width:100%;" type="text"
+                                       class="form-control login-field yonghuming xyanzheng" value=""
+                                       placeholder="短信验证码"
+                                       name="zh_verifycode"/>
+                                <label style="left:95px;" class="tubiao fui-yzm" for="login-pass"></label>
+                            </div>
+                            <div class="fr denglu yanzhengma">
+                                <input type="button" onclick="huoqu_zh_verifycode()" name="zh_bt"
+                                       class=" ouxiang btn btn-block btn-lg btn-info" disabled="true" id="get_verifycode_pe_zh" value="获取验证码">
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="register">
+                            <a href="javascript:void(0)" onclick="zh_shezhi()"
+                               class="btn btn-block btn-lg btn-info denglu">设置新密码</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="logins" id="xiugai" display="none">
+    <div class="modal-table">
+        <div class="modal-cell">
+            <div class="modal-content signup" id="xg">
+                <div class="clear"></div>
+                <div class="panel-padding panel-body">
+                    <div class="zhuce">
+                        <h2>修改密码</h2>
+                    </div>
+
+                    <form class="signin-form login-form" method="post" name="formxiugai" id="formxiugai">
+                        <div class="form-group">
+                            <input type="text" class="form-control login-field yonghuming" placeholder="新的登录密码"
+                                   id="new_mima" name="new_mm"/>
+                            <label class="tubiao user" for="login-name"></label>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="fl">
+                                <input type="text" class="form-control login-field yonghuming" value=""
+                                       placeholder="确认登录密码"
+                                       id="qr_mima" name="qn_mm"/>
+                                <!--extend_field{$field.id+1}-->
+                                <label class="tubiao fui-yzm" for="login-pass"></label>
+                            </div>
+                        </div>
+
+                        <div class="clear"></div>
+                        <div class="register">
+                            <a href="javascript:void(0)" onclick="xiugai_mima()"
+                               class="btn btn-block btn-lg btn-info denglu"
+                               id="user-regist-btn">确认</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script type="text/x-handlebars-template" id="waterfall-tpl"></script>
+
+<input type="hidden" name="city" value="">
+<script src="{$js_path}/jquery.min.js"></script>
+<script src="{$js_path}/bootstrap.min.js"></script>
+<script src="{$js_path}/headroom.js"></script>
+<script src="{$js_path}/video.js"></script>
+<script src="../js/user.js"></script>
+<script src="../js/utils.js"></script>
+<script src="../js/common.js"></script>
+<!--<script src="./waterfall/js/libs/jquery/jquery.js"></script>-->
+<script src="./assets/lib/handlebars/handlebars.js"></script>
+<script src="./assets/lib/waterfall/waterfall.min.js"></script>
+    <script type="text/javascript">
+        $('#container-waterfall').waterfall({
+            itemCls: 'item',
+            colWidth: 222,
+            gutterWidth: 15,
+            gutterHeight: 15,
+            maxPage: 0,
+            checkImagesLoaded: false,
+            callbacks: {
+            },
+            path: function(page) {
+                return 'combo.php?act=list&page=' + page + '&num=8';
+            }
+        });
+
+        function chakan_more() {
+            var page = $("#page").val();
+            var p = Number(page) + Number(1);
+            var num = 8;
+            $.ajax({
+                url : 'combo.php?act=chakan&page='+p+'&num='+num,
+                type : 'POST',
+                dataType : 'json',
+                success : function(data){
+                    var str = '';
+                    if (data.length == 8){
+                        for ( var i = 0;i < data.length;i++){
+                            str += '<div class="col-md-3">';
+                            str += '<div class="hotimg">'+'<div class="yuan">'+'<img src="'+data[i].combo_logo+'"/>'+'</div>'+'<div class="icon" >'+'<div style="position:absolute;width:100%;height:100%;background:rgba(0,0,0,0.5);cursor:pointer;" '+'onclick='+'"window.location.href='+'\'combo.php?id='+data[i].combo_id+'\'">'+'<div class="wenzi" style="width: 80%;position: absolute;-webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%);-o-transform: translate(-50%, -50%);transform: translate(-50%, -50%);top: 50%;left: 50%;padding: 0;text-align: center;color: #fff;">'+'<h4 ><a href="combo.php?id='+data[i].combo_id+'" style="font-size: 30px;font-weight: 700;color: #fff;">'+data[i].combo_title+'</a></h4>'+'<p><a href="combo.php?id='+data[i].combo_id+'">'+data[i].combo_intro+'</a></p>'+'</div>'+'</div>'+'<a href=""><img src="'+data[i].combo_img+'" alt="Icon" style="display: block;width: 100%;"/></a>'+'</div>'+'<div class="hotcont" style="background-color: #'+data[i].combo_color+'">'+'<h3 >'+data[i].combo_name+'</h3>'+'</div>'+'</div>';
+                            str += '</div>';
+                        }
+                        $("#page").val(p);
+                    } else {
+                        for ( var i = 0;i < data.length;i++){
+                            str += '<div class="col-md-3">';
+                            str += '<div class="hotimg">'+'<div class="yuan">'+'<img src="'+data[i].combo_logo+'"/>'+'</div>'+'<div class="icon" >'+'<div style="position:absolute;width:100%;height:100%;background:rgba(0,0,0,0.5);cursor:pointer;" '+'onclick='+'"window.location.href='+'\'combo.php?id='+data[i].combo_id+'\'">'+'<div class="wenzi" style="width: 80%;position: absolute;-webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%);-o-transform: translate(-50%, -50%);transform: translate(-50%, -50%);top: 50%;left: 50%;padding: 0;text-align: center;color: #fff;">'+'<h4 ><a href="combo.php?id='+data[i].combo_id+'" style="font-size: 30px;font-weight: 700;color: #fff;">'+data[i].combo_title+'</a></h4>'+'<p><a href="combo.php?id='+data[i].combo_id+'">'+data[i].combo_intro+'</a></p>'+'</div>'+'</div>'+'<a href=""><img src="'+data[i].combo_img+'" alt="Icon" style="display: block;width: 100%;"/></a>'+'</div>'+'<div class="hotcont" style="background-color: #'+data[i].combo_color+'">'+'<h3 >'+data[i].combo_name+'</h3>'+'</div>'+'</div>';
+                            str += '</div>';
+                        }
+                        $("#page").val(p);
+                        $("#chakangengduo").remove();
+                    }
+
+                    $('#container-waterfall').waterfall('append', $('<div class="row">' + str + '</div>'), function() {
+                        //console.log('appended', p);
+                    });
+                }
+            });
+        }
+    </script>
+<script type="text/javascript">
+    function select_cat(val, id) {
+        $("#select_cat").html(val + "<span class='caret'></span>");
+        $("#select_game").html("选择赛事<span class='caret'></span>");
+        $("#select_city").html("选择城市<span class='caret'></span>");
+        $.ajax({
+            url: 'game_search.php?act=ajax_game&id=' + id,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $("#game_ul").find("li").remove();
+                for (var o in data) {
+                    $("#game_ul").append("<li role='presentation'>"+"<a role='menuitem' tabindex='1' "+'href="javascript:select_game(\''+data[o].game_name+'\','+data[o].id+')"'+">" + data[o].game_name + "</a> </li>");
+                }
+                $("#select_scat_id").val(id);
+            }
+        });
+    }
+
+    function select_game(val, id) {
+        $("#select_game").html(val + "<span class='caret'></span>");
+        $('#game_id').attr("value", id);
+        $.ajax({
+            url: 'game_search.php?act=ajax_game_city&game_id=' + id,
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                $("#city_ul").find("li").remove();
+                for (var o in data) {
+                    $("#city_ul").append("<li role='presentation'>"+"<a role='menuitem' tabindex='1' "+'href="javascript:select_city(\''+data[o].region_name+'\','+data[o].region_id+')"'+">" + data[o].region_name + "</a> </li>");
+                }
+                $("#select_game_id").val(id);
+            }
+        })
+    }
+    function select_city(val, id) {
+        $("#select_city").html(val + "<span class='caret'></span>");
+        $("#select_region_id").val(id);
+    }
+</script>
+<script>
+    function chakan(){
+        var page = $("#page").val();
+        var p = Number(page) + Number(1);
+        var num = 8;
+        $.ajax({
+            url : 'combo.php?act=chakan&page='+p+'&num='+num,
+            type : 'POST',
+            dataType : 'json',
+            success : function(data){
+                var str = '';
+                if(data.length == 8){
+                    for ( var i = 0;i < data.length;i++){
+                        str += '<div class="col-md-3">';
+                        str += '<div class="hotimg">'+'<div class="yuan">'+'<img src="'+data[i].combo_logo+'"/>'+'</div>'+'<div class="icon" >'+'<div style="position:absolute;width:100%;height:100%;background:rgba(0,0,0,0.5);cursor:pointer;" '+'onclick='+'"window.location.href='+'\'combo.php?id='+data[i].combo_id+'\'">'+'<div class="wenzi" style="width: 80%;position: absolute;-webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%);-o-transform: translate(-50%, -50%);transform: translate(-50%, -50%);top: 50%;left: 50%;padding: 0;text-align: center;color: #fff;">'+'<h4 ><a href="combo.php?id='+data[i].combo_id+'" style="font-size: 30px;font-weight: 700;color: #fff;">'+data[i].combo_title+'</a></h4>'+'<p><a href="combo.php?id='+data[i].combo_id+'">'+data[i].combo_intro+'</a></p>'+'</div>'+'</div>'+'<a href=""><img src="'+data[i].combo_img+'" alt="Icon" style="display: block;width: 100%;"/></a>'+'</div>'+'<div class="hotcont" style="background-color: #'+data[i].combo_color+'">'+'<h3 >'+data[i].combo_name+'</h3>'+'</div>'+'</div>';
+                        str += '</div>';
+                        if ((i + 1)  % 4 == 0) {
+                            str += '<div class="clear"></div>';
+                        }
+                    }
+                    str += '<div class="clear"></div>';
+                    $(".tour-section > div").append(str);
+                    $("#page").val(p);
+                }else{
+                    for ( var i = 0;i < data.length;i++){
+                        str += '<div class="col-md-3">';
+                        str += '<div class="hotimg">'+'<div class="yuan">'+'<img src="'+data[i].combo_logo+'"/>'+'</div>'+'<div class="icon" >'+'<div style="position:absolute;width:100%;height:100%;background:rgba(0,0,0,0.5);cursor:pointer;" '+'onclick='+'"window.location.href='+'\'combo.php?id='+data[i].combo_id+'\'">'+'<div class="wenzi" style="width: 80%;position: absolute;-webkit-transform: translate(-50%, -50%);-moz-transform: translate(-50%, -50%);-ms-transform: translate(-50%, -50%);-o-transform: translate(-50%, -50%);transform: translate(-50%, -50%);top: 50%;left: 50%;padding: 0;text-align: center;color: #fff;">'+'<h4 ><a href="combo.php?id='+data[i].combo_id+'" style="font-size: 30px;font-weight: 700;color: #fff;">'+data[i].combo_title+'</a></h4>'+'<p><a href="combo.php?id='+data[i].combo_id+'">'+data[i].combo_intro+'</a></p>'+'</div>'+'</div>'+'<a href=""><img src="'+data[i].combo_img+'" alt="Icon" style="display: block;width: 100%;"/></a>'+'</div>'+'<div class="hotcont" style="background-color: #'+data[i].combo_color+'">'+'<h3 >'+data[i].combo_name+'</h3>'+'</div>'+'</div>';
+                        str += '</div>';
+                        if ((i + 1) % 4 == 0) {
+                            str += '<div class="clear"></div>';
+                        }
+                    }
+                    str += '<div class="clear"></div>';
+                    $(".tour-section > div").append(str);
+                    $("#page").val(p);
+                    $("#chakangengduo").remove();
+                }
+            }
+        });
+    }
+</script>
+<script>
+    /*轮播图8秒*/
+    $('.carousel').carousel({
+        interval: 8000
+    });
+    function is_disable() {
+        var frm = document.forms['ss_sou'];
+        var sea = frm.elements['search'].value;
+        var ss_id = frm.elements['ss_id'];
+        if (sea.length > 0) {
+            frm.elements['ss_id'].disabled = "";
+        }
+        else {
+            frm.elements['ss_id'].disabled = "true";
+        }
+    }
+    function is_null() {
+        var form = document.getElementById('ss_sou').action = "game_search.php?act=search";
+        form.submit();
+
+    }
+    $(document).ready(function () {
+        $('#search2').click(function () {
+            if ($('#game_id').val() == '-1') {
+
+                $('.error_msg').css("display", "block");
+                return false;
+            }
+        });
+    });
+    $(document).ready(function () {
+        $('.close_window').click(function () {
+            $('.error_msg').css("display", "none");
+        });
+    });
+    $(document).ready(function () {
+        $('#lianjie').click(function () {
+            alert("ds");
+        })
+    })
+    function check(url) {
+        console.log(url);
+    }
+
+</script>
+</html>

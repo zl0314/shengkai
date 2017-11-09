@@ -1,0 +1,584 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+<title>球票列表</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=720 user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css"  href="css/base.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+<link rel="stylesheet" type="text/css"  href="css/header.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/footer.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/lister.css" media="all" />
+
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+ <!--<script src="js/ticket.js"></script>-->
+</head>
+<body>
+<!--start 头部-->
+
+{include file="header.html"}
+<!--end 头部-->
+<!--container starts-->
+<div class="container">
+	<div class="top">
+		<div class="wrapper">	
+        	<div class="topContent clearfloat">
+            	<div class="logo fl"><a href="#"><img src="{$game_info.game_logo}"/></a></div>
+                <h1 class="text fl">{$game_info.game_name}</h1>
+            </div>
+        </div>
+    </div>
+    <!--menu starts  -->
+   <div class="menu">
+        <div class="menuContent ">
+        	<div class="wrapper">
+            	<div class="list clearfloat">
+              <!--<select class="select fl" id="jsSelectGame">-->
+                    <!--<option value="">运动类别</option>-->
+                    <!--{foreach from=$sportcat_list item=scat}-->
+                    <!--<option value="{$scat.id}">{$scat.name}</option>-->
+                    <!--{/foreach}-->
+                <!--</select>-->
+                <select class="select fl" id="jsSelectSche">
+                    <option onClick="onclick1()">所有赛段</option>
+                         <!--{foreach from=$sche_list item=sche}-->
+                         <option value="{$sche.id}">{$sche.sche_name}</option>
+                         <!--{/foreach}-->
+                </select>
+                   
+                    <select class="select fl" id="jsSelectCity">
+                    	<option value="所有城市">所有城市</option>
+                        <!-- {foreach from=$region_list item=region}-->
+  			<option value="{$region.region_id}">{$region.region_name}</option>
+                         <!-- {/foreach}-->
+                    </select>
+               	</div>
+            </div>
+        </div>
+ 	</div>
+    <!--menu ends-->
+    <!--subone starts-->
+<div class="sub">
+	<div class="subOne">
+    	<div class="wrapper">
+            <!--{foreach from=$left_info item=good }-->
+        <div class="info clearfloat">
+             <div class="sectionOne fl">
+                <div class="number" style="background:#{$good.color_value}"  id="goods_color{$good.goods_id}">
+                    <img src="{$good.big_pitch_img}"/>
+                    <p style="" class="num" id="goods_num{$good.goods_id}">{$good.numbers}</p>
+                </div>
+                 <div class="tabbedButton ">
+                            {if $game_id == 38}
+                            <!--{if $user_id == '0'}-->
+                     <!--{if $good.goods_number == '0'}-->
+                    <div class="fr tab01 tab02">
+                       <a href="javascript:void(0);" class="jian" >-</a>
+                           <input id="inpt_{$good.goods_id}" type="text" value="{$good.cart_goods_number}"
+                                       class="inpt" />
+                            <a href="javascript:void(0);"  class="jia">+</a>
+                    </div>
+                     <!--{elseif $good.goods_number > 0}-->
+                     <div class="fr tab01 tab02">
+                         <a href="javascript:void(0);" class="jian" onclick="update_number('{$good.goods_id}', 'jian')">-</a>
+                         <input id="inpt_{$good.goods_id}" type="text" value="{$good.cart_goods_number}"
+                                class="inpt" onchange="update_cart_number('{$good.game_id}','{$good.goods_id}')"/>
+                         <a href="javascript:void(0);" onclick="update_number('{$good.goods_id}', 'jia')" class="jia">+</a>
+                     </div>
+                     <!--{/if}-->
+                            <!--{elseif $user_id != '0' && $type == '0'}-->
+                     <!--{if $good.goods_number == '0'}-->
+                    <div class="fr tab01 tab02">
+                                <a href="javascript:void(0);" class="jian" >-</a>
+                                <input id="inpt_{$good.goods_id}" type="text" value="{$good.cart_goods_number}"
+                                       class="inpt" />
+                                <a href="javascript:void(0);"  class="jia">+</a>
+                    </div>
+                     <!--{elseif $good.goods_number > 0}-->
+                     <div class="fr tab01 tab02">
+                         <a href="javascript:void(0);" class="jian" onclick="update_number('{$good.goods_id}', 'jian')">-</a>
+                         <input id="inpt_{$good.goods_id}" type="text" value="{$good.cart_goods_number}"
+                                class="inpt" onchange="update_cart_number('{$good.game_id}','{$good.goods_id}')"/>
+                         <a href="javascript:void(0);" onclick="update_number('{$good.goods_id}', 'jia')" class="jia">+</a>
+                     </div>
+                     <!--{/if}-->
+                            <!--{elseif $user_id != '0' && $type == '1'}-->
+                     <!--{if $good.goods_number == '0'}-->
+                    <div class="fr tab01 tab02">
+                                <a href="javascript:void(0);" class="jian" >-</a>
+                                <input id="inpt_{$good.goods_id}" type="text" value="{$good.cart_goods_number}"
+                                       class="inpt" />
+                                <a href="javascript:void(0);"  class="jia">+</a>
+                    </div>
+                     <!--{elseif $good.goods_number > 0}-->
+                     <div class="fr tab01 tab02">
+                         <a href="javascript:void(0);" class="jian" onclick="update_number_sum('{$good.goods_id}', 'jian')">-</a>
+                         <input id="inpt_{$good.goods_id}" type="text" value="{$good.cart_goods_number}"
+                                class="inpt" onchange="update_cart_number('{$good.game_id}','{$good.goods_id}')"/>
+                         <a href="javascript:void(0);" onclick="update_number_sum('{$good.goods_id}', 'jia')" class="jia">+</a>
+                     </div>
+                     <!--{/if}-->
+                            <!--{/if}-->
+                     {else}
+                     <!--{if $user_id == '0'}-->
+                     <!--{if $good.goods_number == '0'}-->
+                     <div class="fr tab01 tab02">
+                         <a href="javascript:void(0);" class="jian" >-</a>
+                         <input id="inpt_{$good.goods_id}" type="text" value="{$good.cart_goods_number}"
+                                class="inpt" />
+                         <a href="javascript:void(0);"  class="jia">+</a>
+                     </div>
+                     <!--{elseif $good.goods_number > 0}-->
+                     <div class="fr tab01 tab02">
+                         <a href="javascript:void(0);" class="jian" onclick="update_number_mobile('{$good.goods_id}', 'jian')">-</a>
+                         <input id="inpt_{$good.goods_id}" type="text" value="{$good.cart_goods_number}"
+                                class="inpt" onchange="update_cart_number_mobile('{$good.game_id}','{$good.goods_id}')"/>
+                         <a href="javascript:void(0);" onclick="update_number_mobile('{$good.goods_id}', 'jia')" class="jia">+</a>
+                     </div>
+                     <!--{/if}-->
+                     <!--{elseif $user_id != '0' && $type == '0'}-->
+                     <!--{if $good.goods_number == '0'}-->
+                     <div class="fr tab01 tab02">
+                         <a href="javascript:void(0);" class="jian" >-</a>
+                         <input id="inpt_{$good.goods_id}" type="text" value="{$good.cart_goods_number}"
+                                class="inpt" />
+                         <a href="javascript:void(0);"  class="jia">+</a>
+                     </div>
+                     <!--{elseif $good.goods_number > 0}-->
+                     <div class="fr tab01 tab02">
+                         <a href="javascript:void(0);" class="jian" onclick="update_number_mobile('{$good.goods_id}', 'jian')">-</a>
+                         <input id="inpt_{$good.goods_id}" type="text" value="{$good.cart_goods_number}"
+                                class="inpt" onchange="update_cart_number_mobile('{$good.game_id}','{$good.goods_id}')"/>
+                         <a href="javascript:void(0);" onclick="update_number_mobile('{$good.goods_id}', 'jia')" class="jia">+</a>
+                     </div>
+                     <!--{/if}-->
+                     <!--{elseif $user_id != '0' && $type == '1'}-->
+                     <!--{if $good.goods_number == '0'}-->
+                     <div class="fr tab01 tab02">
+                         <a href="javascript:void(0);" class="jian" >-</a>
+                         <input id="inpt_{$good.goods_id}" type="text" value="{$good.cart_goods_number}"
+                                class="inpt" />
+                         <a href="javascript:void(0);"  class="jia">+</a>
+                     </div>
+                     <!--{elseif $good.goods_number > 0}-->
+                     <div class="fr tab01 tab02">
+                         <a href="javascript:void(0);" class="jian" onclick="update_number_sum('{$good.goods_id}', 'jian')">-</a>
+                         <input id="inpt_{$good.goods_id}" type="text" value="{$good.cart_goods_number}"
+                                class="inpt" onchange="update_cart_number('{$good.game_id}','{$good.goods_id}')"/>
+                         <a href="javascript:void(0);" onclick="update_number_sum('{$good.goods_id}', 'jia')" class="jia">+</a>
+                     </div>
+                     <!--{/if}-->
+                     <!--{/if}-->
+                     {/if}
+                </div>
+             </div>
+             <div class="sectionTwo fr">
+            	<div class="lineOne clearfloat">		<!--lineone -->
+                   <h1 class="fl" style="color:#{$good.color_value};width:300px;" id="goods_name{$good.goods_id}">{$good.goods_name}</h1>
+                   <h2 class="fr" id="goods_price{$good.goods_id}">{$good.shop_price}</h2>
+                </div>
+                <ul class="lineTwo clearfloat">				<!--linetwo-->
+                    <li class="location fl">{$good.region_name}</li>
+                    <li class="time fl">{$good.num_start}</li>
+                    <li class="fl" style="width: 28%;">
+                <span class="fl" style="width:35px;"><img src="{$good.pitch_img}" width="100%"/></span>
+                    <span style="margin-left:35px;display:block;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;">{$good.pitch_name}</span>
+                    </li>
+                </ul>
+                <div class="lineThree clearfloat">		<!--linethree-->
+                    <div class="blockTwo fr">
+                        <!--<button  class="blueBox"></button>-->
+                        <!--<div class="greenBox fl">-->
+                            <!--<img src="{$good.seat_logo}">-->
+                        <!--</div>-->
+                        {if $good.rank}
+                        <button  class="blueBox">{$good.rank}</button>
+                        {else}
+                        {/if}
+                        <!--{foreach from=$good.keywords item=keyword}-->
+                        {if $keyword != ''}
+                        <button  class="blueBox">{$keyword}</button>
+                        {else}
+                        {/if}
+                        <!--{/foreach}-->
+                    	<!--<h1 class="fl"><a href="#">支持退票险</a></h1>-->
+                        <!--<h2 class="fr"><a href="#">(需单独购买)</a></h2>-->
+                    </div>
+                </div>
+                <div class="lineFour clearfloat">			<!--linefour-->
+                	<form class="fl">
+                       <div id="message" class="selectTwo">
+                           <span><a href="#" id="message_{$good.goods_id}" onclick="details('{$good.goods_id}')">详细信息</a></span>
+                        </div>
+                    </form>
+                    {if $game_id == 38}
+                    <!--{if $user_id == '0'}->
+                    <!--{if $good.goods_number == '0'}-->
+                    <button class="join-list add fr" >
+                        票已售罄
+                    </button>
+                    <!--{elseif $good.goods_number > 0}-->
+                    <!--<button class="join-list add fr" onclick="javascript:addTitckToCart({$good.goods_id})">-->
+                    <button class="join-list add fr" onclick="javascript:addTitckToCart({$good.goods_id})">
+                        加入清单
+                    </button>
+                    <!--{/if}-->
+                    <!--{elseif $user_id != '0' && $type == '0'}-->
+                    <!--{if $good.goods_number == '0'}-->
+                    <button class="join-list add fr" >
+                        票已售罄
+                    </button>
+                    <!--{elseif $good.goods_number > 0}-->
+                    <!--<button class="join-list add fr" onclick="javascript:addTitckToCart({$good.goods_id})">-->
+                    <button class="join-list add fr" onclick="javascript:addTitckToCart({$good.goods_id})">
+                        加入清单
+                    </button>
+                    <!--{/if}-->
+                    <!--{elseif $user_id != '0' && $type == '1'}-->
+                    <!--{if $good.goods_number == '0'}-->
+                    <button class="join-list add fr" >
+                        票已售罄
+                    </button>
+                    <!--{elseif $good.goods_number > 0}-->
+                    <!--<button class="join-list add fr" onclick="javascript:addTitckToCart({$good.goods_id})">-->
+                    <button class="join-list add fr" onclick="javascript:addTitckToCartNum({$good.goods_id})">
+                        加入清单
+                    </button>
+                    <!--{/if}-->
+                    <!--{/if}-->
+                    {else}
+                    <!--{if $user_id == '0'}->
+                <!--{if $good.goods_number == '0'}-->
+                    <button class="join-list add fr" >
+                        票已售罄
+                    </button>
+                    <!--{elseif $good.goods_number > 0}-->
+                    <!--<button class="join-list add fr" onclick="javascript:addTitckToCart({$good.goods_id})">-->
+                    <button class="join-list add fr" onclick="javascript:addTitckToCartMobile({$good.goods_id})">
+                        加入清单
+                    </button>
+                    <!--{/if}-->
+                    <!--{elseif $user_id != '0' && $type == '0'}-->
+                    <!--{if $good.goods_number == '0'}-->
+                    <button class="join-list add fr" >
+                        票已售罄
+                    </button>
+                    <!--{elseif $good.goods_number > 0}-->
+                    <!--<button class="join-list add fr" onclick="javascript:addTitckToCart({$good.goods_id})">-->
+                    <button class="join-list add fr" onclick="javascript:addTitckToCartMobile({$good.goods_id})">
+                        加入清单
+                    </button>
+                    <!--{/if}-->
+                    <!--{elseif $user_id != '0' && $type == '1'}-->
+                    <!--{if $good.goods_number == '0'}-->
+                    <button class="join-list add fr" >
+                        票已售罄
+                    </button>
+                    <!--{elseif $good.goods_number > 0}-->
+                    <!--<button class="join-list add fr" onclick="javascript:addTitckToCart({$good.goods_id})">-->
+                    <button class="join-list add fr" onclick="javascript:addTitckToCartNum({$good.goods_id})">
+                        加入清单
+                    </button>
+                    <!--{/if}-->
+                    <!--{/if}-->
+                    {/if}
+                </div>
+
+               <div id="messag_{$good.goods_id}" class="xiala" style="display:none;">
+        <span></span>
+
+        <div class=" myDiv p01">
+
+            <h5 style="    width: 260px;
+    padding-top: 20px;"> <img src="{$good.seat_picture}"/></h5>
+
+        </div>
+          <div class=" myDiv p02" style="width:100%;">
+              <h5>座位信息及等级</h5>
+              <p>{$good.seat_text}</p>
+          </div>
+        <div class=" myDiv p02" style="width:100%;padding-bottom:15px;">
+            <h5>票务信息</h5>
+            <p> {$good.ticket_business}</p>
+        </div>
+
+    </div>
+
+            </div>
+        </div>
+
+                    <!--{/foreach}-->
+    </div>
+</div>
+<!--subone ends	-->
+</div>
+<!--subone repeat 2 ends-->
+<div class="bottom">
+	<div class="wrapper">
+    	<div class="bottomContent">
+        	<div class="sUbbottomOne clearfloat">
+        		<!--<h1 class="fl"><a href="">*每张比赛同级球票2张起售</a></h1>-->
+            	<h2 class="fr"><a href="">
+                  {if $cart_money.all}
+                <span>￥ </span><span id="total_price" style="font-size:20px;">{$cart_money.ticket}</span>
+                {else}
+                <span>￥ </span><span id="total_price" style="font-size:20px;">0.00</span>
+                {/if}
+                </a></h2>
+            </div>
+            <input type="hidden" name="cartInfo" id="cartInfo" value="{$cart_info}">
+            <div class="subbottomTwo clearfloat">
+                <a href="cart.php?act=index&game_id={$game_info.id}" id="gotocart" >
+                    <button id="submit" class="submit fr" style="position: relative;">去购物车结算
+                        <span class="cartyuan">{$num}</span>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!--container ends-->
+</body>
+<script type="text/javascript" src="js/pulldown.js"></script>
+<script src="js/tools.js"></script>
+<script src="js/video.js"></script>
+<script src="js/add_cart.js"></script>
+<script src="js/user.js"></script>
+<script type="text/javascript">
+function Show_Hidden(obj)
+{
+ if(obj.style.display=="block")
+ {
+  obj.style.display='none';
+ }
+ else
+ {
+  obj.style.display='block';
+ }
+}
+function details(res){
+ var olink=document.getElementById("message_"+res);
+ var odiv=document.getElementById("messag_"+res);
+ olink.onclick=function()
+ {
+  Show_Hidden(odiv);
+  return false;
+ }
+}
+//修改购物车中商品的数量
+ function update_cart_number(game_id, goods_id) {
+        var goods_number = parseInt($("#inpt_" + goods_id).val());
+//        goods_number = -1;
+      window.location.href = "game_search.php?act=update_goods_number&game_id=" + game_id + "&goods_id=" + goods_id + "&goods_number=" + goods_number;
+    }
+function update_cart_number_mobile(game_id, goods_id) {
+    var goods_number = parseInt($("#inpt_" + goods_id).val());
+//        goods_number = -1;
+    window.location.href = "game_search.php?act=update_goods_number_mobile&game_id=" + game_id + "&goods_id=" + goods_id + "&goods_number=" + goods_number;
+}
+    //当普通用户点击加号或者减号的话，会相应的修改特定商品的数量
+    function update_number(goods_id, op) {
+        var step = 1;  //每一次需要增加或者减少的数量
+        var goods_number = parseInt($("#inpt_" + goods_id).val());
+          if (goods_number == NaN) {
+            alert("数字格式不正确");
+            return false;
+        }
+        if(goods_number == 0){
+            addTitckToCart(goods_id);
+        }else{
+            if (op == 'jia') {
+                if (goods_number == 2) {
+                    return false;
+                }
+                goods_number += step;
+            }
+            if (op == 'jian') {
+                if (goods_number <= 0) {
+                    return false;
+                }
+                goods_number -= step;
+            }
+
+            $("#inpt_" + goods_id).val(goods_number);
+            $("#inpt_" + goods_id).change();
+        }
+    }
+    function update_number_mobile(goods_id, op) {
+        var step = 1;  //每一次需要增加或者减少的数量
+        var goods_number = parseInt($("#inpt_" + goods_id).val());
+        if (goods_number == NaN) {
+            alert("数字格式不正确");
+            return false;
+        }
+        if(goods_number == 0){
+            addTitckToCart(goods_id);
+        }else{
+            if (op == 'jia') {
+                if (goods_number == 4) {
+                    return false;
+                }
+                goods_number += step;
+            }
+            if (op == 'jian') {
+                if (goods_number <= 0) {
+                    return false;
+                }
+                goods_number -= step;
+            }
+
+            $("#inpt_" + goods_id).val(goods_number);
+            $("#inpt_" + goods_id).change();
+        }
+    }
+    function onclick1(){
+        var request = GetRequest();
+        var game_id = request.game_id;
+        var url = "lister.php?game_id=" + game_id
+        window.location.href = url;
+    }
+//        $(function(){
+//            $('#jsSelectGame').change(function(){
+//                var request = GetRequest();
+////                console.log(request);return;
+//                var scat_id = request.scat_id;
+//                var game_id = request.game_id;
+//                var region_id = request.region_id;
+//                console.log($(this).val());
+//                var url = "lister.php?game_id=" + game_id
+//                if ($(this).val() > 0) {
+//                    url = "lister.php?game_id=" + game_id + "&scat_id=" + $(this).val();
+//                }
+//                if (region_id > 0) {
+//                    url += "&region_id=" + region_id;
+//                }
+//                window.location.href = url;
+//            });
+//
+//        });
+       $(function(){
+           $('#jsSelectSche').change(function(){
+              var request = GetRequest();
+                var game_id = request.game_id; 
+                var region_id = request.region_id;
+                 console.log($(this).val());
+                  var url = "lister.php?game_id=" + game_id
+               if ($(this).val() > 0) {
+                url = "lister.php?game_id=" + game_id + "&sche_id=" + $(this).val();
+            }
+               if (region_id > 0) {
+               url += "&region_id=" + region_id;
+            }
+            window.location.href = url;
+            });
+            
+        });
+        
+        $(function(){
+           $('#jsSelectCity').change(function(){
+              var request = GetRequest();
+              var game_id = request.game_id; 
+               var sche_id = request.sche_id;
+              console.log($(this).val());
+              var url = "lister.php?game_id=" + game_id
+               if ($(this).val() > 0) {
+                url = "lister.php?game_id=" + game_id + "&region_id=" + $(this).val();
+            }else if($(this).val() == 0){
+                   url = "lister.php?game_id=" + game_id;
+               }
+              if (sche_id > 0) {
+                 url += "&sche_id=" + sche_id;
+            }else if(sche_id == 0){
+
+              }
+            window.location.href = url;
+            });
+        });
+     function GetRequest() {
+        var url = location.search; //获取url中"?"符后的字串
+        var theRequest = new Object();
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for (var i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split("=")[0]] = (strs[i].split("=")[1]);
+            }
+        }
+        return theRequest;
+    }
+
+//    
+       function change_s(sche_id) {
+   
+        window.location.href = url;
+        
+    }
+//    function change_r(region_id) {
+//        var request = GetRequest();
+//        var game_id = request.game_id;
+//        var sche_id = request.sche_id;
+//        var url = "lister.php?game_id=" + game_id
+//        if (region_id > 0) {
+//            url = "lister.php?game_id=" + game_id + "&region_id=" + region_id;
+//        }
+//
+//        if (sche_id > 0) {
+//            url += "&sche_id=" + sche_id;
+//        }
+//        window.location.href = url;
+//    }
+//当代理商用户点击加号或者减号的话，会相应的修改特定商品的数量
+function update_number_sum(goods_id, op) {
+    var step = 1;  //每一次需要增加或者减少的数量
+    var goods_number = parseInt($("#inpt_" + goods_id).val());
+    if (goods_number == NaN) {
+        alert("数字格式不正确");
+        return false;
+    }
+    if(goods_number == 0){
+        addTitckToCart(goods_id);
+    }else{
+        if (op == 'jia') {
+//            if (goods_number == 2) {
+//                return false;
+//            }
+            goods_number += step;
+        }
+        if (op == 'jian') {
+            if (goods_number <= 0) {
+                return false;
+            }
+            goods_number -= step;
+        }
+
+        $("#inpt_" + goods_id).val(goods_number);
+        $("#inpt_" + goods_id).change();
+    }
+}
+</script>
+<script>
+    $(function(){
+        var cartInfo = $("#cartInfo").val();
+        if(cartInfo == 0){
+            $("#submit").css('background','#959191');
+            $("#gotocart").removeAttr("href");
+        }else{
+            $("#submit").css('background','#0e417d');
+            $("#gotocart").attr("href","cart.php?act=index&game_id={$game_info.id}");
+        }
+    })
+</script>
+<!--<script>-->
+    <!--function show_sportcat(opt){-->
+        <!--var url = 'lister.php?act=index&id='+opt;-->
+        <!--window.location.href = url;-->
+    <!--}-->
+<!--</script>-->
+</html>

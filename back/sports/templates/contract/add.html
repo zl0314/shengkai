@@ -1,0 +1,135 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader2.htm"}
+{insert_scripts files="validator.js,jquery.min.js,../js/region.js"}
+<div class="main-div">
+    <form method="post" action="route.php?con=contract&act=edit" name="theForm" enctype="multipart/form-data">
+        <input type="hidden" name="user_id" value="{if $smarty.get.user_id}{$smarty.get.user_id}{else}{$contract.user_id}{/if}">
+        <input type="hidden" name="contract_id" id="contract_id" value="{$contract.contract_id}">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td class="label">合同名称：</td>
+                <td><input type="text" name="contract_name" maxlength="60" required value="{$contract.contract_name}" />{$lang.require_field}</td>
+            </tr>
+
+            <tr>
+                <td class="label">合同编号：</td>
+                <td><input type="text" name="contract_no" maxlength="60" required value="{$contract.contract_no}" />{$lang.require_field}</td>
+            </tr>
+
+            <tr>
+                <td class="label">对应订单的订单号：</td>
+                <td><input type="text" name="order_sn" maxlength="60"  value="{$contract.order_sn}" />{$lang.require_field}
+                如：2017101532203
+                </td>
+
+            </tr>
+
+            <tr>
+                <td class="label">合同文件：</td>
+                <td><div id="container">
+                    <a class="btn btn-default btn-lg " id="img_upload" href="javascript:;" >
+                        <i class="glyphicon glyphicon-plus"></i>
+                        <sapn>合同文件</sapn>
+                    </a>
+                    <font id="upload_status"></font>
+                    <input type="hidden" name="contract_file" id="img_id" value="{$contract.contract_file}">
+                    {if $contract.contract_file}<a target="_blank" href="{$contract.contract_file}">已上传，点击查看</a>{/if}
+                </div></td>
+            </tr>
+
+            <tr>
+                <td class="label">选择单票：</td>
+                <td><div >
+                    <input type="button" class="button" onclick="get_combo(this, 1)" value="选择单票">
+                    <input type="hidden" name="goods_id" value="{$contract.goods_id}" id="goods_id">
+                    <input type="hidden" name="goods" value="{$contract.goods}" id="goods">
+                    <!-- <input type="hidden" name="goods_count" value="{$contract.goods_count}" id="goods_count"> -->
+                    <span id="goods_id_name">{$contract.goods_name}</span>
+                </div>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="label">选择套餐：</td>
+                <td><div >
+                    <input type="button" class="button" onclick="get_combo(this, 2)" value="选择套餐">
+                    <input type="hidden" name="combo_id" value="{$contract.combo_id}" id="combo_id">
+                    <input type="hidden" name="combos" value="{$contract.combos}" id="combos">
+                    <!-- <input type="hidden" name="combos_count" value="{$contract.combos_count}" id="combos_count"> -->
+
+                    <span id="combo_id_name">{$contract.combo_name}</span>
+                </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">选择酒店：</td>
+                <td><div >
+                    <input type="button" class="button" onclick="get_combo(this, 3)" value="选择酒店">
+                    <input type="hidden" name="hotel_id" value="{$contract.hotel_id}" id="hotel_id">
+                    <input type="hidden" name="hotels" value="{$contract.hotels}" id="hotels">
+                    <!-- <input type="hidden" name="hotels_count" value="{$contract.hotels_count}" id="hotels_count"> -->
+
+                    <span id="hotel_id_name">{$contract.hotel_name}</span>
+                </div>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">选择机票：</td>
+                <td><div >
+                    <input type="button" class="button" onclick="get_combo(this, 4)" value="选择机票">
+                    <input type="hidden" name="airticket_id" value="{$contract.airticket_id}" id="airticket_id">
+                    <input type="hidden" name="airtickets" value="{$contract.airtickets}" id="airtickets">
+                    <!-- <input type="hidden" name="airtickets_count" value="{$contract.airtickets_count}" id="airtickets_count"> -->
+                    
+                    <span id="airticket_id_name">{$contract.flight}</span>
+                </div>
+                </td>
+            </tr>
+        </table>
+
+        <table align="center">
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" class="button" value="{$lang.button_submit}" />
+                    <input type="reset" class="button" value="{$lang.button_reset}" />
+                    <input type="hidden" name="act" value="{$act}" />
+                    <input type="hidden" name="id" value="{$contract.id}" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script type="text/javascript" charset="utf-8" src="js/qiniu/plupload.full.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/qiniu.js"></script>
+<script type="text/javascript" charset="utf-8" src="js/qiniu/main.js"></script>
+<script language="JavaScript">
+
+</script>
+{/literal}
+{include file="pagefooter.htm"}
+
+<script type="text/javascript" src="js/layer/layer.js"></script>
+<script>
+    function get_combo(id, type){
+        var url = '/sports/goods.php?act=list&ticket=2&select=1';
+        if(type == 2){
+            url = '/sports/route.php?con=combo&select=1'
+        }else if(type == 3){
+            url = '/sports/route.php?con=hotel&select=1'
+        }else if(type == 4){
+            url = '/sports/route.php?con=airticket&select=1'
+        }
+        console.log(url);
+        //iframe层-父子操作
+        layer.open({
+            type: 2,
+            title: '选择内容',
+            area: ['1040px', '750px'],
+            fixed: false, //不固定
+            maxmin: true,
+            content: url
+        });
+    }
+</script>

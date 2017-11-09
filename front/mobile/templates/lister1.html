@@ -1,0 +1,242 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+<title>列表页-lister</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=720 user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css"  href="css/base.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+<link rel="stylesheet" type="text/css"  href="css/header.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/footer.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/lister.css" media="all" />
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+ <script src="js/ticket.js"></script>
+</head>
+<body>
+<!--start 头部-->
+
+{include file="header.html"}
+<!--end 头部-->
+<!--container starts-->
+<div class="container">
+	<div class="top">
+		<div class="wrapper">	
+        	<div class="topContent clearfloat">
+            	<div class="logo fl"><a href="#"><img src="{$game_info.game_sealogo}"/></a></div>
+                <h1 class="text fl">{$game_info.game_name}</h1>
+            </div>
+        </div>
+    </div>   
+    <!--menu starts  --> 
+    <div class="menu">
+        <div class="menuContent ">
+        	<div class="wrapper">
+            	<form class="list clearfloat">
+                	
+                    <select class="select fl">
+                    	<option value="所有赛段">所有赛段</option>
+                        <!-- {foreach from=$sche_list item=sche}-->
+                                <option>
+                                    <a href="####" onclick="change_s({$sche.id})">{$sche.sche_name}</a>
+                               </option>
+                                <!-- {/foreach}-->
+ 						<option>运动类别</option>
+  						
+					</select>
+                    <select class="select fl">
+                    	<option value="所有城市">所有城市</option>
+ 					  <!-- {foreach from=$region_list item=region}-->
+                               <option>
+                                    <a href="####" onclick="change_r({$region.region_id})">{$region.region_name}</a>
+                                </option>
+                                <!-- {/foreach}-->
+  						
+					</select>
+               	</form>
+            </div>
+        </div>
+ 	</div>
+    <!--menu ends-->
+    <!--subone starts	-->
+<!--    <script>
+        var count = 0;
+    function update_number(game_id,op_type){
+        count = parseInt($('#inpt_'+game_id).attr('value'));
+        if(count !=0){
+            if(op_type=='jian'){
+                count = count-1;
+            }else if(op_type=='jia'){
+                 count = count+1;
+            }
+              update_cart_number();
+        }
+      
+       $('#inpt_'+game_id).attr('value',count);
+       
+    }
+    function update_cart_number(){
+        console.log(1123123123123);
+    }
+    </script>-->
+    
+    
+<div class="sub">
+	<div class="subOne">			
+    	<div class="wrapper">
+             <!--{foreach from=$left_info item=good }-->
+    	<div class="info clearfloat">  
+                <div class="sectionOne fl">
+                    <div class="number"  id="goods_color{$good.goods_id}"><img src="{$good.big_pitch_img}"/></div>
+<div class="tabbedButton ">
+<!--     {foreach from=$cart_list item=goods}-->
+         <div class="fr tab01 tab02">
+              <a href="#" onclick="update_number({$goods.goods_id}, 'jian')">-</a>
+            <input class="inpt" value="{$goods.cart_goods_number}" id="inpt_{$goods.goods_id}" type="text" onchange="update_cart_number($game_id, {$goods.goods_id})">
+              <a href="#" onclick="update_number({$goods.goods_id}, 'jia')" >+</a>
+         </div>
+<!--         {/foreach}-->
+ </div>		
+</div>   
+                       
+            <div class="sectionTwo fr">
+            	<div class="lineOne clearfloat">		<!--lineone -->
+                	<h1 class="fl" id="goods_name{$good.goods_id}">{$good.goods_name}</h1>
+                    <h2 class="fr" id="goods_price{$good.goods_id}">{$good.shop_price}</h2>
+                </div>
+                <ul class="lineTwo clearfloat">				<!--linetwo-->
+                	<li class="location fl">{$good.region_name}</li>
+                    <li class="time fl">{$good.num_start}</li>
+                    <li class="sign fl">{$good.pitch_name}</li>
+                </ul>
+                <div class="lineThree clearfloat">		<!--linethree-->
+                    <div class="blockTwo fr">
+                    	<h1 class="fl"><a href="#">支持退票险</a></h1>
+                        <h2 class="fr"><a href="#">(需单独购买)</a></h2>
+                    </div>	    
+                </div>
+                <div class="lineFour clearfloat">			<!--linefour-->
+                	<form class="fl">
+                       <div id="message" class="selectTwo">
+                           <span><a href="#" id="message_{$good.goods_id}" onclick="details('{$good.goods_id}')">详细信息</a></span>
+                        </div>
+                    </form>
+                         <button class="join-list add fr" onclick="javascript:addTitckToCart({$good.goods_id})">
+                                            加入清单
+                                        </button>
+                </div>
+               <div id="messag_{$good.goods_id}" class="xiala" style="display:none;">
+        <span></span>
+        <div class=" myDiv p01">
+            <h5> <img src="{$good.seat_picture}"/></h5>
+            4场小组赛、1场八分之一决赛<br />
+            本球场可容纳观众 45,000 名<br />
+            巴黎王子公园球场曾是1960年与1984年两届欧洲杯决赛举办地，1984年更是见证了法国队的夺冠时刻。<br />
+            坐席等级：左侧图示中黑色线条为白金包厢坐席位置；黄色区域为黄金坐席位置。
+        </div>
+        <div class=" myDiv p02">
+            <h5>票务信息</h5>
+            1. 白金坐席尊享以下服务： 比赛日私人包厢和专属观赛座椅、欢迎香槟、赛前和中场休息的餐饮服务、红酒和软饮、官方赛程表、欧洲杯专属礼品、包厢专属服务人员、比赛名单、专属停车位。<br />
+            2. 以上报价包含欧盟VAT，中国境内营业税以及代理服务费。<br />
+            3. 盛开体育将独家为您提供票务咨询、签证咨询及代办服务、比赛日球场直达接驳和比赛现场中文服务、24小时紧急援助热线。<br />
+            4. 欧足联将保留对购票人资格审查的权利，如未通过将扣除汇款手续费后如数退还购票款。
+        </div>
+    </div> 
+            </div>
+                </div>
+                    <!--{/foreach}-->  
+        </div>
+    </div>
+</div>
+<!--subone ends	-->
+</div>
+<!--subone repeat 2 ends-->
+<div class="bottom">
+	<div class="wrapper">
+    	<div class="bottomContent">
+        	<div class="sUbbottomOne clearfloat">
+        		<h1 class="fl"><a href="">*每张比赛同级球票2张起售</a></h1>
+            	<h2 class="fr"><a href="">
+                  {if $cart_money.all}
+                <span>￥ </span><span id="total_price" style="font-size:20px;">{$cart_money.ticket}</span>
+                {else}
+                <span>￥ </span><span id="total_price" style="font-size:20px;">0.00</span>
+                {/if}
+                </a></h2>
+            </div>
+            
+            <div class="subbottomTwo clearfloat">
+ 
+                <a href="cart.php?act=index&game_id={$game_info.id}"><button  class="submit fr">加入购物车</button></a>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<!--container ends-->
+</body>
+<script type="text/javascript" src="js/pulldown.js"></script>
+<script src="js/tools.js"></script>
+
+<script src="js/video.js"></script>
+<script src="js/add_cart.js"></script>
+<script src="js/user.js"></script>
+<script type="text/javascript">
+function Show_Hidden(obj)
+{
+ if(obj.style.display=="block")
+ {
+  obj.style.display='none';
+ }
+ else
+ {
+  obj.style.display='block';
+ }
+}
+function details(res){
+ var olink=document.getElementById("message_"+res);
+ var odiv=document.getElementById("messag_"+res);
+ olink.onclick=function()
+ {
+  Show_Hidden(odiv);
+  return false;
+ }
+}
+
+    //修改购物车中商品的数量
+    function update_cart_number(game_id, goods_id) {
+        var goods_number = $("#inpt_" + goods_id).val();
+        goods_number = -1;
+        window.location.href = "lister.php?act=update_goods_number&game_id=" + game_id + "&goods_id=" + goods_id + "&goods_number=" + $("#inpt_" + goods_id).val();
+    }
+//当用户点击加号或者减号的话，会相应的修改特定商品的数量
+    function update_number(goods_id, op) {
+        var step = 1;  //每一次需要增加或者减少的数量
+        var goods_number = parseInt($("#inpt_" + goods_id).val());
+        if (goods_number == NaN) {
+            alert("数字格式不正确");
+            return false;
+        }
+        if (op == 'jia') {
+            if (goods_number == 4) {
+                return false;
+            }
+            goods_number += step;
+        }
+        if (op == 'jian') {
+            if (goods_number <= 0) {
+                return false;
+            }
+            goods_number -= step;
+        }
+        $("#inpt_" + goods_id).val(goods_number);
+        $("#inpt_" + goods_id).change();
+    }
+</script>
+</html>

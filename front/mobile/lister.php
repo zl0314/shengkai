@@ -1,0 +1,417 @@
+<?php
+
+/**
+ * ECSHOP mobile首页
+ * ============================================================================
+ * * 版权所有 2005-2012 上海商派网络科技有限公司，并保留所有权利。
+ * 网站地址: http://www.ecshop.com；
+ * ----------------------------------------------------------------------------
+ * 这不是一个自由软件！您只能在不用于商业目的的前提下对程序代码进行修改和
+ * 使用；不允许对程序代码以任何形式任何目的的再发布。
+ * ============================================================================
+ * $Author: liuhui $
+ * $Id: index.php 15013 2010-03-25 09:31:42Z liuhui $
+ */
+
+define('IN_ECS', true);
+define('ECS_ADMIN', true);
+
+require(dirname(__FILE__) . '/includes/init.php');
+include_once('includes/cls_json.php');
+require(ROOT_PATH . 'includes/lib_order.php');
+
+
+$act = empty($_REQUEST['act']) ? "index" : trim($_REQUEST['act']);
+/* 获取赛事列表 start */
+__load("GameService");
+$game_obj = new GameService();
+$game_list = $game_obj->get_list();
+if (!empty($game_id)) {
+    $game = $game_obj->get_game($game_id);
+
+    $smarty->assign('game', $game);
+
+    //根据赛事自动查询城市
+    __load("RegionService");
+    $RegionService = new RegionService();
+    $schedule_id = $RegionService->get_schedule($game_id);
+
+    $smarty->assign('schedule_id', $schedule_id);
+}
+/* 获取赛事列表 end */
+$combo = $GLOBALS['db']->getALL('select * from sk_combo');
+$sportcat_list = $GLOBALS['db']->getAll('SELECT id,name FROM sk_sportcat where is_display=1');
+$smarty->assign('sportcat_list', $sportcat_list);
+//获取赛事信息
+
+if ($act == "index") {
+    if ($_SESSION['user_id'] == '0') {
+        $user_id = $_SESSION['user_id'];
+        $smarty->assign('user_id', $user_id);
+        //检查当前用户购物车中是否有数据
+        $game_id = empty($_REQUEST['game_id']) ? 0 : intval($_REQUEST['game_id']);
+        $smarty->assign('game_id', $game_id);
+        //查询购物车
+        $cart_info = get_cart_info(SESS_ID, $game_id);
+        //统计购物车数量
+        $cart_num = count($cart_info);
+        $_SESSION['cart_num'] = $cart_num;
+
+        //判断购物车是否有商品
+        $get_cart_num = count(get_cart_num(SESS_ID));
+        $smarty->assign('cart_info', $get_cart_num);
+
+        $smarty->assign('cart_list', $cart_info);
+        $smarty->assign('cart_list_count', $cart_num);
+        __load("CartService");
+        $cart_obj = new CartService();
+        $smarty->assign("cart_money", $cart_obj->get_cart_money());
+//    $smarty->assign('total_price', sprintf("%10.2f", $n));
+        //查询购物车数量
+        $number = get_cart_num(SESS_ID);
+        $num = 0;
+        foreach ($number as $value) {
+            $num += $value['goods_number'];
+        }
+        //    echo $num;die;
+        $smarty->assign('num', $num);
+
+        //票务等级
+        $rank = empty($_REQUEST['rank']) ? '' : trim($_REQUEST['rank']);
+
+        //获取城市信息
+        $region_id = empty($_REQUEST['region_id']) ? 0 : intval($_REQUEST['region_id']);
+        __load("GameService");
+        __load("RegionService");
+        $region_obj = new RegionService();
+        $this_region = $region_obj->get_region($region_id);
+        if (empty($region_id)) {
+            $smarty->assign('region_name', "所有城市");
+        } else {
+            $smarty->assign('region_name', $this_region['region_name']);
+        }
+        $game = new GameService();
+        $left_info = $game->get_game_info($game_id, $region_id, $rank);
+        if (!empty($_REQUEST['scat_id'])) {
+            $left_info = $game->get_scat_game_goods($game_id, $region_id, $_REQUEST['scat_id']);
+            $arr = $left_info;
+            foreach ($arr AS $key => $value) {
+                $arr[$key]['keywords'] = explode(' ', trim($value['keywords']));
+            }
+        }
+        if (!empty($_REQUEST['sche_id'])) {
+            $left_info = $game->get_game_sche($game_id, $region_id, $_REQUEST['sche_id'], $rank);
+            $arr = $left_info;
+            foreach ($arr AS $key => $value) {
+                $arr[$key]['keywords'] = explode(' ', trim($value['keywords']));
+            }
+        }
+        foreach ($left_info AS $key => $value) {
+            $left_info[$key]['cart_goods_number'] = 0;
+            $left_info[$key]['keywords'] = explode(' ', trim($value['keywords']));
+            if ($cart_info) {
+                foreach ($cart_info AS $k => $v) {
+                    if ($value['goods_id'] == $v['goods_id']) {
+                        $left_info[$key]['cart_goods_number'] = $v['cart_goods_number'];
+                        break;
+                    }
+                }
+            }
+        }
+        $smarty->assign("left_info", $left_info);
+        /*获取运动类别*/
+        $sportcat_list = $game->get_sportcat_list();
+        $smarty->assign('sportcat_list', $sportcat_list);
+        /* 获取地区列表  */
+        $sche_id = empty($_REQUEST['sche_id']) ? 0 : $_REQUEST['sche_id'];
+        $region_list = $game->get_region_list($game_id, $sche_id);
+        $smarty->assign('region_list', $region_list);
+        $smarty->assign("game_id", $game_id);
+        /* 获取票务等级 */
+        $game_rank_list = get_game_rank_list($game_id, $sche_id);
+        $smarty->assign('game_rank_list', $game_rank_list);
+
+        //获取赛事名称
+        $game_info = $game->get_game_name($game_id);
+        $smarty->assign("game_info", $game_info);
+        if (empty($game_info['template'])) {
+            $smarty->assign("game_more", 0);
+        } else {
+            $smarty->assign("game_more", 1);
+        }
+
+        /* 获取赛程列表 start */
+        __load("ScheduleService");
+        $sche_obj = new ScheduleService();
+        $sche_list = $sche_obj->sche_list_info($game_id);
+        if (empty($_REQUEST['sche_id'])) {
+            $smarty->assign('sche_name', "所有赛段");
+        } else {
+            $sche_name = $sche_obj->get_ScheName($_REQUEST['sche_id']);
+            $smarty->assign('sche_name', $sche_name);
+        }
+
+        $smarty->assign('sche_list', $sche_list);
+        $schedule_html = '';
+        /* 获取赛程列表 end */
+        $namel = "<img src='images/logo.png'>";
+        $smarty->assign('name1', $namel);
+        $smarty->display("lister.html");
+    } elseif ($_SESSION['user_id'] != '0') {
+        $user_id = $_SESSION['user_id'];
+        $type_info = get_user($user_id);
+        $smarty->assign('user_id', $user_id);
+        $smarty->assign('type', $type_info);
+        //检查当前用户购物车中是否有数据
+        $game_id = empty($_REQUEST['game_id']) ? 0 : intval($_REQUEST['game_id']);
+        $smarty->assign('game_id', $game_id);
+        $cart_info = get_cart_info(SESS_ID, $game_id);
+
+        $cart_num = count($cart_info);
+        $_SESSION['cart_num'] = $cart_num;
+        //判断购物车是否有商品
+        $get_cart_num = count(get_cart_num(SESS_ID));
+        $smarty->assign('cart_info', $get_cart_num);
+
+        $smarty->assign('cart_list', $cart_info);
+        $smarty->assign('cart_list_count', count($cart_info));
+        __load("CartService");
+        $cart_obj = new CartService();
+        $smarty->assign("cart_money", $cart_obj->get_cart_money());
+        $number = get_cart_num(SESS_ID);
+        $num = 0;
+        foreach ($number as $value) {
+            $num += $value['goods_number'];
+        }
+        $smarty->assign('num', $num);
+        //票务等级
+        $rank = empty($_REQUEST['rank']) ? '' : trim($_REQUEST['rank']);
+
+        //获取城市信息
+        $region_id = empty($_REQUEST['region_id']) ? 0 : intval($_REQUEST['region_id']);
+        __load("GameService");
+        __load("RegionService");
+        $region_obj = new RegionService();
+        $this_region = $region_obj->get_region($region_id);
+        if (empty($region_id)) {
+            $smarty->assign('region_name', "所有城市");
+        } else {
+            $smarty->assign('region_name', $this_region['region_name']);
+        }
+        $game = new GameService();
+        $left_info = $game->get_game_info($game_id, $region_id, $rank);
+        foreach ($left_info AS $key => $value) {
+            $left_info[$key]['cart_goods_number'] = 0;
+
+            if ($cart_info) {
+                foreach ($cart_info AS $k => $v) {
+                    if ($value['goods_id'] == $v['goods_id']) {
+                        $left_info[$key]['cart_goods_number'] = $v['cart_goods_number'];
+                        break;
+                    }
+                }
+            }
+        }
+        $smarty->assign("left_info", $left_info);
+        $game_info = $game->get_game_name($game_id);
+        $smarty->assign("game_info", $game_info);
+        if (empty($game_info['template'])) {
+            $smarty->assign("game_more", 0);
+        } else {
+            $smarty->assign("game_more", 1);
+        }
+        /*获取运动类别*/
+        $sportcat_list = $game->get_sportcat_list();
+        $smarty->assign('sportcat_list', $sportcat_list);
+
+        /* 获取地区列表  */
+        $sche_id = empty($_REQUEST['sche_id']) ? 0 : $_REQUEST['sche_id'];
+        $region_list = $game->get_region_list($game_id, $sche_id);
+        $smarty->assign('region_list', $region_list);
+        $smarty->assign("game_id", $game_id);
+        /* 获取票务等级 */
+        $game_rank_list = get_game_rank_list($game_id, $sche_id);
+        $smarty->assign('game_rank_list', $game_rank_list);
+
+        /* 获取赛程列表 start */
+        __load("ScheduleService");
+        $sche_obj = new ScheduleService();
+        $sche_list = $sche_obj->sche_list_info($game_id);
+        if (!empty($_REQUEST['scat_id'])) {
+            $left_info = $game->get_scat_game_goods($game_id, $region_id, $_REQUEST['scat_id']);
+            $arr = $left_info;
+            foreach ($arr AS $key => $value) {
+                $arr[$key]['keywords'] = explode(' ', trim($value['keywords']));
+            }
+        }
+        if ($sche_id) {
+            $smarty->assign('sche_name', "所有赛段");
+        } else {
+            $sche_name = $sche_obj->get_ScheName($sche_id);
+            $smarty->assign('sche_name', $sche_name);
+        }
+
+        $smarty->assign('sche_list', $sche_list);
+        $namel = "<img src='images/logo.png'>";
+        $smarty->assign('name1', $namel);
+        $smarty->display("lister.html");
+    }
+} elseif ($act == "add_to_cart_game") {
+    __load("CartService");
+    $cart_obj = new CartService();
+    include_once('includes/cls_json.php');
+    $this_goods_id = intval($_POST['goods_id']);
+    if (empty($this_goods_id)) {
+        return false;
+    } else {
+        //检测购物车内数量
+        $number = $cart_obj->get_one_number($this_goods_id);
+        if ($number >= 2) {
+            return false;
+        }
+        $goods_attr_id = goods_attr_id($this_goods_id);
+        __load("GoodsService");
+        $goods_obj = new GoodsService();
+        $this_goods_info = $goods_obj->get_goods_info($this_goods_id);
+
+        $cart_list = array();
+        array_push($cart_list, array(
+            "goods_id" => $this_goods_id,
+            "goods_name" => $this_goods_info['goods_name'],
+            "goods_price" => $this_goods_info['shop_price'],
+            "game_id" => $this_goods_info['game_id'],
+            "goods_number" => 1,
+        ));
+        $cart_obj->add_ticket_to_cart($cart_list);
+        $json = new JSON;
+        exit($json->encode($_POST));
+    }
+} elseif ($act == "add_to_cart_game_mobile") {
+    __load("CartService");
+    $cart_obj = new CartService();
+    include_once('includes/cls_json.php');
+    $this_goods_id = intval($_POST['goods_id']);
+    if (empty($this_goods_id)) {
+        return false;
+    } else {
+        //检测购物车内数量
+        $number = $cart_obj->get_one_number($this_goods_id);
+        if ($number >= 4) {
+            return false;
+        }
+        $goods_attr_id = goods_attr_id($this_goods_id);
+        __load("GoodsService");
+        $goods_obj = new GoodsService();
+        $this_goods_info = $goods_obj->get_goods_info($this_goods_id);
+
+        $cart_list = array();
+        array_push($cart_list, array(
+            "goods_id" => $this_goods_id,
+            "goods_name" => $this_goods_info['goods_name'],
+            "goods_price" => $this_goods_info['shop_price'],
+            "game_id" => $this_goods_info['game_id'],
+            "goods_number" => 1,
+        ));
+        $cart_obj->add_ticket_to_cart($cart_list);
+        $json = new JSON;
+        exit($json->encode($_POST));
+    }
+} elseif ($act == "add_to_cart_games") {
+    __load("CartService");
+    $cart_obj = new CartService();
+    include_once('includes/cls_json.php');
+    $this_goods_id = intval($_POST['goods_id']);
+    if (empty($this_goods_id)) {
+        return false;
+    } else {
+        //检测购物车内数量
+        $number = $cart_obj->get_one_number($this_goods_id);
+        $goods_attr_id = goods_attr_id($this_goods_id);
+        __load("GoodsService");
+        $goods_obj = new GoodsService();
+        $this_goods_info = $goods_obj->get_goods_info($this_goods_id);
+
+        $cart_list = array();
+        array_push($cart_list, array(
+            "goods_id" => $this_goods_id,
+            "goods_name" => $this_goods_info['goods_name'],
+            "goods_price" => $this_goods_info['shop_price'],
+            "game_id" => $this_goods_info['game_id'],
+            "goods_number" => 1,
+        ));
+        $cart_obj->add_ticket_to_cart($cart_list);
+        $json = new JSON;
+        exit($json->encode($_POST));
+    }
+}
+function get_cart_info($session_id, $game_id)
+{
+    $sql = "SELECT c.*,n.*,g.*,cm.color_value,c.goods_number as cart_goods_number FROM " . $GLOBALS['ecs']->table('cart') . "AS c," . $GLOBALS['ecs']->table('color_manage') . "AS cm," . $GLOBALS['ecs']->table('goods') . "AS g," . $GLOBALS['ecs']->table('number') . "AS n WHERE c.session_id= '$session_id' AND g.game_id={$game_id} AND c.goods_id=g.goods_id AND g.number_id=n.id AND n.color_id=cm.color_id ";
+    return $GLOBALS['db']->getAll($sql);
+}
+
+function goods_attr_id($goods_id)
+{
+    $sql = "SELECT goods_attr_id FROM " . $GLOBALS['ecs']->table('goods_attr') . "WHERE goods_id =$goods_id";
+    return $GLOBALS['db']->getOne($sql);
+}
+
+//判断购物车是否有商品
+function get_cart_num($sess)
+{
+    $sql = "SELECT c.* FROM sk_cart AS c WHERE c.session_id = '$sess' AND (c.goods_type = 'ticket' OR c.goods_type='goods' OR c.goods_type='plane' OR c.goods_type = 'combo')";
+    return $GLOBALS['db']->getAll($sql);
+}
+
+function search_teams($condition)
+{
+    return $GLOBALS['db']->getAll("SELECT g.* FROM " . $GLOBALS['ecs']->table('game') . "AS g," . $GLOBALS['ecs']->table('schedule') . "AS s," . $GLOBALS['ecs']->table('number') . "AS n," . $GLOBALS['ecs']->table('num_team') . "AS nt," . $GLOBALS['ecs']->table('teams') . "AS t " . "WHERE g.id=s.game_id AND s.id=n.sche_id  AND n.id=nt.num_id AND nt.team_id=t.id AND t.team_name LIKE\"%$condition%\" GROUP BY g.id");
+}
+
+function teams_count($condition)
+{
+    $sql = "SELECT COUNT(*) FROM (SELECT g.* FROM " . $GLOBALS['ecs']->table('game') . "AS g," . $GLOBALS['ecs']->table('schedule') . "AS s," . $GLOBALS['ecs']->table('number') . "AS n," . $GLOBALS['ecs']->table('num_team') . "AS nt," . $GLOBALS['ecs']->table('teams') . "AS t " . "WHERE g.id=s.game_id AND s.id=n.sche_id  AND n.id=nt.num_id AND nt.team_id=t.id AND t.team_name LIKE\"%$condition%\" GROUP BY g.id) aa";
+    return $GLOBALS['db']->getOne($sql);
+}
+
+function search_city($condition)
+{
+    $sql = "SELECT g.* FROM " . $GLOBALS['ecs']->table('game') . "AS g," . $GLOBALS['ecs']->table('schedule') . "AS s," . $GLOBALS['ecs']->table('number') . "AS n," . $GLOBALS['ecs']->table('pitch') . "AS p," . $GLOBALS['ecs']->table('region') . "AS r " . "WHERE g.id=s.game_id AND s.id=n.sche_id  AND n.pitch_id=p.id AND p.region_id=r.region_id AND r.region_name LIKE\"%$condition%\"  AND r.region_type=2 GROUP BY g.id";
+    return $GLOBALS['db']->getAll($sql);
+}
+
+function city_count($condition)
+{
+    $sql = "SELECT COUNT(*) FROM (SELECT g.* FROM " . $GLOBALS['ecs']->table('game') . "AS g," . $GLOBALS['ecs']->table('schedule') . "AS s," . $GLOBALS['ecs']->table('number') . "AS n," . $GLOBALS['ecs']->table('pitch') . "AS p," . $GLOBALS['ecs']->table('region') . "AS r " . "WHERE g.id=s.game_id AND s.id=n.sche_id  AND n.pitch_id=p.id AND p.region_id=r.region_id AND r.region_name LIKE\"%$condition%\"  AND r.region_type=2 GROUP BY g.id) aa";
+    return $GLOBALS['db']->getOne($sql);
+}
+
+//获取用户的属性是否为代理商
+function get_user($user_id)
+{
+    $sql = "SELECT type FROM sk_users WHERE user_id=$user_id";
+    return $GLOBALS['db']->getOne($sql);
+}
+
+//取得票务(坐席)等级
+//game_id 比赛id
+//sche_id 赛程id
+function get_game_rank_list($game_id, $sche_id = 0)
+{
+    //查询这个球场的票的等级
+    $sql = "SELECT DISTINCT g.rank FROM " . $GLOBALS['ecs']->table('goods') . " AS g," . $GLOBALS['ecs']->table('number') . " AS n WHERE g.game_id=$game_id AND g.number_id=n.id";
+    if ($sche_id > 0) {
+        $sql .= " AND g.sche_id = {$sche_id}";
+    }
+    $rank = $GLOBALS['db']->getAll($sql);
+    $num = count($rank);
+    for ($i = 0; $i < $num; $i++) {
+        if (empty($rank[$i]['rank'])) {
+            unset($rank[$i]);
+        }
+    }
+    $rank = array_merge($rank);
+    return $rank;
+}
+
+?>

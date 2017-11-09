@@ -1,0 +1,81 @@
+<!-- $Id: agency_list.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,newlisttable.js"}
+<form method="post" action="route.php?con=agent&act=batch_drop" name="listForm" onsubmit="return confirm_bath();">
+    <div class="list-div" id="listDiv">
+        {/if}
+        <table cellpadding="3" cellspacing="1">
+            <tr>
+                <th width="5%"> <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" />
+                    <a href="javascript:listTable.sort('agency_id'); ">{$lang.record_id}</a>{$sort_agency_id} </th>
+                <th>代理商名称</th>
+                <th>账户</th>
+                <th>邮箱</th>
+                <th>主管人</th>
+                <th>银行卡卡号</th>
+                <th>状态</th>
+                <th>操作</th>
+            </tr>
+            {foreach from=$agents item=agent}
+            <tr>
+                <td><input type="checkbox" name="checkboxes[]" value="{$agent.id}" />
+                    {$agent.id}</td>
+                <td class="first-cell">
+                    {$agent.agent}</td>
+                <td class="first-cell">
+                    {$agent.user_name}</td>
+                <td>{$agent.email}</td>
+                <td>{$agent.satrap}</td>
+                <td>{$agent.bank_card}</td>
+                <td>{if $agent.state eq 0}启用{else}已冻结{/if}</td>
+                <td align="center">
+                    {if $agent.state eq 0}<a href="route.php?con=agent&act=status&hotel_id={$agent.id}&s=1" title="{$lang.edit}">冻结</a>{else}<a href="route.php?con=agent&act=status&hotel_id={$agent.id}&s=0" title="{$lang.edit}">启用</a>{/if} |
+                    <a href="route.php?con=agent&act=update&id={$agent.id}" title="{$lang.edit}">{$lang.edit}</a> |
+                    <a href="javascript:confirm_redirect('确定要删除代理商?', 'route.php?con=agent&act=remove&id={$agent.id}')" title="{$lang.remove}">{$lang.remove}</a> |
+                    <a href="route.php?con=agent&act=pitch_list&id={$agent.id}" title="查看代理商票务信息">查看代理商票务信息</a> 
+                </td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="7">{$lang.no_records}</td></tr>
+            {/foreach}
+        </table>
+        <table id="page-table" cellspacing="0">
+            <tr>
+                <td>
+                    <input name="remove" type="submit" id="btnSubmit" value="{$lang.drop}" class="button" disabled="true" />
+                    <input name="act" type="hidden" value="batch" />
+                </td>
+                <td align="right" nowrap="true">
+                    {include file="page2.htm"}
+                </td>
+            </tr>
+        </table>
+        {if $full_page}
+    </div>
+</form>
+<script type="text/javascript" language="javascript">
+<!--
+    listTable.recordCount = {$record_count};
+    listTable.pageCount = {$page_count};
+    listTable.new_url = 'route.php?is_ajax=1&con=agent';
+    listTable.act = 'index_query';
+    {foreach from = $filter item = item key = key}
+    listTable.filter.{$key} = '{$item}';
+    {/foreach}
+
+    {literal}
+    onload = function()
+    {
+    // 开始检查订单
+    startCheckOrder();
+    }
+    {/literal}
+    //-->
+    function confirm_bath()
+    {
+       return confirm("确定要批量删除所选酒店吗");
+    }
+</script>
+{include file="pagefooter.htm"}
+{/if}

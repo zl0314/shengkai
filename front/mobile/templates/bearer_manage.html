@@ -1,0 +1,113 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+    <title>持票人信息</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=720 user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" type="text/css"  href="css/base.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+    <link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/header.css" media="all" />
+    <link rel="stylesheet" type="text/css"  href="css/footer.css" media="all" />
+    <link rel="stylesheet" type="text/css" href="css/vouch.css" media="all">
+    <link rel="stylesheet" type="text/css" href="css/flexslider.css" media="all">
+    <link rel="stylesheet" type="text/css" href="css/user-info.css" />
+    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+</head>
+<body>
+<form name='update_bearer' method='post'>
+    <!--start 头部-->
+    <div class="boxBg debugTop">
+
+        {include file="header.html"}
+            <!--end 头部-->
+              
+            <!-- 持票人信息 -->
+            <div class="topBox-bg">
+               
+                <div class="topBox">
+                         {foreach from=$bearer_info item=bearer}
+                   <div class="strip3">
+                        <div class="region difePad">
+                            <div class="fl regionLeft">
+                                <label class="fr hintd">姓名：</label>
+                            </div>
+                            <div class="fl regionRight">{$bearer.cn_customer_name}</div>
+                        <div class="alterBg fr">
+                                <a  href="bearer.php?act=update&id={$bearer.id}" class="compiled fl">编辑</a>
+                                <a  onclick="remove_bearer({$bearer.id})" class="removen fr">删除</a>
+                               
+                            </div>
+                        </div>
+                    </div>
+                    <div class="region">
+                        <div class="fl regionLeft">
+                            <label class="fr hintd">护照号码：</label>
+                        </div>
+                        <div class="fl regionRight">{$bearer.passport_number}</div>
+                    </div>
+                    <div class="region">
+                        <div class="fl regionLeft">
+                            <label class="fr hintd">详细地址：</label>
+                        </div>
+                        <div class="fl regionRight">{$bearer.cn_name_street}</div>
+                    </div>
+                    <div class="region">
+                        <div class="fl regionLeft">
+                            <label class="fr hintd">电话：</label>
+                        </div>
+                        <div class="fl regionRight">{$bearer.telephone}</div>
+                    </div>
+                    <div class="region">
+                        <div class="fl regionLeft">
+                            <label class="fr hintd">电子邮件：</label>
+                        </div>
+                        <div class="fl regionRight">{$bearer.mail}</div>
+                    </div>
+                    <div class="region">
+                        <div class="fl regionLeft">
+                            <label class="fr hintd">手机：</label>
+                        </div>
+                        <div class="fl regionRight">{$bearer.mobile}</div>
+                    </div>
+                </div>
+                {/foreach}
+            </div>
+        </div>
+    </div>
+
+    <div class="btn01">
+
+        <a href="bearer.php?act=add&step=center_add">+&nbsp;添加持票人信息</a>
+
+    </div>
+</form>
+</body>
+<script type="text/javascript" src="js/pulldown.js"></script>
+<!--{insert_scripts files='common.js,user.js'}-->
+<script>
+    $(function() {
+        $('[data-toggle=tooltip]').tooltip();
+    });
+    function edit(bearer_id) {
+        window.location.href = "bearer.php?act=update&id=" + bearer_id;
+    }
+    function remove_bearer(bearer_id) {
+        $.ajax({
+            url: '../bearer.php?act=remove',
+            data: 'bearer_id=' + bearer_id,
+            type: "POST",
+            success: delete_success
+        });
+    }
+    function delete_success() {
+        location.reload();
+
+    }
+</script>
+</html>

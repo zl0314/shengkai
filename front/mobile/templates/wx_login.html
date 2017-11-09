@@ -1,0 +1,47 @@
+<!DOCTYPE  HTML>
+<html lang="zh-cn">
+<head>
+<title>绑定手机</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=720 user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="">
+<meta name="format-detection" content="telephone=no">
+<link rel="stylesheet" type="text/css"  href="css/base.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/pulldown.css" media="all">
+<link rel="stylesheet" type="text/css"  href="css/index.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/header.css" media="all" />
+<link rel="stylesheet" type="text/css"  href="css/footer.css" media="all" />
+<link rel="stylesheet" type="text/css" href="css/register.css" />
+<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/wx_bind.js"></script>
+</head>
+<body>
+    <!--start 头部-->
+    {include file=header.html}
+        <!--end 头部-->
+        <!-- form-01-->
+        <div class="loginBox forgetPass">
+            <form action="" name="formzhaohui" id="formzhaohui"  class="form-01">
+                <h2>绑定手机</h2>
+                <div class="inp-01 inp-none">
+                    <!--<input type="text" value="" placeholder="验证手机号码" maxlength="30"/>-->
+                    <input type="text" class="form-control login-field yonghuming" placeholder="验证手机号码" id="check_mobile_id" oninput="wx_check_mobile()" name="zh_mobile" />
+                </div>
+                <div class="inp-01 inp-none yanzheng">
+                    <!--<input type="text" value="" placeholder="请输入验证码" maxlength="10"/>-->
+                    <input type="text" class="form-control login-field yonghuming" value=""
+                           placeholder="请输入验证码" name="zh_verifycode" id="mobile_code_id"/>
+                </div>
+                <!--<button class="huoqu">获取验证码</button>-->
+                <input type="button" onclick="wx_huoqu_verifycode()" name="zh_bt"
+                       class="huoqu" disabled="true" id="get_verifycode_pc_zh" value="获取验证码">
+                <!--<button class="setPassword">设置新密码</button>-->
+                <button onclick="wx_mobile_bind()" class="setPassword">确定</button>
+            </form>
+        </div>
+</body>
+</html>

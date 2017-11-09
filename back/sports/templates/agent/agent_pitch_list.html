@@ -1,0 +1,81 @@
+<!-- $Id: agency_list.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,newlisttable.js"}
+<div class="list-div" id="listDiv">
+{/if}
+    <table class="list-td" cellpadding="0" cellspacing="2" style="txet-align:center;">
+        <tr>
+            <th width="10%"> <input onclick='listTable.selectAll(this, "checkboxes")' type="checkbox" />{$lang.record_id}</th>
+            <th>添加时间</th>
+            <th>代理商公司名称</th>
+            <th>赛事</th>
+            <th>赛程</th>
+            <th>球赛时间</th>
+            <th>场次</th>
+            <th>城市</th>
+<!--            <th>票务等级</th>-->
+            <th>商品名称</th>
+            <th>总票数</th>
+            <th>查看持票人信息</th>
+        </tr>
+        {foreach from=$agent_orders item=agent_order}    
+            {foreach from=$agent_order.datas item=data key=key}
+                <tr>
+                    {if $key==0}
+                    <td rowspan="{$agent_order.row}"><input type="checkbox" name="checkboxes[]" value="{$agent.id}" />{$agent_order.order_sn}</td>
+                    {/if}
+                    {if $key==0}
+                    <td rowspan="{$agent_order.row}">{$agent_order.add_time}</td>
+                    {/if}
+                    {if $key==0}
+                    <td rowspan="{$agent_order.row}" class="first-cell">{$agent_order.agent}</td>
+                    {/if}                   
+                    <td align="center">{$data.game_name}</td>
+                    <td align="center">{$data.sche_name}</td>
+                    <td align="center">{$data.date}</td>
+                    <td align="center">{$data.num_name}</td>
+                    <td align="center">{$data.region_name}</td>
+<!--                    <td align="center">{$data.attr_value}</td>-->
+                    <td align="center">{$data.goods_name}</td>
+                    <td align="center">{$data.number}</td>
+                    <td align="center">{if $data.record neq 0}<a href="route.php?con=agent&act=pitch_info&id={$data.order_info_id}">查看</a>{else}暂无持票人信息{/if}</td>                    
+                </tr> 
+            {/foreach}
+        {foreachelse}
+        <tr><td class="no-records" colspan="12">{$lang.no_records}</td></tr>
+        {/foreach}
+    </table>
+    <table id="page-table" cellspacing="0">
+        <tr>
+            <td>
+                <input name="remove" type="submit" id="btnSubmit" value="{$lang.drop}" class="button" disabled="true" />
+                <input name="act" type="hidden" value="batch" />
+            </td>
+            <td align="right" nowrap="true">
+                {include file="page2.htm"}
+            </td>
+        </tr>
+    </table>
+{if $full_page}
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+  listTable.new_url = 'route.php?is_ajax=1&con=agent';
+  listTable.act = 'pitch_list_query';
+  {foreach from = $filter item = item key = key}
+    listTable.filter.{$key} = '{$item}';
+  {/foreach}
+{literal}
+    onload = function()
+    {
+        // 开始检查订单
+        startCheckOrder();
+    } 
+{/literal}
+//-->
+</script>
+{include file="pagefooter.htm"}
+{/if}
