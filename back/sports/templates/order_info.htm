@@ -124,8 +124,8 @@
   </tr> 
 
   <tr>
-    <td><div align="right"><strong>来源</strong></div></td>
-    <td>{if $order.third_platform == '1'}飞猪店铺{else}携程店铺{/if}</td>
+    <td><div align="right"><strong>第三方来源</strong></div></td>
+    <td>{if $order.third_platform == '1'}飞猪店铺{elseif $order.third_platform == '2'}携程店铺{else}本站{/if}</td>
     <td><div align="right"><strong>第三方信息</strong></div></td>
     <td>{$order.third_info}</td>
   </tr>
