@@ -775,7 +775,11 @@
                         <div class="clear"></div>
                         <div class="lyr" style="text-align:center">
                             <img src="user.php?act=voucher_img&order_sn={$order.order_sn}" />
-                            <a href="download.php?type=vouch&file_name=vouch_{$order.order_sn}.pdf" class="btn btn-block btn-danger xiazai">下载购票凭证</a>
+                            {if $order.third_platform}
+                                <a href="http://www.skstravel.com/download.php?type=vouch&file_name=vouch_{$order.order_sn}.pdf" class="btn btn-block btn-danger xiazai">下载购票凭证</a>
+                            {else}
+                                <a href="http://182.92.237.65/download.php?type=vouch&file_name=vouch_{$order.order_sn}.pdf" class="btn btn-block btn-danger xiazai">下载购票凭证</a>
+                            {/if}
                         </div>
                         <div class="clear"></div>
                         <!--{/if}-->
