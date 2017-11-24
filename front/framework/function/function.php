@@ -165,10 +165,12 @@ function create_vouch_pdf($order_id)
     $order_sn = $order['order_sn'];
     $file_name = ROOT_PATH . "data/pdf_data/tmp_qr/qr_{$order_sn}.png";
     $value = 'http://webshop.shankaisports.com/user.php?act=show_pdf_info&order_sn=' . $order_sn; //二维码内容
+    
     create_qr($value, $file_name);
     $GLOBALS['smarty']->assign("order_sn", $order_sn);
     $GLOBALS['smarty']->assign("qr_url", $file_name);
     $html = $GLOBALS['smarty']->fetch("pdf_tpl/vouch.tpl", null, null, false);
+
     sava_pdf($html, ROOT_PATH . "data/pdf_data/vouch/vouch_{$order_sn}.pdf", false, false, "F");
     if (file_exists($file_name)) {
         @unlink($file_name);

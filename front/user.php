@@ -834,6 +834,11 @@ elseif ($action == 'order_detail') {
 
         exit;
     }
+    //生成购票凭证pdf
+    if(!empty($order['third_platform'])){
+        create_vouch_pdf($order_id);
+    }
+
 
     //获取合同下载地址
     __load("ContractService");

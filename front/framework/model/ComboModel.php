@@ -63,7 +63,7 @@ class ComboModel extends Model {
         return $this->db->getAll( "SELECT * FROM  " . $GLOBALS['ecs']->table('combo') . " WHERE is_show = 1 order by sort_order desc limit ".$page.",".$num);
     }
     public function get_combo_info($id){
-        return $this->db->getRow( "SELECT * FROM  " . $GLOBALS['ecs']->table('combo') . " WHERE is_show = 1 AND combo_id = $id");
+        return $this->db->getRow( "SELECT * FROM  " . $GLOBALS['ecs']->table('combo') . " WHERE is_show = 1 AND combo_id = '$id'");
     }
     //查看套餐金额
     public function get_combo_money($id){
