@@ -464,8 +464,25 @@ GROUP BY
     foreach($res as $key=>$val){
         $res[$key]['order_combo_all'] = $val['order_goods_number']*$val['combo_price'];
     }
+    if(empty($res)){
+            return  order_sync_combo_menpiao($order_id);
+    }
     return $res;
 }
+
+function order_sync_combo_menpiao($order_id){
+    $sql = "SELECT * from `sk_sync_piaowu` where `order_id` ='$order_id'";
+    $res = $GLOBALS['db']->getAll($sql);
+    foreach($res as $key=>$val){
+        $res[$key]['game_name'] = $val['changci'];
+        $res[$key]['num_start'] = $val['trip_start_date'];
+        $res[$key]['order_goods_number'] = $val['shuliang'];
+    }
+    return $res;
+}
+
+
+
 //取得订单下的门票总价格
 function order_menpiao_sum($order_id)
 {
@@ -666,6 +683,35 @@ AND n.color_id=c.color_id";
             'seat_logo' => $k['seat_logo'],
             'mobile' => $k['mobile'],
             'ticket_code' => $k['ticket_code']
+        );
+        $cpr_list[] = $cpr;
+    }
+    if(empty($cpr_list)){
+        return order_sync_bearer_list_agent($order_id);
+    }
+    return $cpr_list;
+}
+
+//取得订单下的持票人信息
+function order_sync_bearer_list_agent($order_id)
+{
+    $sql = "SELECT 
+b.cn_customer_name,b.passport_number,b.mobile,sp.`huohao` ,u.`email` as mail
+  FROM sk_bearer_info AS b
+  left join `sk_sync_piaowu` as sp on sp.`order_id`= b.`order_id`
+  LEFT JOIN `sk_users` as u on u.`user_id` =b.`user_id` 
+ WHERE b.order_id= $order_id";
+
+
+    $res = $GLOBALS['db']->getAll($sql);
+    $cpr_list = array();
+    foreach ($res as $key => $k) {
+        $cpr = array(
+            'cn_customer_name' => $k['cn_customer_name'],
+            'passport_number' => $k['passport_number'],
+            'mobile' => $k['mobile'],
+            'mail' => $k['mail'],
+            'ticket_code' => $k['huohao']
         );
         $cpr_list[] = $cpr;
     }
