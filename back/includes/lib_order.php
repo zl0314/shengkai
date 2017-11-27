@@ -439,8 +439,25 @@ WHERE
 GROUP BY
 	ot.goods_id";
     $res = $GLOBALS['db']->getAll($sql);
+    if(empty($res)){
+        return order_menpiao_sync($order_id);
+    }
     return $res;
 }
+
+function order_menpiao_sync($order_id){
+    $sql = "SELECT * from `sk_sync_piaowu` where `order_id` ='$order_id'";
+    $res = $GLOBALS['db']->getAll($sql);
+    foreach($res as $key=>$val){
+        $res[$key]['g_name'] = $val['piaowu_name'];
+        $res[$key]['num_name'] = $val['changci'];
+        $res[$key]['goods_sn'] = $val['huohao'];
+        $res[$key]['goods_price'] = $val['jiage'];
+        $res[$key]['order_goods_number'] = $val['shuliang'];
+    }
+    return $res;
+}
+
 //取得套餐门票的信息
 function order_combo_menpiao($order_id)
 {
