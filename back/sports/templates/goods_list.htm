@@ -49,12 +49,14 @@
     <td align="right"><!--<span onclick="listTable.edit(this, 'edit_goods_price', {$goods.goods_id})">-->{$goods.shop_price}<!--</span>--></td>
     <td align="center"><img src="images/{if $goods.is_on_sale}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'toggle_on_sale', {$goods.goods_id})" /></td>
     <td align="center"><!--<span onclick="listTable.edit(this, 'edit_sort_order', {$goods.goods_id})">-->{$goods.sort_order}<!--</span>--></td>
-      {if $use_storage}
-      <td align="right"><a href="order.php?act=list&goods_id={$goods.goods_id}&is_goods={if $goods.is_goods}1{else}-1{/if}">
-              {$goods.goods_number}</a></td>
-      {/if}
+    {if $use_storage}
+    <td align="right"><a href="order.php?act=list&goods_id={$goods.goods_id}&is_goods={if $goods.is_goods}1{else}-1{/if}&order_type=2">
+            {$goods.goods_number}</a> ／ {if $goods.sum_number gt 0} {$goods.sum_number}  {else}0{/if}</td>
+    </td>
+    {/if}
     <td align="center">
       <!--<a href="../goods.php?id={$goods.goods_id}" target="_blank" title="{$lang.view}"><img src="images/icon_view.gif" width="16" height="16" border="0" /></a>-->
+      <a href="route.php?con=sku_num&act=index&goods_id={$goods.goods_id}&goods_type=2&combo_id=0" title="{$lang.edit}" target="_blank">库存管理</a>
       <a href="goods.php?act=edit&goods_id={$goods.goods_id}{if $code neq 'real_goods'}&extension_code={$code}{/if}" title="{$lang.edit}"><img src="images/icon_edit.gif" width="16" height="16" border="0" /></a>
       <a href="javascript:;" onclick="listTable.remove({$goods.goods_id}, '{$lang.trash_goods_confirm}')" title="{$lang.trash}"><img src="images/icon_trash.gif" width="16" height="16" border="0" /></a>
       {if $specifications[$goods.goods_type] neq ''}<a href="goods.php?act=product_list&goods_id={$goods.goods_id}" title="{$lang.item_list}"><img src="images/icon_docs.gif" width="16" height="16" border="0" /></a>{else}<img src="images/empty.gif" width="16" height="16" border="0" />{/if}
