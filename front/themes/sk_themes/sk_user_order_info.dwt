@@ -284,6 +284,16 @@
                                     <th width="10%">数量</th>
                                     <th width="10%">小计</th>
                                 </tr>
+                                {if empty($combo_order_info) && !empty($sync_piaowu)}
+                                <tr>
+                                    <td>{$sync_piaowu.piaowu_name}</td>
+                                    <td>{$sync_piaowu.attributes}</td>
+                                    <td>{$sync_piaowu.jiage}</td>
+                                    <td>{$sync_piaowu.shuliang}</td>
+                                    <td>{$sync_piaowu.jiage}</td>
+                                </tr>
+
+                                {/if}
                                 <!-- 门票 -->
                                 {if $combo_order_info}
                                 {foreach from=$combo_order_info item=combo}

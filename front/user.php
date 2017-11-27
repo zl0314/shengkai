@@ -1139,6 +1139,11 @@ elseif ($action == 'order_detail') {
         }
     }
 
+    //同步过来的第三方信息
+    $sql = "SELECT * FROM ".$ecs->table('sync_piaowu') ." WHERE order_id='$order_id'";
+    $sync_piaowu = $db->getRow($sql);
+    
+    $smarty->assign('sync_piaowu', $sync_piaowu);
     $smarty->assign('order', $order);
     $smarty->assign('order_sn', $order['order_sn']);
     $smarty->assign('type', $type);
