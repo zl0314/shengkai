@@ -63,7 +63,8 @@
 	<tr>
 		<td>{$order_info.order_sn}</td>
 		<td>{if $order_info.third_platform == 1}飞猪{elseif $third_platform == 2}携程{else}个人{/if}</td>
-		<td>￥{$order_info.goods_amount}</td>
+		<!-- <td>￥{$order_info.goods_amount}</td> -->
+		<td>￥{if $order_info.third_platform == 1}{$order_info.order_amount}{else}{$order_info.goods_amount}{/if}</td>
 		<td>
 		    <!--{if $order_info.shipping_status == 3}-->
                 已取票
